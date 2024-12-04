@@ -152,21 +152,21 @@ class PenguinModProject {
     setValuesFromMetadata(metadata) {
         this.internalId = metadata._id;
         this.author = null;
-        this.title = null;
-        this.instructions = null;
-        this.notes = null;
-        this.remix = null;
-        this.featured = null;
-        this.views = null;
-        this.date = null;
-        this.lastUpdate = null;
-        this.rating = null;
-        this.public = null;
-        this.softRejected = null;
-        this.hardReject = null;
-        this.hardRejectTime = null;
-        this.loves = null;
-        this.votes = null;
+        this.title = metadata.title;
+        this.instructions = metadata.instructions;
+        this.notes = metadata.notes;
+        this.remix = metadata.remix;
+        this.featured = metadata.featured;
+        this.views = metadata.views;
+        this.date = metadata.date;
+        this.lastUpdate = metadata.lastUpdate;
+        this.rating = metadata.rating;
+        this.public = metadata.public;
+        this.softRejected = metadata.softRejected;
+        this.hardReject = metadata.hardReject;
+        this.hardRejectTime = metadata.hardRejectTime;
+        this.loves = metadata.loves;
+        this.votes = metadata.votes;
     }
 }
 

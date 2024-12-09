@@ -1,0 +1,2 @@
+# PenguinMod-ApiModule
+PenguinMod-ApiModule is intended to make interacting with the PenguinMod API simple and easy. Designed for use in other PenguinMod repositories only, but it may work for automating certain tasks on existing accounts only.

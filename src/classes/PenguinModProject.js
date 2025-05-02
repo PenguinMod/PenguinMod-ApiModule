@@ -1,5 +1,6 @@
 /**
- * @class This class is used to interact with specific projects. Be careful that you do not waste requests by loading a bunch of project info to only use one or two fields.
+ * @class This class is used to interact with specific projects.
+ * Be careful that you do not waste requests by loading a bunch of project info to only use one or two fields.
  */
 class PenguinModProject {
     /**

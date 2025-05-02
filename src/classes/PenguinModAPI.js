@@ -1,5 +1,5 @@
-const utils = require("../misc/utils.js")
-const PenguinModProject = require("./PenguinModProject.js")
+const utils = require("../misc/utils.js");
+const PenguinModProject = require("./PenguinModProject.js");
 
 /**
  * @class This class is used to interface with general non-account related aspects of the PenguinMod API.

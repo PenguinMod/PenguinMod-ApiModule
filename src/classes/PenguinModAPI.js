@@ -7,26 +7,26 @@ const PenguinModProject = require("./PenguinModProject.js");
 class PenguinModAPI {
     /**
      * This is the API url used for all requests.
-     * Default is "https://projects.penguinmod.com/api/v1"
+     * Default is "https://projects.penguinmod.com/api"
      * @type {string}
      */
-    static globalApiUrl = "https://projects.penguinmod.com/api/v1";
+    static globalApiUrl = "https://projects.penguinmod.com/api";
 
     /**
-     * This will query the API url exactly, which should return API server information.
+     * This will query the API url for v1, which should return API server information.
      * @link https://projects.penguinmod.com/api/v1
      * @returns The metadata for the current API version used. Can be in any format.
      */
     static async getMetadata() {
-        return await utils.doBasicRequest(this.globalApiUrl, null, true, true);
+        return await utils.doBasicRequest(`${this.globalApiUrl}/v1`, null, true, true);
     }
     /**
      * This will get the API's server stats such as number of users and projects.
      * @link https://projects.penguinmod.com/api/v1/misc/getStats
-     * @returns {Promise<{userCount:number, bannedCount:number, projectCount:number, remixCount:number, featuredCount:number}>} The statistics of the server's content.
+     * @returns {Promise<{userCount:number, bannedCount:number, projectCount:number, remixCount:number, featuredCount:number, totalViews:number, mongodb_stats:object}>} The statistics of the server's content.
      */
     static async getStats() {
-        return await utils.doBasicRequest(`${this.globalApiUrl}/misc/getStats`, null, true, true);
+        return await utils.doBasicRequest(`${this.globalApiUrl}/v1/misc/getStats`, null, true, true);
     }
     /**
      * Requests the ping endpoint as a way to check if the API is online without sending much data.
@@ -35,19 +35,29 @@ class PenguinModAPI {
      */
     static async checkOnline() {
         try {
-            return !!(await utils.doBasicRequest(`${this.globalApiUrl}/ping`, null, false, false));
+            return !!(await utils.doBasicRequest(`${this.globalApiUrl}/v1/ping`, null, false, false));
         } catch {
             return false;
         }
     }
+
+    /**
+     * Returns an object containing the latest dates the policy documents were updated.
+     * @link https://projects.penguinmod.com/api/v1/misc/getLastPolicyUpdate
+     * @returns {Promise<{TOS:number, guidelines:number, privacyPolicy:number}>} The statistics of the server's content.
+     */
+    static async getLastPolicyUpdate() {
+        return await utils.doBasicRequest(`${this.globalApiUrl}/v1/misc/getLastPolicyUpdate`, null, true, true);
+    }
     
+    // projects
     /**
      * Returns a boolean that is true if uploading is enabled for all users.
      * @link https://projects.penguinmod.com/api/v1/projects/canuploadprojects
      * @returns {Promise<boolean>}
      */
     static async canUploadProjects() {
-        const canUploadObject = await utils.doBasicRequest(`${this.globalApiUrl}/projects/canuploadprojects`, null, true, true);
+        const canUploadObject = await utils.doBasicRequest(`${this.globalApiUrl}/v1/projects/canuploadprojects`, null, true, true);
         if (!canUploadObject) throw new Error("canuploadprojects returned a non-object");
         if (typeof canUploadObject !== "object") throw new Error("canuploadprojects returned a non-object");
         return canUploadObject.canUpload !== false;
@@ -58,7 +68,7 @@ class PenguinModAPI {
      * @returns {Promise<boolean>}
      */
     static async canViewProjects() {
-        const canViewObject = await utils.doBasicRequest(`${this.globalApiUrl}/projects/canviewprojects`, null, true, true);
+        const canViewObject = await utils.doBasicRequest(`${this.globalApiUrl}/v1/projects/canviewprojects`, null, true, true);
         if (!canViewObject) throw new Error("canviewprojects returned a non-object");
         if (typeof canViewObject !== "object") throw new Error("canviewprojects returned a non-object");
         return canViewObject.viewing !== false;

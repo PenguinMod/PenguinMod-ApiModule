@@ -15,7 +15,7 @@ class PenguinModAPI {
     /**
      * This will query the API url exactly, which should return API server information.
      * @link https://projects.penguinmod.com/api/v1
-     * @returns The metadata for the current API version used.
+     * @returns The metadata for the current API version used. Can be in any format.
      */
     static async getMetadata() {
         return await utils.doBasicRequest(this.globalApiUrl, null, true, true);
@@ -27,6 +27,18 @@ class PenguinModAPI {
      */
     static async getStats() {
         return await utils.doBasicRequest(`${this.globalApiUrl}/misc/getStats`, null, true, true);
+    }
+    /**
+     * Requests the ping endpoint as a way to check if the API is online without sending much data.
+     * @link https://projects.penguinmod.com/api/v1/ping
+     * @returns {Promise<boolean>} True if the server responds properly.
+     */
+    static async checkOnline() {
+        try {
+            return !!(await utils.doBasicRequest(`${this.globalApiUrl}/ping`, null, false, false));
+        } catch {
+            return false;
+        }
     }
     
     /**
@@ -43,13 +55,10 @@ class PenguinModAPI {
     /**
      * Returns a boolean that is true if viewing projects is enabled for all users.
      * @link https://projects.penguinmod.com/api/v1/projects/canviewprojects
-     * @todo For some reason this is a POST request. There doesn't seem to be a reason for this, so it should be fixed on the backend at some point.
      * @returns {Promise<boolean>}
      */
     static async canViewProjects() {
-        const canViewObject = await utils.doBasicRequest(`${this.globalApiUrl}/projects/canviewprojects`, {
-            method: "POST"
-        }, true, true);
+        const canViewObject = await utils.doBasicRequest(`${this.globalApiUrl}/projects/canviewprojects`, null, true, true);
         if (!canViewObject) throw new Error("canviewprojects returned a non-object");
         if (typeof canViewObject !== "object") throw new Error("canviewprojects returned a non-object");
         return canViewObject.viewing !== false;

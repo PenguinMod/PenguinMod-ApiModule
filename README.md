@@ -1,5 +1,12 @@
 # PenguinMod-ApiModule
-PenguinMod-ApiModule is intended to make interacting with the PenguinMod API simple and easy. Designed for use in other PenguinMod repositories only, but it may work for automating certain tasks on existing accounts only.
+PenguinMod-ApiModule is intended to make interacting with the PenguinMod API simple and easy.
+Designed for use in other PenguinMod repositories only, but it may work for automating certain tasks on existing accounts only.
+
+# User Notice
+This module is designed for PenguinMod's own resporitories.
+Use with caution in your own work, since breaking changes may be made often.
+
+Use of this module for API spam or malicious activity will result in your IP being blocked.
 
 ## Example
 ```js

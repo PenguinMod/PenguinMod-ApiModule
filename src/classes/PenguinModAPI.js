@@ -50,7 +50,7 @@ class PenguinModAPI {
     /**
      * This will query the API url for v1, which should return API server information.
      * @link https://projects.penguinmod.com/api/v1
-     * @returns The metadata for the current API version used. Can be in any format.
+     * @returns {object} The metadata for the current API version used. Can be in any format.
      */
     async getMetadata() {
         return await utils.doBasicRequest(`${this.apiUrl}/v1`, null, true, true);

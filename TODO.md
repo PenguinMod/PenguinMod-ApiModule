@@ -1,0 +1,3 @@
+- [ ] PenguinModError (see src/misc/utils.js)
+- [ ] ApiModule header (see src/misc/utils.js)
+- [ ] Make TODOs in every PenguinModAPI file that lists which endpoints need to be implemented for that section

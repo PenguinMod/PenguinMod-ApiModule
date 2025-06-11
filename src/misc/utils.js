@@ -16,6 +16,8 @@ const safeParseJSON = (possibleJson, forceObject) => {
  * @param {boolean} json Whether to parse as JSON or not. If the JSON is invalid, the text will be returned.
  */
 const doBasicRequest = (url, options, doResolve, json) => {
+    // TODO: Make a PenguinModError class, so it will stringify like the Error class but you can access the API's HTTP error code with error.code
+    // TODO: maybe add a header so we know the request came from the API module?
     return new Promise((resolve, reject) => {
         fetch(url, options).then(response => {
             if (response.ok) {

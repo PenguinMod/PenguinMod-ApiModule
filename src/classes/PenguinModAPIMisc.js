@@ -1,6 +1,9 @@
 const utils = require("../misc/utils.js");
 
 /**
+ * @typedef {import("./PenguinModAPI")} PenguinModAPI
+ */
+/**
  * @class This class is used to interface with the miscellaneous endpoints within the PenguinMod API.
  * Should only be accessed through PenguinModAPI.misc
  * @private
@@ -15,12 +18,16 @@ class PenguinModAPIMisc {
      * @returns {PenguinModAPIMisc}
      * @private
      */
-    constructor(options = {}) {
+    constructor(options = {}, parent) {
+        /** @type {PenguinModAPI} @private */
+        this._parent = parent;
+
         this.id = options.id;
         this.username = options.username;
         this.token = options.token;
         
         this.apiUrl = options.apiUrl || "https://projects.penguinmod.com/api";
+        this.resolveDetails = options.resolveDetails !== false;
     }
 
     /**

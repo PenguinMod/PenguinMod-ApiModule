@@ -1,5 +1,6 @@
 const utils = require("../misc/utils.js");
 const PenguinModAPIMisc = require("./PenguinModAPIMisc.js");
+const PenguinModAPIUsers = require("./PenguinModAPIUsers.js");
 
 /**
  * @class This class is used to interface with general core endpoints of the PenguinMod API.
@@ -22,29 +23,90 @@ class PenguinModAPI {
         /**
          * This is the API url used for all requests.
          * Most endpoints will append a version like /v1 before the endpoint.
+         * 
          * Default is "https://projects.penguinmod.com/api"
          * @type {string}
          */
         this.apiUrl = options.apiUrl || "https://projects.penguinmod.com/api";
+        /**
+         * If an endpoint requires id to be set but only username is set, this will get the ID from username.
+         * If an endpoint requires username to be set but only id is set, this will get the username from ID.
+         * 
+         * Recommended to keep enabled because the API may change an endpoint to require different information later.
+         * 
+         * It's also just recommended to always set username and ID together, or fetch it from the API to save it.
+         * 
+         * Default is true.
+         * @type {boolean}
+         */
+        this.resolveDetails = options.resolveDetails !== false; // so its true by default
 
         /** @type {PenguinModAPIMisc} */
-        this.misc = new PenguinModAPIMisc(options);
+        this.misc = new PenguinModAPIMisc(options, this);
+        /** @type {PenguinModAPIUsers} */
+        this.users = new PenguinModAPIUsers(options, this);
     }
     setId(id) {
         this.id = id;
         this.misc.id = id;
+        this.users.id = id;
     }
     setUsername(username) {
         this.username = username;
         this.misc.username = username;
+        this.users.username = username;
     }
     setToken(token) {
         this.token = token;
         this.misc.token = token;
+        this.users.token = token;
     }
     setApiUrl(apiUrl) {
         this.apiUrl = apiUrl;
         this.misc.apiUrl = apiUrl;
+        this.users.apiUrl = apiUrl;
+    }
+
+    /**
+     * Fetches the API to get the username by ID, and runs this.setUsername() to the fetched username.
+     * @param {string} id The ID to use to fetch username.
+     * @throws {"UserNotFound"|any} Throws "UserNotFound" if the user is not found.
+     * @returns {string} The username from ID
+     */
+    async setUsernameFromId(id) {
+        const username = await this.users.getUsername(id);
+        if (!username) throw "UserNotFound";
+        this.setUsername(username);
+        return username;
+    }
+    /**
+     * Fetches the API to get the ID by username, and runs this.setId() to the fetched ID.
+     * @param {string} username The username to use to fetch ID.
+     * @throws {"UserNotFound"|any} Throws "UserNotFound" if the user is not found.
+     * @returns {string} The ID from username
+     */
+    async setIdFromUsername(username) {
+        const id = await this.users.getId(username);
+        if (!id) throw "UserNotFound";
+        this.setId(id);
+        return id;
+    }
+    /**
+     * Will set this.id or this.username if one is defined, but the other isn't.
+     * Will run setIdFromUsername or setUsernameFromId depending on which is missing.
+     * Neither will run if both are defined.
+     * @throws {"IdAndUsernameMissing"|any} Throws "IdAndUsernameMissing" if neither id or username are defined.
+     * @returns {void}
+     */
+    async setMissingDetail() {
+        if (this.id && this.username) return;
+        if (!this.id && !this.username) throw "IdAndUsernameMissing";
+        if (this.username && !this.id) {
+            this.setIdFromUsername(this.username);
+        }
+        if (this.id && !this.username) {
+            this.setUsernameFromId(this.id);
+        }
     }
 
     /**

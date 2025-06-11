@@ -2,6 +2,7 @@ const utils = require("../misc/utils.js");
 
 /**
  * @class This class is used to interface with the miscellaneous endpoints within the PenguinMod API.
+ * Should only be accessed through PenguinModAPI.misc
  * @private
  */
 class PenguinModAPIMisc {

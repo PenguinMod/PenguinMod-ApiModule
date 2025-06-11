@@ -9,6 +9,12 @@ const safeParseJSON = (possibleJson, forceObject) => {
     }
 };
 
+/**
+ * @param {string} url 
+ * @param {RequestInit} options 
+ * @param {boolean} doResolve If true, when the response is OK, the Response object will be returned.
+ * @param {boolean} json Whether to parse as JSON or not. If the JSON is invalid, the text will be returned.
+ */
 const doBasicRequest = (url, options, doResolve, json) => {
     return new Promise((resolve, reject) => {
         fetch(url, options).then(response => {
@@ -26,11 +32,11 @@ const doBasicRequest = (url, options, doResolve, json) => {
             } else {
                 response.text().then(text => {
                     if (json) {
-                        return reject(safeParseJSON(text), response.status);
+                        return reject(safeParseJSON(text));
                     }
-                    return reject(text, response.status);
+                    return reject(text);
                 }).catch(err => {
-                    reject(err, response.status)
+                    reject(err);
                 });
             }
         }).catch(reject);

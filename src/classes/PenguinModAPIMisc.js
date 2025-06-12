@@ -30,12 +30,22 @@ class PenguinModAPIMisc {
     /**
      * Returns an object containing the latest dates the policy documents were updated.
      * @link https://projects.penguinmod.com/api/v1/misc/getLastPolicyUpdate
-     * @returns {Promise<{TOS:number, guidelines:number, privacyPolicy:number}>} The statistics of the server's content.
+     * @returns {Promise<{TOS:number, guidelines:number, privacyPolicy:number}>} The dates policy documents were last updated.
      */
     async getLastPolicyUpdate() {
         return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getLastPolicyUpdate`, null, true, true);
     }
-    // TODO: /api/v1/misc/getLastPolicyRead
+
+    /**
+     * Returns the dates that this account last read the policy documents.
+     * Requires username and token.
+     * @link https://projects.penguinmod.com/api/v1/misc/getLastPolicyRead
+     * @returns {Promise<{TOS:number, guidelines:number, privacyPolicy:number}>} The dates policy documents were last read on this account.
+     */
+    async getLastPolicyRead() {
+        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
+        return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getLastPolicyRead?username=${encodeURIComponent(this._parent.username)}&token=${encodeURIComponent(this._parent.token)}`, null, true, true);
+    }
     // TODO: /api/v1/misc/getProfanityList
     // TODO: /api/v1/misc/markGuidelinesAsRead
     // TODO: /api/v1/misc/markPrivacyPolicyAsRead

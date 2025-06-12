@@ -9,7 +9,7 @@ const PenguinModAPIProjects = require("./PenguinModAPIProjects.js");
  */
 class PenguinModAPI {
     /**
-     * @param {Object?} options
+     * @param {Object} options Optional.
      * @param {string?} options.id The ID of the account to use. Both ID and username can be defined, but at least one should be given to use login-required endpoints. If omitted, use setId later.
      * @param {string?} options.username The username of the account to use. Both ID and username can be defined, but at least one should be given to use login-required endpoints. If omitted, use setUsername later.
      * @param {string?} options.token If omitted, use setToken later.
@@ -54,7 +54,7 @@ class PenguinModAPI {
      * Fetches the API to get the username by ID, and sets this client's username to the fetched username.
      * @param {string} id The ID to use to fetch username.
      * @throws {"UserNotFound"|any} Throws "UserNotFound" if the user is not found.
-     * @returns {string} The username from ID
+     * @returns {Promise<string>} The username from ID
      */
     async setUsernameFromId(id) {
         const username = await this.users.getUsername(id);
@@ -66,7 +66,7 @@ class PenguinModAPI {
      * Fetches the API to get the ID by username, and sets this client's ID to the fetched ID.
      * @param {string} username The username to use to fetch ID.
      * @throws {"UserNotFound"|any} Throws "UserNotFound" if the user is not found.
-     * @returns {string} The ID from username
+     * @returns {Promise<string>} The ID from username
      */
     async setIdFromUsername(username) {
         const id = await this.users.getId(username);
@@ -78,7 +78,7 @@ class PenguinModAPI {
     /**
      * This will query the API url for v1, which should return API server information.
      * @link https://projects.penguinmod.com/api/v1
-     * @returns {object} The metadata for the current API version used. Can be in any format.
+     * @returns {Promise<object>} The metadata for the current API version used. Can be in any format.
      */
     async getMetadata() {
         return await utils.doBasicRequest(`${this.apiUrl}/v1`, null, true, true);

@@ -40,7 +40,7 @@ class PenguinModAPIUsers {
      * Returns the username of a user by their ID.
      * @link https://projects.penguinmod.com/api/v1/users/getusername
      * @param {string} id The ID of the user you want to get the username of.
-     * @returns {Promise<string>} The username of the user, or null if not found.
+     * @returns {Promise<string|null>} The username of the user, or null if not found.
      */
     async getUsername(id) {
         try {

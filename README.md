@@ -25,4 +25,19 @@ PenguinModClient.misc.getLastPolicyUpdate().then(console.log).catch(console.log)
 // users endpoints
 PenguinModClient.users.getId("PenguinMod").then(console.log).catch(console.log); // string
 PenguinModClient.users.getUsername("01JPZVED48ZT6H4VVMBZT6V2PE").then(console.log).catch(console.log); // string
+
+// SIGN IN ONLY!
+// misc endpoints
+PenguinModClient.misc.getLastPolicyRead().then(console.log).catch(console.log); // {TOS:number, guidelines:number, privacyPolicy:number}
+PenguinModClient.misc.markGuidelinesAsRead().catch(console.log); // void
+PenguinModClient.misc.markTOSAsRead().catch(console.log); // void
+PenguinModClient.misc.markPrivacyPolicyAsRead().catch(console.log); // void
+
+// ADMIN ONLY!
+// misc endpoints
+// {illegalWords:Array<string>, illegalWebsites:Array<string>, spacedOutWordsOnly:Array<string>,
+// potentiallyUnsafeWords:Array<string>, potentiallyUnsafeWordsSpacedOut:Array<string>, legalExtensions:Array<string>}
+PenguinModClient.misc.getProfanityList().then(console.log).catch(console.log);
+PenguinModClient.misc.setLastPolicyUpdate(["guidelines", "tos", "privacyPolicy"]).catch(console.log); // void
+PenguinModClient.misc.setProfanityList({ "illegalWords": ["badword"] }).catch(console.log); // void
 ```

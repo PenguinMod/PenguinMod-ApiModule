@@ -21,4 +21,8 @@ PenguinModClient.getMetadata().then(console.log).catch(console.log); // {} arbit
 // {userCount:number, bannedCount:number, projectCount:number, remixCount:number, featuredCount:number, totalViews:number, mongodb_stats:object}
 PenguinModClient.misc.getStats().then(console.log).catch(console.log);
 PenguinModClient.misc.getLastPolicyUpdate().then(console.log).catch(console.log); // {TOS:number, guidelines:number, privacyPolicy:number}
+
+// users endpoints
+PenguinModClient.users.getId("PenguinMod").then(console.log).catch(console.log); // string
+PenguinModClient.users.getUsername("01JPZVED48ZT6H4VVMBZT6V2PE").then(console.log).catch(console.log); // string
 ```

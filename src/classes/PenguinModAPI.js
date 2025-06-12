@@ -71,23 +71,6 @@ class PenguinModAPI {
         this.id = id;
         return id;
     }
-    /**
-     * Will set this.id or this.username if one is defined, but the other isn't.
-     * Will run setIdFromUsername or setUsernameFromId depending on which is missing.
-     * Neither will run if both are defined.
-     * @throws {"IdAndUsernameMissing"|any} Throws "IdAndUsernameMissing" if neither id or username are defined.
-     * @returns {void}
-     */
-    async setMissingDetail() {
-        if (this.id && this.username) return;
-        if (!this.id && !this.username) throw "IdAndUsernameMissing";
-        if (this.username && !this.id) {
-            this.setIdFromUsername(this.username);
-        }
-        if (this.id && !this.username) {
-            this.setUsernameFromId(this.id);
-        }
-    }
 
     /**
      * This will query the API url for v1, which should return API server information.

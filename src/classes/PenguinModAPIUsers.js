@@ -10,24 +10,13 @@ const utils = require("../misc/utils.js");
  */
 class PenguinModAPIUsers {
     /**
-     * @param {Object?} options
-     * @param {string?} options.id
-     * @param {string?} options.username
-     * @param {string?} options.token
-     * @param {string?} options.apiUrl
+     * @param {PenguinModAPI} parent
      * @returns {PenguinModAPIUsers}
      * @private
      */
-    constructor(options = {}, parent) {
+    constructor(parent) {
         /** @type {PenguinModAPI} @private */
         this._parent = parent;
-        
-        this.id = options.id;
-        this.username = options.username;
-        this.token = options.token;
-
-        this.apiUrl = options.apiUrl || "https://projects.penguinmod.com/api";
-        this.resolveDetails = options.resolveDetails !== false;
     }
 
     /**
@@ -38,7 +27,7 @@ class PenguinModAPIUsers {
      */
     async getId(username) {
         try {
-            const json = await utils.doBasicRequest(`${this.apiUrl}/v1/users/getid?username=${encodeURIComponent(username)}`, null, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getid?username=${encodeURIComponent(username)}`, null, true, true);
             return json.id;
         } catch (err) {
             if (err && err.error === "UserNotFound") {
@@ -55,7 +44,7 @@ class PenguinModAPIUsers {
      */
     async getUsername(id) {
         try {
-            const json = await utils.doBasicRequest(`${this.apiUrl}/v1/users/getusername?ID=${encodeURIComponent(id)}`, null, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getusername?ID=${encodeURIComponent(id)}`, null, true, true);
             return json.username || null; // false is returned if no user is found
         } catch (err) {
             if (err && err.error === "UserNotFound") {

@@ -42,33 +42,13 @@ class PenguinModAPI {
         this.resolveDetails = options.resolveDetails !== false; // so its true by default
 
         /** @type {PenguinModAPIMisc} */
-        this.misc = new PenguinModAPIMisc(options, this);
+        this.misc = new PenguinModAPIMisc(this);
         /** @type {PenguinModAPIUsers} */
-        this.users = new PenguinModAPIUsers(options, this);
-    }
-    setId(id) {
-        this.id = id;
-        this.misc.id = id;
-        this.users.id = id;
-    }
-    setUsername(username) {
-        this.username = username;
-        this.misc.username = username;
-        this.users.username = username;
-    }
-    setToken(token) {
-        this.token = token;
-        this.misc.token = token;
-        this.users.token = token;
-    }
-    setApiUrl(apiUrl) {
-        this.apiUrl = apiUrl;
-        this.misc.apiUrl = apiUrl;
-        this.users.apiUrl = apiUrl;
+        this.users = new PenguinModAPIUsers(this);
     }
 
     /**
-     * Fetches the API to get the username by ID, and runs this.setUsername() to the fetched username.
+     * Fetches the API to get the username by ID, and sets this client's username to the fetched username.
      * @param {string} id The ID to use to fetch username.
      * @throws {"UserNotFound"|any} Throws "UserNotFound" if the user is not found.
      * @returns {string} The username from ID
@@ -76,11 +56,11 @@ class PenguinModAPI {
     async setUsernameFromId(id) {
         const username = await this.users.getUsername(id);
         if (!username) throw "UserNotFound";
-        this.setUsername(username);
+        this.username = username;
         return username;
     }
     /**
-     * Fetches the API to get the ID by username, and runs this.setId() to the fetched ID.
+     * Fetches the API to get the ID by username, and sets this client's ID to the fetched ID.
      * @param {string} username The username to use to fetch ID.
      * @throws {"UserNotFound"|any} Throws "UserNotFound" if the user is not found.
      * @returns {string} The ID from username
@@ -88,7 +68,7 @@ class PenguinModAPI {
     async setIdFromUsername(username) {
         const id = await this.users.getId(username);
         if (!id) throw "UserNotFound";
-        this.setId(id);
+        this.id = id;
         return id;
     }
     /**

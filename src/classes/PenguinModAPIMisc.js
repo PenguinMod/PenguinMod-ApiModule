@@ -10,24 +10,13 @@ const utils = require("../misc/utils.js");
  */
 class PenguinModAPIMisc {
     /**
-     * @param {Object?} options
-     * @param {string?} options.id
-     * @param {string?} options.username
-     * @param {string?} options.token
-     * @param {string?} options.apiUrl
-     * @returns {PenguinModAPIMisc}
+     * @param {PenguinModAPI} parent
+     * @returns {PenguinModAPIUsers}
      * @private
      */
-    constructor(options = {}, parent) {
+    constructor(parent) {
         /** @type {PenguinModAPI} @private */
         this._parent = parent;
-
-        this.id = options.id;
-        this.username = options.username;
-        this.token = options.token;
-        
-        this.apiUrl = options.apiUrl || "https://projects.penguinmod.com/api";
-        this.resolveDetails = options.resolveDetails !== false;
     }
 
     /**
@@ -36,7 +25,7 @@ class PenguinModAPIMisc {
      * @returns {Promise<{userCount:number, bannedCount:number, projectCount:number, remixCount:number, featuredCount:number, totalViews:number, mongodb_stats:object}>} The statistics of the server's content.
      */
     async getStats() {
-        return await utils.doBasicRequest(`${this.apiUrl}/v1/misc/getStats`, null, true, true);
+        return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getStats`, null, true, true);
     }
     /**
      * Returns an object containing the latest dates the policy documents were updated.
@@ -44,7 +33,7 @@ class PenguinModAPIMisc {
      * @returns {Promise<{TOS:number, guidelines:number, privacyPolicy:number}>} The statistics of the server's content.
      */
     async getLastPolicyUpdate() {
-        return await utils.doBasicRequest(`${this.apiUrl}/v1/misc/getLastPolicyUpdate`, null, true, true);
+        return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getLastPolicyUpdate`, null, true, true);
     }
 }
 

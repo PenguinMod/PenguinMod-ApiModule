@@ -35,6 +35,14 @@ class PenguinModAPIMisc {
     async getLastPolicyUpdate() {
         return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getLastPolicyUpdate`, null, true, true);
     }
+    // TODO: /api/v1/misc/getLastPolicyRead
+    // TODO: /api/v1/misc/getProfanityList
+    // TODO: /api/v1/misc/markGuidelinesAsRead
+    // TODO: /api/v1/misc/markPrivacyPolicyAsRead
+    // TODO: /api/v1/misc/markTOSAsRead
+    // TODO: /api/v1/misc/setLastPolicyUpdate
+    // TODO: /api/v1/misc/setProfanityList
+    // TODO: /api/v1/misc/updateApi
 }
 
 module.exports = PenguinModAPIMisc;

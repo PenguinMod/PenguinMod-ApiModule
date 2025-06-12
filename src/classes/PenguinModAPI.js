@@ -1,6 +1,7 @@
 const utils = require("../misc/utils.js");
 const PenguinModAPIMisc = require("./PenguinModAPIMisc.js");
 const PenguinModAPIUsers = require("./PenguinModAPIUsers.js");
+const PenguinModAPIProjects = require("./PenguinModAPIProjects.js");
 
 /**
  * @class This class is used to interface with general core endpoints of the PenguinMod API.
@@ -45,6 +46,8 @@ class PenguinModAPI {
         this.misc = new PenguinModAPIMisc(this);
         /** @type {PenguinModAPIUsers} */
         this.users = new PenguinModAPIUsers(this);
+        /** @type {PenguinModAPIProjects} */
+        this.projects = new PenguinModAPIProjects(this);
     }
 
     /**

@@ -37,7 +37,12 @@ const doBasicRequest = (url, options, apiClass, doResolve, json) => {
 
                 response.text().then(text => {
                     if (json) {
-                        return resolve(safeParseJSON(text));
+                        try {
+                            return resolve(JSON.parse(text));
+                        } catch (err) {
+                            const pmError = new PenguinModAPIError("ParseJSONFailed", err, response.status, text, true, url, options, response, err);
+                            reject(pmError);
+                        }
                     }
                     return resolve(text);
                 }).catch((err) => {

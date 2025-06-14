@@ -1,4 +1,5 @@
 const utils = require("../misc/utils.js");
+const PenguinModAPIError = require("./PenguinModAPIError.js");
 
 /**
  * @typedef {import("./PenguinModAPI")} PenguinModAPI

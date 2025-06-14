@@ -1,4 +1,5 @@
 const utils = require("../misc/utils.js");
+const PenguinModAPIError = require("./PenguinModAPIError.js");
 const PenguinModAPIMisc = require("./PenguinModAPIMisc.js");
 const PenguinModAPIUsers = require("./PenguinModAPIUsers.js");
 const PenguinModAPIProjects = require("./PenguinModAPIProjects.js");
@@ -51,9 +52,20 @@ class PenguinModAPI {
     }
 
     /**
+     * Can be overridden. Modify fetch options that the module sends.
+     * @param {RequestInit?} options Optional, Fetch options
+     * @param {string?} url Optional, the URL being fetched
+     * @virtual
+     * @returns {RequestInit} Fetch options
+     */
+    injectOptions(options, url) {
+        return options;
+    }
+
+    /**
      * Fetches the API to get the username by ID, and sets this client's username to the fetched username.
      * @param {string} id The ID to use to fetch username.
-     * @throws {"UserNotFound"|any} Throws "UserNotFound" if the user is not found.
+     * @throws {"UserNotFound"|PenguinModAPIError} Throws "UserNotFound" if the user is not found.
      * @returns {Promise<string>} The username from ID
      */
     async setUsernameFromId(id) {
@@ -65,7 +77,7 @@ class PenguinModAPI {
     /**
      * Fetches the API to get the ID by username, and sets this client's ID to the fetched ID.
      * @param {string} username The username to use to fetch ID.
-     * @throws {"UserNotFound"|any} Throws "UserNotFound" if the user is not found.
+     * @throws {"UserNotFound"|PenguinModAPIError} Throws "UserNotFound" if the user is not found.
      * @returns {Promise<string>} The ID from username
      */
     async setIdFromUsername(username) {
@@ -78,19 +90,21 @@ class PenguinModAPI {
     /**
      * This will query the API url for v1, which should return API server information.
      * @link https://projects.penguinmod.com/api/v1
+     * @throws {PenguinModAPIError}
      * @returns {Promise<object>} The metadata for the current API version used. Can be in any format.
      */
     async getMetadata() {
-        return await utils.doBasicRequest(`${this.apiUrl}/v1`, null, true, true);
+        return await utils.doBasicRequest(`${this.apiUrl}/v1`, null, this, true, true);
     }
     /**
      * Requests the ping endpoint as a way to check if the API is online without sending much data.
      * @link https://projects.penguinmod.com/api/v1/ping
+     * @throws {PenguinModAPIError}
      * @returns {Promise<boolean>} True if the server responds properly.
      */
     async checkOnline() {
         try {
-            return !!(await utils.doBasicRequest(`${this.apiUrl}/v1/ping`, null, false, false));
+            return !!(await utils.doBasicRequest(`${this.apiUrl}/v1/ping`, null, this, false, false));
         } catch {
             return false;
         }

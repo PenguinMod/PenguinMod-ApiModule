@@ -1,4 +1,5 @@
 const utils = require("../misc/utils.js");
+const PenguinModAPIError = require("./PenguinModAPIError.js");
 
 /**
  * @typedef {import("./PenguinModAPI")} PenguinModAPI
@@ -23,14 +24,15 @@ class PenguinModAPIUsers {
      * Returns the ID of a user by their username.
      * @link https://projects.penguinmod.com/api/v1/users/getid
      * @param {string} username The username of the user you want to get the ID of.
+     * @throws {PenguinModAPIError}
      * @returns {Promise<string|null>} The ID of the user, or null if not found.
      */
     async getId(username) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getid?username=${encodeURIComponent(username)}`, null, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getid?username=${encodeURIComponent(username)}`, null, this._parent, true, true);
             return json.id;
         } catch (err) {
-            if (err && err.error === "UserNotFound") {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "UserNotFound") {
                 return null;
             }
             throw err;
@@ -40,14 +42,15 @@ class PenguinModAPIUsers {
      * Returns the username of a user by their ID.
      * @link https://projects.penguinmod.com/api/v1/users/getusername
      * @param {string} id The ID of the user you want to get the username of.
+     * @throws {PenguinModAPIError}
      * @returns {Promise<string|null>} The username of the user, or null if not found.
      */
     async getUsername(id) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getusername?ID=${encodeURIComponent(id)}`, null, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getusername?ID=${encodeURIComponent(id)}`, null, this._parent, true, true);
             return json.username || null; // false is returned if no user is found
         } catch (err) {
-            if (err && err.error === "UserNotFound") {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "UserNotFound") {
                 return null;
             }
             throw err;

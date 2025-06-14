@@ -51,7 +51,7 @@ class PenguinModAPIProjects {
      */
     async getLoves(projectId) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getLoves?projectID=${projectId}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getLoves?projectID=${encodeURIComponent(projectId)}`, null, this._parent, true, true);
             return json.loves;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "InvalidProjectID") {
@@ -74,7 +74,7 @@ class PenguinModAPIProjects {
      */
     async getVotes(projectId) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getVotes?projectID=${projectId}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getVotes?projectID=${encodeURIComponent(projectId)}`, null, this._parent, true, true);
             return json.votes;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "InvalidProjectID") {
@@ -119,6 +119,28 @@ class PenguinModAPIProjects {
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Viewing is disabled") {
                 throw "ViewingDisabled";
+            }
+            throw err;
+        }
+    }
+
+    /**
+     * Returns whether or not you have loved (liked) or voted a project.
+     * Requires username and token.
+     * @link https://projects.penguinmod.com/api/v1/projects/getuserstatewrapper
+     * @param {string} projectId The project to check.
+     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
+     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @returns {Promise<{hasLoved:boolean, hasVoted:boolean}>}
+     */
+    async getUserState(projectId) {
+        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
+        try {
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getuserstatewrapper?projectId=${encodeURIComponent(projectId)}&username=${encodeURIComponent(this._parent.username)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+            return json;
+        } catch (err) {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
+                throw "ProjectNotFound";
             }
             throw err;
         }

@@ -61,6 +61,7 @@ PenguinModClient.projects.canViewProjects().then(console.log).catch(console.log)
 PenguinModClient.projects.getProjects().then(console.log).catch(console.log); // [{...}], array of projects
 PenguinModClient.projects.getLoves("sigma").then(console.log).catch(console.log); // number
 PenguinModClient.projects.getVotes("sigma").then(console.log).catch(console.log); // number
+PenguinModClient.projects.getUserState("sigma").then(console.log).catch(console.log); // { hasLoved:boolean, hasVoted:boolean }
 
 // SIGN IN ONLY!
 // misc endpoints

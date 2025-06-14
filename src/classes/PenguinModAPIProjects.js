@@ -19,8 +19,27 @@ class PenguinModAPIProjects {
         /** @type {PenguinModAPI} @private */
         this._parent = parent;
     }
-    // TODO: /api/v1/projects/canuploadprojects
-    // TODO: /api/v1/projects/canviewprojects
+
+    /**
+     * Returns a boolean that is true if uploading is enabled for all users.
+     * @link https://projects.penguinmod.com/api/v1/projects/canuploadprojects
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<boolean>} True if uploading is enabled for all users.
+     */
+    async canUploadProjects() {
+        const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/canuploadprojects`, null, this._parent, true, true);
+        return json.canUpload !== false;
+    }
+    /**
+     * Returns a boolean that is true if viewing projects is enabled for all users.
+     * @link https://projects.penguinmod.com/api/v1/projects/canviewprojects
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<boolean>} True if viewing projects is enabled for all users.
+     */
+    async canViewProjects() {
+        const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/canviewprojects`, null, this._parent, true, true);
+        return json.viewing !== false;
+    }
     // TODO: /api/v1/projects/getproject
     // TODO: /api/v1/projects/getprojects
     // TODO: /api/v1/projects/getprojectwrapper

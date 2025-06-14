@@ -55,6 +55,10 @@ PenguinModClient.misc.getLastPolicyUpdate().then(console.log).catch(console.log)
 PenguinModClient.users.getId("PenguinMod").then(console.log).catch(console.log); // string
 PenguinModClient.users.getUsername("01JPZVED48ZT6H4VVMBZT6V2PE").then(console.log).catch(console.log); // string
 
+// projects endpoints
+PenguinModClient.projects.canUploadProjects().then(console.log).catch(console.log); // boolean
+PenguinModClient.projects.canViewProjects().then(console.log).catch(console.log); // boolean
+
 // SIGN IN ONLY!
 // misc endpoints
 PenguinModClient.misc.getLastPolicyRead().then(console.log).catch(console.log); // {TOS:number, guidelines:number, privacyPolicy:number}

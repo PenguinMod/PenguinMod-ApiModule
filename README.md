@@ -70,6 +70,10 @@ PenguinModClient.misc.markGuidelinesAsRead().catch(console.log); // void
 PenguinModClient.misc.markTOSAsRead().catch(console.log); // void
 PenguinModClient.misc.markPrivacyPolicyAsRead().catch(console.log); // void
 
+// projects endpoints
+PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean
+PenguinModClient.projects.hasVoted("sigma").then(console.log).catch(console.log); // boolean
+
 // ADMIN ONLY!
 // misc endpoints
 // {illegalWords:Array<string>, illegalWebsites:Array<string>, spacedOutWordsOnly:Array<string>,
@@ -77,4 +81,8 @@ PenguinModClient.misc.markPrivacyPolicyAsRead().catch(console.log); // void
 PenguinModClient.misc.getProfanityList().then(console.log).catch(console.log);
 PenguinModClient.misc.setLastPolicyUpdate(["guidelines", "tos", "privacyPolicy"]).catch(console.log); // void
 PenguinModClient.misc.setProfanityList({ "illegalWords": ["badword"] }).catch(console.log); // void
+
+// projects endpoints
+PenguinModClient.projects.hasLovedAdmin("sigma", "PenguinMod").then(console.log).catch(console.log); // boolean
+PenguinModClient.projects.hasVotedAdmin("sigma", "PenguinMod").then(console.log).catch(console.log); // boolean
 ```

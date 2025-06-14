@@ -58,6 +58,9 @@ PenguinModClient.users.getUsername("01JPZVED48ZT6H4VVMBZT6V2PE").then(console.lo
 // projects endpoints
 PenguinModClient.projects.canUploadProjects().then(console.log).catch(console.log); // boolean
 PenguinModClient.projects.canViewProjects().then(console.log).catch(console.log); // boolean
+PenguinModClient.projects.getProjects().then(console.log).catch(console.log); // [{...}], array of projects
+PenguinModClient.projects.getLoves("sigma").then(console.log).catch(console.log); // number
+PenguinModClient.projects.getVotes("sigma").then(console.log).catch(console.log); // number
 
 // SIGN IN ONLY!
 // misc endpoints

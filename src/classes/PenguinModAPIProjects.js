@@ -40,14 +40,94 @@ class PenguinModAPIProjects {
         const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/canviewprojects`, null, this._parent, true, true);
         return json.viewing !== false;
     }
+    /**
+     * Gets the amount of loves (likes) a project has.
+     * @link https://projects.penguinmod.com/api/v1/projects/getLoves
+     * @param {string} projectId The project to get loves for.
+     * @throws {"InvalidProjectID"} Will throw if the project ID is invalid.
+     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
+     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @returns {Promise<number>} The amount of loves (likes) the project has.
+     */
+    async getLoves(projectId) {
+        try {
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getLoves?projectID=${projectId}`, null, this._parent, true, true);
+            return json.loves;
+        } catch (err) {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "InvalidProjectID") {
+                throw "InvalidProjectID";
+            }
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
+                throw "ProjectNotFound";
+            }
+            throw err;
+        }
+    }
+    /**
+     * Gets the amount of votes a project has.
+     * @link https://projects.penguinmod.com/api/v1/projects/getVotes
+     * @param {string} projectId The project to get votes for.
+     * @throws {"InvalidProjectID"} Will throw if the project ID is invalid.
+     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
+     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @returns {Promise<number>} The amount of votes the project has.
+     */
+    async getVotes(projectId) {
+        try {
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getVotes?projectID=${projectId}`, null, this._parent, true, true);
+            return json.votes;
+        } catch (err) {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "InvalidProjectID") {
+                throw "InvalidProjectID";
+            }
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
+                throw "ProjectNotFound";
+            }
+            throw err;
+        }
+    }
+
+    /**
+     * Gets a list of all projects uploaded by ranked users on the site.
+     * If logged in as a moderator, this will also include projects uploaded by unranked users.
+     * @link https://projects.penguinmod.com/api/v1/projects/getprojects
+     * @todo Make a PenguinModProject interface that defines the properties a project will have.
+     * @param {Object} options Optional.
+     * @param {number?} options.page Determines which page of projects should be returned. If not provided, page will be 0.
+     * @param {boolean?} options.reverse Whether or not to show oldest projects first. Default is false.
+     * @param {boolean?} options.login Whether or not to provide login info. Should be true for moderators who want to see unranked user's projects. Default is true.
+     * @throws {"ViewingDisabled"|PenguinModAPIError} Throws "ViewingDisabled" if viewing projects is disabled.
+     * @returns {Promise<Array<object>>} An array of PenguinMod projects.
+     */
+    async getProjects(options) {
+        if (!options) options = {};
+        try {
+            const url = new URL(`${this._parent.apiUrl}/v1/projects/getprojects`);
+            if (typeof options.page === "number") {
+                url.searchParams.set("page", options.page);
+            }
+            if (typeof options.reverse === "boolean") {
+                url.searchParams.set("reverse", options.reverse);
+            }
+            if (options.login !== false && this._parent.token) {
+                if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
+                url.searchParams.set("username", this._parent.username);
+                url.searchParams.set("token", this._parent.token);
+            }
+            const json = await utils.doBasicRequest(url.toString(), null, this._parent, true, true);
+            return json;
+        } catch (err) {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Viewing is disabled") {
+                throw "ViewingDisabled";
+            }
+            throw err;
+        }
+    }
     // TODO: /api/v1/projects/getproject
-    // TODO: /api/v1/projects/getprojects
     // TODO: /api/v1/projects/getprojectwrapper
     // TODO: /api/v1/projects/updateProject
     // TODO: /api/v1/projects/uploadProject
-    // TODO: /api/v1/projects/getLoves
     // TODO: /api/v1/projects/getuserstatewrapper
-    // TODO: /api/v1/projects/getVotes
     // TODO: /api/v1/projects/getWhoLoved
     // TODO: /api/v1/projects/getWhoVoted
     // TODO: /api/v1/projects/hasLoved

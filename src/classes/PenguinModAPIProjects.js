@@ -149,7 +149,6 @@ class PenguinModAPIProjects {
     // TODO: /api/v1/projects/getprojectwrapper
     // TODO: /api/v1/projects/updateProject
     // TODO: /api/v1/projects/uploadProject
-    // TODO: /api/v1/projects/getuserstatewrapper
     // TODO: /api/v1/projects/getWhoLoved
     // TODO: /api/v1/projects/getWhoVoted
     // TODO: /api/v1/projects/hasLoved

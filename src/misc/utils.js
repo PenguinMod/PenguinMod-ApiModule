@@ -51,12 +51,10 @@ const doBasicRequest = (url, options, apiClass, doResolve, json) => {
                 });
             } else {
                 response.text().then(text => {
-                    if (json) {
-                        const jsonResp = safeParseJSON(text);
-                        const pmError = new PenguinModAPIError(jsonResp && jsonResp.error ? jsonResp.error : PenguinModAPIError.UNKNOWN, text, response.status, jsonResp, false, url, options, response, null);
-                        return reject(pmError);
-                    }
-                    const pmError = new PenguinModAPIError(PenguinModAPIError.UNKNOWN, text, response.status, text, false, url, options, response, null);
+                    // a text API might error in JSON
+                    const jsonResp = safeParseJSON(text);
+                    const errorMsg = jsonResp && jsonResp.error ? jsonResp.error : text || PenguinModAPIError.UNKNOWN;
+                    const pmError = new PenguinModAPIError(errorMsg, text, response.status, jsonResp, false, url, options, response, null);
                     return reject(pmError);
                 }).catch(err => {
                     const pmError = new PenguinModAPIError("ParseTextFailed", err, response.status, null, true, url, options, response, err);

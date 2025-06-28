@@ -1,15 +1,19 @@
 # PenguinMod-ApiModule
+
 PenguinMod-ApiModule is intended to make interacting with the PenguinMod API simple and easy.
 Designed for use in other PenguinMod repositories only, but it may work for automating certain tasks on existing accounts only.
 
-# Using this module
-## User Notice
+## Using this module
+
+### User Notice
+
 This module is designed for PenguinMod's own resporitories.
 Use with caution in your own work, since breaking changes may be made often.
 
 Use of this module for API spam or malicious activity will result in your IP being blocked.
 
-## Errors
+### Errors
+
 Errors thrown by the API will reject with a `PenguinModAPIError`.
 
 If an endpoint uses a JSON response, `PenguinModAPIError.message` will return the `error` property in the JSON response.
@@ -17,9 +21,10 @@ If an endpoint uses a JSON response, `PenguinModAPIError.message` will return th
 If an endpoint uses a text response, `PenguinModAPIError.message` will return the entire text response.
 
 In some error cases, the `PenguinModAPIError.message` property can instead be one of these values:
+
 - `"FetchFailed"`: Used if the fetch fails entirely.
 - `"ParseJSONFailed"`: Used if a JSON response was expected but the JSON was invalid.
-    - You can still get the API response from `PenguinModAPIError.data` in this case.
+  - You can still get the API response from `PenguinModAPIError.data` in this case.
 - `"ParseTextFailed"`: Used if `Response.text()` somehow fails.
 
 You can also get the full API response with `PenguinModAPIError.data`.
@@ -27,8 +32,9 @@ You can also get the full API response with `PenguinModAPIError.data`.
 To get the original `Error` instance, use `PenguinModAPIError.cause`. Note that this will be null if the fetch succeeded, and the API just returned it's own error.
 
 Other notable `PenguinModAPIError` properties:
+
 - `httpCode:number`: The HTTP error code that the API returned.
-    - If the fetch failed in a way where the `Response` object was never accessible
+  - If the fetch failed in a way where the `Response` object was never accessible
     (usually CORS error in browser), this will be `PenguinModAPIError.UNKNOWN_CODE`.
 - `parsing:boolean`: Will be `true` if the error was caused by failing to parse the response.
 - `url:string`: The URL that was being fetched.
@@ -38,6 +44,7 @@ Other notable `PenguinModAPIError` properties:
 The `PenguinModAPIError` class is exported by this module if you need it for any purpose.
 
 ## Example
+
 ```js
 const { PenguinModAPI } = require("../index");
 const PenguinModClient = new PenguinModAPI();

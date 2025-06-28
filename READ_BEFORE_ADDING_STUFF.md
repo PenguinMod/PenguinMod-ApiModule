@@ -1,4 +1,5 @@
 # Notice
+
 Everything should be designed so the API can stop relying on `username`s being supplied to endpoints to identify the logged in user.
 It should be able to eventually allow `id` only input, or entirely rely on the `token` to get `id` or `username`.
 

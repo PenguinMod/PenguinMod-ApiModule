@@ -119,7 +119,6 @@ class PenguinModAPIUsers {
     // TODO: /api/v1/users/massbanregex
     // TODO: /api/v1/users/setBadges
     // TODO: /api/v1/users/verifyfollowers
-    // TODO: /api/v1/users/sendloginsuccess
     // TODO: /api/v1/users/addoauthmethod
     // TODO: /api/v1/users/githubcallback/addmethod
     // TODO: /api/v1/users/googlecallback/addmethod

@@ -110,8 +110,6 @@ class PenguinModAPIProjects {
                 url.searchParams.set("reverse", options.reverse);
             }
             if (options.login !== false && this._parent.token) {
-                if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
-                url.searchParams.set("username", this._parent.username);
                 url.searchParams.set("token", this._parent.token);
             }
             const json = await utils.doBasicRequest(url.toString(), null, this._parent, true, true);
@@ -126,7 +124,7 @@ class PenguinModAPIProjects {
 
     /**
      * Returns whether or not you have loved (liked) or voted a project.
-     * Requires username and token.
+     * Requires token.
      * @link https://projects.penguinmod.com/api/v1/projects/getuserstatewrapper
      * @param {string} projectId The project to check.
      * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
@@ -134,9 +132,8 @@ class PenguinModAPIProjects {
      * @returns {Promise<{hasLoved:boolean, hasVoted:boolean}>}
      */
     async getUserState(projectId) {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getuserstatewrapper?projectId=${encodeURIComponent(projectId)}&username=${encodeURIComponent(this._parent.username)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getuserstatewrapper?projectId=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
             return json;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -147,7 +144,7 @@ class PenguinModAPIProjects {
     }
     /**
      * Returns whether or not you have loved (liked) a project.
-     * Requires username and token.
+     * Requires token.
      * @link https://projects.penguinmod.com/api/v1/projects/hasLoved
      * @param {string} projectId The project to check.
      * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
@@ -155,9 +152,8 @@ class PenguinModAPIProjects {
      * @returns {Promise<{boolean}>}
      */
     async hasLoved(projectId) {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLoved?projectID=${encodeURIComponent(projectId)}&username=${encodeURIComponent(this._parent.username)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLoved?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
             return json.hasLoved;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -168,7 +164,7 @@ class PenguinModAPIProjects {
     }
     /**
      * Returns whether or not you have voted for a project.
-     * Requires username and token.
+     * Requires token.
      * @link https://projects.penguinmod.com/api/v1/projects/hasVoted
      * @param {string} projectId The project to check.
      * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
@@ -176,9 +172,8 @@ class PenguinModAPIProjects {
      * @returns {Promise<{boolean}>}
      */
     async hasVoted(projectId) {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVoted?projectID=${encodeURIComponent(projectId)}&username=${encodeURIComponent(this._parent.username)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVoted?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
             return json.hasVoted;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -190,7 +185,7 @@ class PenguinModAPIProjects {
 
     /**
      * Returns whether or not another user has loved (liked) a project.
-     * Requires username and token.
+     * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/projects/hasLovedAdmin
      * @param {string} projectId The project to check.
@@ -200,9 +195,8 @@ class PenguinModAPIProjects {
      * @returns {Promise<{boolean}>}
      */
     async hasLovedAdmin(projectId, targetUsername) {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLovedAdmin?projectID=${encodeURIComponent(projectId)}&username=${encodeURIComponent(this._parent.username)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLovedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, true, true);
             return json.hasLoved;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -213,7 +207,7 @@ class PenguinModAPIProjects {
     }
     /**
      * Returns whether or not another user has voted for a project.
-     * Requires username and token.
+     * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/projects/hasVotedAdmin
      * @param {string} projectId The project to check.
@@ -223,9 +217,8 @@ class PenguinModAPIProjects {
      * @returns {Promise<{boolean}>}
      */
     async hasVotedAdmin(projectId, targetUsername) {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVotedAdmin?projectID=${encodeURIComponent(projectId)}&username=${encodeURIComponent(this._parent.username)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVotedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, true, true);
             return json.hasVoted;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {

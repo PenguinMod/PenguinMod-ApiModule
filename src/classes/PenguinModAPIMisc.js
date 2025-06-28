@@ -41,65 +41,58 @@ class PenguinModAPIMisc {
 
     /**
      * Returns the dates that this account last read the policy documents.
-     * Requires username and token.
+     * Requires token.
      * @link https://projects.penguinmod.com/api/v1/misc/getLastPolicyRead
      * @throws {PenguinModAPIError}
      * @returns {Promise<{TOS:number, guidelines:number, privacyPolicy:number}>} The dates policy documents were last read on this account.
      */
     async getLastPolicyRead() {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
-        return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getLastPolicyRead?username=${encodeURIComponent(this._parent.username)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+        return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getLastPolicyRead?token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
     }
     /**
      * Saves the current date as the last time the guidelines policy document was read.
-     * Requires username and token.
+     * Requires token.
      * @link https://projects.penguinmod.com/api/v1/misc/markGuidelinesAsRead
      * @throws {PenguinModAPIError}
      * @returns {Promise<void>}
      */
     async markGuidelinesAsRead() {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/markGuidelinesAsRead`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                username: this._parent.username,
                 token: this._parent.token,
             })
         }, this._parent, true, true);
     }
     /**
      * Saves the current date as the last time the privacyPolicy policy document was read.
-     * Requires username and token.
+     * Requires token.
      * @link https://projects.penguinmod.com/api/v1/misc/markPrivacyPolicyAsRead
      * @throws {PenguinModAPIError}
      * @returns {Promise<void>}
      */
     async markPrivacyPolicyAsRead() {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/markPrivacyPolicyAsRead`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                username: this._parent.username,
                 token: this._parent.token,
             })
         }, this._parent, true, true);
     }
     /**
      * Saves the current date as the last time the TOS policy document was read.
-     * Requires username and token.
+     * Requires token.
      * @link https://projects.penguinmod.com/api/v1/misc/markTOSAsRead
      * @throws {PenguinModAPIError}
      * @returns {Promise<void>}
      */
     async markTOSAsRead() {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/markTOSAsRead`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                username: this._parent.username,
                 token: this._parent.token,
             })
         }, this._parent, true, true);
@@ -107,19 +100,18 @@ class PenguinModAPIMisc {
 
     /**
      * Returns the profanity list.
-     * Requires username and token.
+     * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/misc/getProfanityList
      * @throws {PenguinModAPIError}
      * @returns {Promise<{illegalWords:Array<string>, illegalWebsites:Array<string>, spacedOutWordsOnly:Array<string>, potentiallyUnsafeWords:Array<string>, potentiallyUnsafeWordsSpacedOut:Array<string>, legalExtensions:Array<string>}>} The current profanity list.
      */
     async getProfanityList() {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
-        return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getProfanityList?username=${encodeURIComponent(this._parent.username)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+        return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getProfanityList?token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
     }
     /**
      * Saves the current date as the last time the specified policy documents were updated.
-     * Requires username and token.
+     * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/misc/setLastPolicyUpdate
      * @param {Array<"privacyPolicy"|"tos"|"guidelines">} types Which documents to update.
@@ -127,12 +119,10 @@ class PenguinModAPIMisc {
      * @returns {Promise<void>}
      */
     async setLastPolicyUpdate(types) {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/setLastPolicyUpdate`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                username: this._parent.username,
                 token: this._parent.token,
                 types
             })
@@ -151,13 +141,11 @@ class PenguinModAPIMisc {
      * @returns {Promise<void>}
      */
     async setProfanityList(newProfanityList) {
-        if (this._parent.resolveDetails && this._parent.id) await this._parent.setUsernameFromId(this._parent.id);
         try {
             await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/setProfanityList`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    username: this._parent.username,
                     token: this._parent.token,
                     json: newProfanityList
                 })
@@ -176,13 +164,14 @@ class PenguinModAPIMisc {
         }
     }
 
+    /*
     /**
      * @link https://projects.penguinmod.com/api/v1/misc/updateApi
      * @param {string} hash
      * @param {any} packet
      * @throws {PenguinModAPIError}
      * @returns {Promise<any>}
-     */
+     * /
     async updateApi(hash, packet) {
         return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/updateApi`, {
             method: "POST",
@@ -193,6 +182,7 @@ class PenguinModAPIMisc {
             body: JSON.stringify(packet)
         }, this._parent, true, true);
     }
+    */
 }
 
 module.exports = PenguinModAPIMisc;

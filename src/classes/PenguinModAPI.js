@@ -94,7 +94,7 @@ class PenguinModAPI {
      * @returns {Promise<object>} The metadata for the current API version used. Can be in any format.
      */
     async getMetadata() {
-        return await utils.doBasicRequest(`${this.apiUrl}/v1`, null, this, true, true);
+        return await utils.doBasicRequest(`${this.apiUrl}/v1`, null, this, utils.RequestType.JSON);
     }
     /**
      * Requests the ping endpoint as a way to check if the API is online without sending much data.
@@ -104,7 +104,7 @@ class PenguinModAPI {
      */
     async checkOnline() {
         try {
-            return !!(await utils.doBasicRequest(`${this.apiUrl}/v1/ping`, null, this, false, false));
+            return !!(await utils.doBasicRequest(`${this.apiUrl}/v1/ping`, null, this, utils.RequestType.None));
         } catch {
             return false;
         }

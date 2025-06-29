@@ -29,7 +29,7 @@ class PenguinModAPIUsers {
      */
     async getId(username) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getid?username=${encodeURIComponent(username)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getid?username=${encodeURIComponent(username)}`, null, this._parent, utils.RequestType.JSON);
             return json.id;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "UserNotFound") {
@@ -47,7 +47,7 @@ class PenguinModAPIUsers {
      */
     async getUsername(id) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getusername?ID=${encodeURIComponent(id)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getusername?ID=${encodeURIComponent(id)}`, null, this._parent, utils.RequestType.JSON);
             return json.username || null; // false is returned if no user is found
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "UserNotFound") {
@@ -56,9 +56,58 @@ class PenguinModAPIUsers {
             throw err;
         }
     }
+
+    /**
+     * Block a user.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/blockuser
+     * @param {string} targetUsername The username of the user you want to block.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async blockUser(targetUsername) {
+        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/blockuser`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target: targetUsername
+            })
+        }, this._parent, utils.RequestType.JSON);
+    }
+
+    /**
+     * Get your feed.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/getmyfeed
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<object>>}
+     */
+    async getMyFeed() {
+        const feed = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getmyfeed?token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+        return feed;
+    }
+
+    /**
+     * Get the profile picture of a user.
+     * @link https://projects.penguinmod.com/api/v1/users/getpfp
+     * @param {string} username The username of the user. 
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Uint8Array|null>} The profile picture as an octet stream, or null if not found.
+     */
+    async getPFP(username) {
+        try {
+            const pfp = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getpfp?username=${encodeURIComponent(username)}`, null, this._parent, utils.RequestType.ArrayBuffer);
+            return pfp;
+        } catch (err) {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "NotFound") {
+                return null;
+            }
+            throw err;
+        }
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/blockuser
-    // TODO: /api/v1/users/getmyfeed
     // TODO: /api/v1/users/getpfp
     // TODO: /api/v1/users/hasblocked
     // TODO: /api/v1/users/profile

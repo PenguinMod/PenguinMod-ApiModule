@@ -27,7 +27,7 @@ class PenguinModAPIProjects {
      * @returns {Promise<boolean>} True if uploading is enabled for all users.
      */
     async canUploadProjects() {
-        const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/canuploadprojects`, null, this._parent, true, true);
+        const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/canuploadprojects`, null, this._parent, utils.RequestType.JSON);
         return json.canUpload !== false;
     }
     /**
@@ -37,7 +37,7 @@ class PenguinModAPIProjects {
      * @returns {Promise<boolean>} True if viewing projects is enabled for all users.
      */
     async canViewProjects() {
-        const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/canviewprojects`, null, this._parent, true, true);
+        const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/canviewprojects`, null, this._parent, utils.RequestType.JSON);
         return json.viewing !== false;
     }
     /**
@@ -51,7 +51,7 @@ class PenguinModAPIProjects {
      */
     async getLoves(projectId) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getLoves?projectID=${encodeURIComponent(projectId)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getLoves?projectID=${encodeURIComponent(projectId)}`, null, this._parent, utils.RequestType.JSON);
             return json.loves;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "InvalidProjectID") {
@@ -74,7 +74,7 @@ class PenguinModAPIProjects {
      */
     async getVotes(projectId) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getVotes?projectID=${encodeURIComponent(projectId)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getVotes?projectID=${encodeURIComponent(projectId)}`, null, this._parent, utils.RequestType.JSON);
             return json.votes;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "InvalidProjectID") {
@@ -112,7 +112,7 @@ class PenguinModAPIProjects {
             if (options.login !== false && this._parent.token) {
                 url.searchParams.set("token", this._parent.token);
             }
-            const json = await utils.doBasicRequest(url.toString(), null, this._parent, true, true);
+            const json = await utils.doBasicRequest(url.toString(), null, this._parent, utils.RequestType.JSON);
             return json;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Viewing is disabled") {
@@ -133,7 +133,7 @@ class PenguinModAPIProjects {
      */
     async getUserState(projectId) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getuserstatewrapper?projectId=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getuserstatewrapper?projectId=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, utils.RequestType.JSON);
             return json;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -153,7 +153,7 @@ class PenguinModAPIProjects {
      */
     async hasLoved(projectId) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLoved?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLoved?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, utils.RequestType.JSON);
             return json.hasLoved;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -173,7 +173,7 @@ class PenguinModAPIProjects {
      */
     async hasVoted(projectId) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVoted?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVoted?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, utils.RequestType.JSON);
             return json.hasVoted;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -196,7 +196,7 @@ class PenguinModAPIProjects {
      */
     async hasLovedAdmin(projectId, targetUsername) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLovedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLovedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, utils.RequestType.JSON);
             return json.hasLoved;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -218,7 +218,7 @@ class PenguinModAPIProjects {
      */
     async hasVotedAdmin(projectId, targetUsername) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVotedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, true, true);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVotedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, utils.RequestType.JSON);
             return json.hasVoted;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {

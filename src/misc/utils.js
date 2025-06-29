@@ -11,6 +11,13 @@ const safeParseJSON = (possibleJson, forceObject) => {
     }
 };
 
+const RequestType = {
+    None: "none",
+    Text: "text",
+    JSON: "json",
+    ArrayBuffer: "arrbuff"
+};
+
 /**
  * @typedef {import("../classes/PenguinModAPI")} PenguinModAPI
  */
@@ -18,10 +25,10 @@ const safeParseJSON = (possibleJson, forceObject) => {
  * @param {string} url 
  * @param {RequestInit?} options 
  * @param {PenguinModAPI} apiClass Required to add headers.
- * @param {boolean?} doResolve If true, when the response is OK, the Response object will be returned.
- * @param {boolean?} json Whether to parse as JSON or not. If the JSON is invalid, the text will be returned.
+ * @param {string} requestType The type that the result of the request is parsed as (i.e. text, json, etc). Use the RequestType object.
+ * @returns {Promise<any>}
  */
-const doBasicRequest = (url, options, apiClass, doResolve, json) => {
+const doBasicRequest = (url, options, apiClass, requestType) => {
     if (!apiClass) throw new Error("Provide apiClass to doBasicRequest");
     options = apiClass.injectOptions(options, url);
     if (!options) options = {};
@@ -31,24 +38,34 @@ const doBasicRequest = (url, options, apiClass, doResolve, json) => {
     return new Promise((resolve, reject) => {
         fetch(url, options).then(response => {
             if (response.ok) {
-                if (!doResolve) {
+                if (requestType === RequestType.None) {
                     return resolve(response);
                 }
 
-                response.text().then(text => {
-                    if (json) {
-                        try {
-                            return resolve(JSON.parse(text));
-                        } catch (err) {
-                            const pmError = new PenguinModAPIError("ParseJSONFailed", err, response.status, text, true, url, options, response, err);
-                            reject(pmError);
+                if (requestType === RequestType.ArrayBuffer) {
+                    response
+                    .arrayBuffer()
+                    .then(arr_buff => resolve(arr_buff))
+                    .catch((err) => {
+                        const pmError = new PenguinModAPIError("ParseArrayBufferFailed", err, response.status, null, true, url, options, response, err);
+                        reject(pmError);
+                    });
+                } else {
+                    response.text().then(text => {
+                        if (requestType === RequestType.JSON) {
+                            try {
+                                return resolve(JSON.parse(text));
+                            } catch (err) {
+                                const pmError = new PenguinModAPIError("ParseJSONFailed", err, response.status, text, true, url, options, response, err);
+                                reject(pmError);
+                            }
                         }
-                    }
-                    return resolve(text);
-                }).catch((err) => {
-                    const pmError = new PenguinModAPIError("ParseTextFailed", err, response.status, null, true, url, options, response, err);
-                    reject(pmError);
-                });
+                        return resolve(text);
+                    }).catch((err) => {
+                        const pmError = new PenguinModAPIError("ParseTextFailed", err, response.status, null, true, url, options, response, err);
+                        reject(pmError);
+                    });
+                }
             } else {
                 response.text().then(text => {
                     // a text API might error in JSON
@@ -71,4 +88,5 @@ const doBasicRequest = (url, options, apiClass, doResolve, json) => {
 module.exports = {
     safeParseJSON,
     doBasicRequest,
+    RequestType
 };

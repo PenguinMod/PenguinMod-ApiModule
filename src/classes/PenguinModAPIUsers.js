@@ -205,7 +205,7 @@ class PenguinModAPIUsers {
      * @returns {Promise<null>}
      */
     async setEmail(email) {
-        const url = `${this._parent.apiUrl}/v1/users/setEmail`
+        const url = `${this._parent.apiUrl}/v1/users/setEmail`;
         utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
         utils.assert(this.isValidEmail(email), url, "InvalidEmail", `Email '${email}' is not a valid email.`);
         await utils.doBasicRequest(url, {
@@ -218,9 +218,65 @@ class PenguinModAPIUsers {
         }, this._parent, utils.RequestType.None);
     }
 
+    /**
+     * Check if a user exists by their username
+     * @link https://projects.penguinmod.com/api/v1/users/userexists
+     * @param {string} username The user's username
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<boolean>}
+     */
+    async userExists(username) {
+        if (!username) {
+            return false;
+        }
+
+        const url = `${this._parent.apiUrl}/v1/users/userexists`;
+        const exists = (await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON)).exists;
+
+        return exists;
+    }
+
+    /**
+     * @typedef {Object} SelfInfo
+     * @property {string} id Your ID.
+     * @property {string} username Your username.
+     * @property {string} real_username Your username with capitalization preserved.
+     * @property {boolean} admin If you're an admin or not.
+     * @property {boolean} approver If you're a mod or not
+     * @property {boolean} isBanned if you're banned or not.
+     * @property {Array<string>} badges Your badges.
+     * @property {boolean} donator If you're a donator or not.
+     * @property {number} rank Your rank. 0 for new penguin, 1 for penguin.
+     * @property {number} myFeaturedProject The ID of the project featured on your profile. Defaults to -1.
+     * @property {number} myFeaturedProjectTitle The index of the subtitle of the project featured on your profile. Defaults to -1.
+     * @property {number} cubes Unused currently.
+     * @property {number} firstLogin Unix timestamp (with milliseconds) of your first login.
+     * @property {number} lastLogin Unix timestamp (with milliseconds) of your most recent login.
+     * @property {number} lastLogin Unix timestamp (with milliseconds) of your last project upload/update.
+     * @property {string} email Your email.
+     * @property {boolean} emailVerified If your email is verified or not.
+     * @property {boolean} birthdayEntered If your birthday is entered or not.
+     * @property {boolean} countryEntered If your country is entered or not.
+     * @property {string} country Your country of residence, in country-code form.
+     */
+
+    /**
+     * Get your info.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/userfromcode
+     * @throws {PenguinModAPIError}
+     * @returns {SelfInfo}
+     */
+    async getInfo() {
+        const url = `${this._parent.apiUrl}/v1/users/userfromcode?token=${this._parent.token}`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+
+        return data;
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/userexists
-    // TODO: /api/v1/users/userfromcode
     // TODO: /api/v1/users/changePassword
     // TODO: /api/v1/users/createAccount
     // TODO: /api/v1/users/filloutSafetyDetails

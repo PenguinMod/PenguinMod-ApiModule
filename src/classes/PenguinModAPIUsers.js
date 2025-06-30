@@ -219,7 +219,6 @@ class PenguinModAPIUsers {
     }
 
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/setEmail
     // TODO: /api/v1/users/userexists
     // TODO: /api/v1/users/userfromcode
     // TODO: /api/v1/users/changePassword

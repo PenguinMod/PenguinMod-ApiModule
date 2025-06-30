@@ -8,6 +8,7 @@ class PenguinModAPIError extends Error {
      * Unknown HTTP error code.
      */
     static UNKNOWN_CODE = 0;
+    static ASSERT_FAILED = -1;
 
     /**
      * @param {string} message An error message that PenguinMod-BackendApi sent back

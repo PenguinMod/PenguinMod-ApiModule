@@ -57,7 +57,9 @@ class PenguinModAPIMisc {
      * @returns {Promise<void>}
      */
     async markGuidelinesAsRead() {
-        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/markGuidelinesAsRead`, {
+        const url = `${this._parent.apiUrl}/v1/misc/markGuidelinesAsRead`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        await utils.doBasicRequest(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -73,7 +75,9 @@ class PenguinModAPIMisc {
      * @returns {Promise<void>}
      */
     async markPrivacyPolicyAsRead() {
-        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/markPrivacyPolicyAsRead`, {
+        const url = `${this._parent.apiUrl}/v1/misc/markPrivacyPolicyAsRead`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        await utils.doBasicRequest(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -89,7 +93,9 @@ class PenguinModAPIMisc {
      * @returns {Promise<void>}
      */
     async markTOSAsRead() {
-        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/markTOSAsRead`, {
+        const url = `${this._parent.apiUrl}/v1/misc/markTOSAsRead`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        await utils.doBasicRequest(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -107,7 +113,9 @@ class PenguinModAPIMisc {
      * @returns {Promise<{illegalWords:Array<string>, illegalWebsites:Array<string>, spacedOutWordsOnly:Array<string>, potentiallyUnsafeWords:Array<string>, potentiallyUnsafeWordsSpacedOut:Array<string>, legalExtensions:Array<string>}>} The current profanity list.
      */
     async getProfanityList() {
-        return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getProfanityList?token=${encodeURIComponent(this._parent.token)}`, null, this._parent, utils.RequestType.JSON);
+        const url = `${this._parent.apiUrl}/v1/misc/getProfanityList?token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        return await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
     }
     /**
      * Saves the current date as the last time the specified policy documents were updated.
@@ -119,7 +127,9 @@ class PenguinModAPIMisc {
      * @returns {Promise<void>}
      */
     async setLastPolicyUpdate(types) {
-        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/setLastPolicyUpdate`, {
+        const url = `${this._parent.apiUrl}/v1/misc/setLastPolicyUpdate`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        await utils.doBasicRequest(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -130,7 +140,7 @@ class PenguinModAPIMisc {
     }
     /**
      * Sets the profanity list.
-     * Requires username and token.
+     * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/misc/setProfanityList
      * @param {{illegalWords:Array<string>, illegalWebsites:Array<string>, spacedOutWordsOnly:Array<string>, potentiallyUnsafeWords:Array<string>, potentiallyUnsafeWordsSpacedOut:Array<string>, legalExtensions:Array<string>}} newProfanityList 
@@ -141,8 +151,10 @@ class PenguinModAPIMisc {
      * @returns {Promise<void>}
      */
     async setProfanityList(newProfanityList) {
+        const url = `${this._parent.apiUrl}/v1/misc/setProfanityList`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
         try {
-            await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/setProfanityList`, {
+            await utils.doBasicRequest(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

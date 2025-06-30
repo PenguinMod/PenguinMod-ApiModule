@@ -132,8 +132,10 @@ class PenguinModAPIProjects {
      * @returns {Promise<{hasLoved:boolean, hasVoted:boolean}>}
      */
     async getUserState(projectId) {
+        const url = `${this._parent.apiUrl}/v1/projects/getuserstatewrapper?projectId=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getuserstatewrapper?projectId=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -152,8 +154,10 @@ class PenguinModAPIProjects {
      * @returns {Promise<{boolean}>}
      */
     async hasLoved(projectId) {
+        const url = `${this._parent.apiUrl}/v1/projects/hasLoved?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLoved?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json.hasLoved;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -172,8 +176,10 @@ class PenguinModAPIProjects {
      * @returns {Promise<{boolean}>}
      */
     async hasVoted(projectId) {
+        const url = `${this._parent.apiUrl}/v1/projects/hasVoted?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVoted?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json.hasVoted;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -195,8 +201,10 @@ class PenguinModAPIProjects {
      * @returns {Promise<{boolean}>}
      */
     async hasLovedAdmin(projectId, targetUsername) {
+        const url = `${this._parent.apiUrl}/v1/projects/hasLovedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasLovedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json.hasLoved;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
@@ -217,8 +225,10 @@ class PenguinModAPIProjects {
      * @returns {Promise<{boolean}>}
      */
     async hasVotedAdmin(projectId, targetUsername) {
+        const url = `${this._parent.apiUrl}/v1/projects/hasVotedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/hasVotedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json.hasVoted;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {

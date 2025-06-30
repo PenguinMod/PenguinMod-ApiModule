@@ -66,7 +66,9 @@ class PenguinModAPIUsers {
      * @returns {Promise<null>}
      */
     async blockUser(targetUsername) {
-        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/blockuser`, {
+        const url = `${this._parent.apiUrl}/v1/users/blockuser`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        await utils.doBasicRequest(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -84,7 +86,9 @@ class PenguinModAPIUsers {
      * @returns {Promise<Array<object>>}
      */
     async getMyFeed() {
-        const feed = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getmyfeed?token=${encodeURIComponent(this._parent.token)}`, null, this._parent, true, true);
+        const url = `${this._parent.apiUrl}/v1/users/getmyfeed?token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        const feed = await utils.doBasicRequest(url, null, this._parent, true, true);
         return feed;
     }
 
@@ -107,11 +111,114 @@ class PenguinModAPIUsers {
         }
     }
 
+    /**
+     * Check if you're blocking a given user.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/hasblocked
+     * @param {string} username Who you want to check if you're blocking.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<boolean|null>} If blocking or not, null if not found
+     */
+    async hasblocked(username) {
+        const url = `${this._parent.apiUrl}/v1/users/hasblocked?username${encodeURIComponent(username)}`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        try {
+            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+            return json.has_blocked; 
+        } catch (err) {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Target not found") {
+                return null;
+            }
+            throw err;
+        }
+    }
+
+    /**
+     * @typedef {Object} Profile
+     * @property {string} id The ID of the user.
+     * @property {string} username The username of the user.
+     * @property {string} real_username The username of the user, with capitalization preserved.
+     * @property {Array<string>} badges The badges of the user.
+     * @property {boolean} donator If the user is a donator.
+     * @property {number} rank The rank of the user. 0 represents new penguin, 1 represents penguin.
+     * @property {string} bio The user's bio.
+     * @property {number} myFeaturedProject the user's featured project.
+     * @property {number} myFeaturedProjectTitle An enum-ish of the titles. Each integer represents a different title.
+     * @property {number} followers The follower count of the user.
+     * @property {boolean} canrankup If the user can rank up.
+     * @property {boolean} privateProfile If the user's account is private.
+     * @property {boolean} canFollowingSeeProfile If people the user follows can see the users account when the account is private.
+     * @property {boolean} isFollowing If the user is following you.
+     */
+
+    /**
+     * Get the profile of a user.
+     * Token is optional. If the user has a private account, it can be viewed only if they allow followees to view and they're following you, or if you're a mod/admin.
+     * @link https://projects.penguinmod.com/api/v1/users/profile
+     * @param {string} username Username of the target.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Profile|null>} Either the resulting profile or null if not found (not found could be given from a profile whose user is currently banned).
+     */
+    async getProfile(username) {
+        try {
+            const has_token = !!this._parent.token;
+            const token_str = has_token ? `&token=${this._parent.token}` : "";
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/profile?username${encodeURIComponent(username)}${token_str}`, null, this._parent, utils.RequestType.JSON);
+            return json; 
+        } catch (err) {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "NotFound") {
+                return null;
+            }
+            throw err;
+        }
+    }
+
+    /**
+     * Request a rank up.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/requestrankup
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async requestRankUp() {
+        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/requestrankup?token=${encodeURIComponent(this._parent.token)}`, null, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Check if an email is valid. Same function as used in the API.
+     * @param {string} email
+     * @returns {boolean} 
+     */
+    isValidEmail(email) {
+        return email.match(
+            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    }
+
+    /**
+     * Set your email.
+     * Requires token.
+     * Email must be a valid email.
+     * @link https://projects.penguinmod.com/api/v1/users/setEmail
+     * @throws {PenguinModAPIError}
+     * @param {string} email New email.
+     * @returns {Promise<null>}
+     */
+    async setEmail(email) {
+        const url = `${this._parent.apiUrl}/v1/users/setEmail`
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        utils.assert(this.isValidEmail(email), url, "InvalidEmail", `Email '${email}' is not a valid email.`);
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                email
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/getpfp
-    // TODO: /api/v1/users/hasblocked
-    // TODO: /api/v1/users/profile
-    // TODO: /api/v1/users/requestrankup
     // TODO: /api/v1/users/setEmail
     // TODO: /api/v1/users/userexists
     // TODO: /api/v1/users/userfromcode

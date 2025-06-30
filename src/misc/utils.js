@@ -85,8 +85,23 @@ const doBasicRequest = (url, options, apiClass, requestType) => {
     });
 };
 
+/**
+ * Assert a bool. Error if false.
+ * @param {boolean|any} val The value to check.
+ * @param {string} url The url that was being fetched when asserting this.
+ * @param {string|None} message The error message. Defaults to "AssertFailed".
+ * @param {string|None} detail Extra detail on the error message. Defaults to "Assert failed."
+ * @throws {PenguinModAPIError} 
+ */
+const assert = (val, url, message="AssertFailed", detail="Assert failed.") => {
+    if (!val) {
+        throw new PenguinModAPIError(message, detail, PenguinModAPIError.ASSERT_FAILED, null, false, url, null, null, null);
+    }
+}
+
 module.exports = {
     safeParseJSON,
     doBasicRequest,
-    RequestType
+    RequestType,
+    assert
 };

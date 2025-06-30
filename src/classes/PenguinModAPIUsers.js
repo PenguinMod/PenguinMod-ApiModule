@@ -275,25 +275,17 @@ class PenguinModAPIUsers {
     // TODO: /api/v1/users/setBadges
     // TODO: /api/v1/users/verifyfollowers
     // TODO: /api/v1/users/addoauthmethod
-    // TODO: /api/v1/users/githubcallback/addmethod
-    // TODO: /api/v1/users/googlecallback/addmethod
     // TODO: /api/v1/users/addscratchlogin
     // TODO: /api/v1/users/addpasswordtooauth
-    // TODO: /api/v1/users/githubcallback/addpasswordfinal
-    // TODO: /api/v1/users/githubcallback/addpassword
-    // TODO: /api/v1/users/googlecallback/addpasswordfinal
-    // TODO: /api/v1/users/googlecallback/addpassword
-    // TODO: /api/v1/users/scratchaddpasswordfinal
-    // TODO: /api/v1/users/scratchaddpassword
     // TODO: /api/v1/users/createoauthaccount
-    // TODO: /api/v1/users/githubcallback/createaccount
-    // TODO: /api/v1/users/googlecallback/createaccount
-    // TODO: /api/v1/users/scratchoauthcreate
-    // TODO: /api/v1/users/githubcallback/login
-    // TODO: /api/v1/users/googlecallback/login
     // TODO: /api/v1/users/loginoauthaccount
-    // TODO: /api/v1/users/scratchoauthlogin
     // TODO: /api/v1/users/removeoauthmethod
+
+    // NOTE FOR THESE: These are redirected to from the frontend, not fetched. Perhaps cleanup these into one function that redirects to the correct method so we avoid worrying about different methods, in case they're changed?
+
+    // TODO: /api/v1/users/githubcallback/addpasswordfinal
+    // TODO: /api/v1/users/googlecallback/addpasswordfinal
+    // TODO: /api/v1/users/scratchaddpasswordfinal
 }
 
 module.exports = PenguinModAPIUsers;

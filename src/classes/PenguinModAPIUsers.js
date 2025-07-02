@@ -1,4 +1,5 @@
 const utils = require("../misc/utils.js");
+const countryLookup = require("../misc/countryLookup.js");
 const PenguinModAPIError = require("./PenguinModAPIError.js");
 
 /**
@@ -265,7 +266,7 @@ class PenguinModAPIUsers {
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/userfromcode
      * @throws {PenguinModAPIError}
-     * @returns {SelfInfo}
+     * @returns {Promise<SelfInfo>}
      */
     async getInfo() {
         const url = `${this._parent.apiUrl}/v1/users/userfromcode?token=${this._parent.token}`;
@@ -276,9 +277,117 @@ class PenguinModAPIUsers {
         return data;
     }
 
+    /**
+     * Change your password.
+     * Also refreshes your token.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/changePassword
+     * @param {string} old_password Your current password.
+     * @param {string} new_password Your new password.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<string>} Your new token.
+     */
+    async changePassword(old_password, new_password) {
+        const url = `${this._parent.apiUrl}/v1/users/changePassword`;
+        if (new_password.length < 6 || new_password.length > 20) {
+            throw new PenguinModAPIError("InvalidPasswordLength", "Password must be between 6 and 20 characters long.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+        }
+        let username = this._parent.username;
+        if (!username) {
+            utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+            const info = await this.getInfo();
+            username = info.username;
+        }
+        const data = await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username,
+                old_password,
+                new_password
+            })
+        }, this._parent, utils.RequestType.JSON);
+        return data.token;
+    }
+
+    parseBirthday(birthday) {
+        if (!birthday) return;
+        if (typeof birthday !== "string") return;
+        try {
+            const date = new Date(birthday);
+            if (isNaN(date.getTime())) {
+                return; // invalid format
+            }
+
+            return date.toISOString();
+        } catch {
+            return;
+        }
+    }
+
+    /**
+     * Create an account.
+     * Returns a token.
+     * @link https://projects.penguinmod.com/api/v1/users/createAccount
+     * @param {string} username Your new username.
+     * @param {string} password Your new password. 
+     * @param {string} captcha_token The captcha token from cloudflare.
+     * @param {string|number|null} birthday Your birthday. Should be parseable by new Date(x). Optional, but you're gonna get hassled for it on the frontend sooo just provide it now.
+     * @param {string|null} country Your country, in country-code form. Same as above - optional but recommended to provide it now.
+     * @param {string} email Your email. Optional.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<string>} Your new token. 
+     */
+    async createAccount(username, password, captcha_token, birthday, country, email="") {
+        const url = `${this._parent.apiUrl}/v1/users/createAccount`;
+
+        // validate everything
+        // block cuz im sooo sigma
+        {
+            const usernameDoesNotMeetLength = username.length < 3 || username.length > 20;
+            const usernameHasIllegalChars = username.match(/[^a-z0-9\-_]/i);
+
+            utils.assert(!usernameDoesNotMeetLength, url, "InvalidUsernameLength", "Username must be between 3 and 20 characters long.");
+            utils.assert(!usernameHasIllegalChars, url, "InvalidUsernameChars", "Username can only contain letters, numbers, dashes and underscores.");
+
+            const passwordDoesNotMeetLength = password.length < 8 || password.length > 50;
+            const passwordMeetsTextInclude = password.match(/[a-z]/) && password.match(/[A-Z]/);
+            const passwordMeetsSpecialInclude = password.match(/[0-9]/) && password.match(/[^a-z0-9]/i);
+
+            utils.assert(!passwordDoesNotMeetLength, url, "InvalidPasswordLength", "Password must be between 8 and 50 characters long.");
+            utils.assert(passwordMeetsTextInclude, url, "InvalidPasswordText", "Password must contain at least one letter.");
+            utils.assert(passwordMeetsSpecialInclude, url, "InvalidPasswordSpecial", "Password must contain at least one number and one special character.");
+
+            if (email) {
+                utils.assert(this.isValidEmail(email), url, "InvalidEmail", `Email '${email}' is not a valid email.`);
+            }
+
+            if (birthday && !this.parseBirthday(birthday)) {
+                throw new PenguinModAPIError("InvalidBirthday", "Birthday must be a valid date.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+            }
+
+            if (country && !countryLookup.countryCodes.includes(country)) {
+                throw new PenguinModAPIError("InvalidCountry", "Country must be a valid country code.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+            }
+        }
+
+        const data = await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username,
+                password,
+                captcha_token,
+                birthday,
+                country,
+                email
+            })
+        }, this._parent, utils.RequestType.JSON);
+
+        return data.token;
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/changePassword
-    // TODO: /api/v1/users/createAccount
     // TODO: /api/v1/users/filloutSafetyDetails
     // TODO: /api/v1/users/logout
     // TODO: /api/v1/users/passwordLogin

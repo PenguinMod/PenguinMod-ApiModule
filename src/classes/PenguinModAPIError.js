@@ -17,9 +17,9 @@ class PenguinModAPIError extends Error {
      * @param {any} data Anything the API sent back when the error occurred.
      * @param {boolean} parsingError Whether or not this was caused by failing to parse an API response
      * @param {string} url The URL that was fetched.
-     * @param {RequestInit} request The fetch options provided to fetch()
-     * @param {Response} response The actual response after "fetch()"ing a URL.
-     * @param {Error} error The original error that PenguinModAPIError was created after.
+     * @param {RequestInit|null} request The fetch options provided to fetch()
+     * @param {Response|null} response The actual response after "fetch()"ing a URL.
+     * @param {Error|null} error The original error that PenguinModAPIError was created after.
      */
     constructor(message, detail, httpCode, data, parsingError = false, url, request, response, error) {
         super(message);

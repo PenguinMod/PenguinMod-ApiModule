@@ -11,6 +11,9 @@ const safeParseJSON = (possibleJson, forceObject) => {
     }
 };
 
+/**
+ * The type that the result of the request is parsed as (i.e. text, json, etc)
+ */
 const RequestType = {
     None: "none",
     Text: "text",

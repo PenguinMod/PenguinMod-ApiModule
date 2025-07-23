@@ -121,8 +121,9 @@ class PenguinModAPIUsers {
      * @returns {Promise<boolean|null>} If blocking or not, null if not found
      */
     async hasblocked(username) {
-        const url = `${this._parent.apiUrl}/v1/users/hasblocked?username${encodeURIComponent(username)}`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        const token = this._parent.token;
+        const url = `${this._parent.apiUrl}/v1/users/hasblocked?username=${encodeURIComponent(username)}&token=${encodeURIComponent(token)}`;
+        utils.assert(!!token, url, "Reauthenticate", "No token is registered.");
         try {
             const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json.has_blocked; 
@@ -387,8 +388,33 @@ class PenguinModAPIUsers {
         return data.token;
     }
 
+    async filloutSafetyDetails(token, birthday, country) {
+        const url = `${this._parent.apiUrl}/v1/users/filloutSafetyDetails`;
+
+        if (birthday && !this.parseBirthday(birthday)) {
+            throw new PenguinModAPIError("InvalidBirthday", "Birthday must be a valid date.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+        }
+
+        if (country && !countryLookup.countryCodes.includes(country)) {
+            throw new PenguinModAPIError("InvalidCountry", "Country must be a valid country code.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+        }
+
+        if (!birthday && !country) {
+            throw new PenguinModAPIError("MissingOneField", "Must have birthday and/or country", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+        }
+
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token,
+                birthday,
+                country,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/filloutSafetyDetails
     // TODO: /api/v1/users/logout
     // TODO: /api/v1/users/passwordLogin
     // TODO: /api/v1/users/tokenlogin

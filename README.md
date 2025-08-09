@@ -119,6 +119,7 @@ PenguinModClient.users.getMyFeed().then(console.log).catch(console.log); // Arra
 PenguinModClient.users.requestRankUp().then(() => console.log("success")).catch(console.log); // void
 PenguinModClient.users.setEmail("exampleemail@example.com").catch(console.log); // void
 PenguinModClient.users.changePassword("oldpassword", "newpassword").then(console.log).catch(console.log); // string, makes a new token for the account
+PenguinModClient.users.filloutSafetyDetails("01-01-2000", "US").then(console.log).catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean

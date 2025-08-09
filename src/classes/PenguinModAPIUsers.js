@@ -376,9 +376,9 @@ class PenguinModAPIUsers {
      * @param {string} username Your new username.
      * @param {string} password Your new password. 
      * @param {string} captcha_token The captcha token from cloudflare.
-     * @param {string|number|null} birthday Your birthday. Should be parseable by new Date(x). Optional, but you're gonna get hassled for it on the frontend sooo just provide it now.
-     * @param {string|null} country Your country, in country-code form. Same as above - optional but recommended to provide it now.
-     * @param {string} email Your email. Optional.
+     * @param {string|number|null} birthday Your birthday. Should be parseable by new Date(x). Optional, but you're gonna get hassled for it on the frontend sooo just provide it now. You can use `filloutSafetyDetails` later to set the missing info.
+     * @param {string|null} country Your country, in country-code form. Same as above - optional but recommended to provide it now. You can use `filloutSafetyDetails` later to set the missing info.
+     * @param {string} email Your email. Optional. You can use `setEmail` later to set an email for this account.
      * @throws {PenguinModAPIError}
      * @returns {Promise<string>} Your new token. 
      */
@@ -431,17 +431,24 @@ class PenguinModAPIUsers {
         return data.token;
     }
 
-    async filloutSafetyDetails(token, birthday, country) {
+    /**
+     * Adds legal safety details to the currently logged in account.
+     * It is recommended to set all of this information if it is missing, since some laws may require this information for us to abide by them.
+     * @link https://projects.penguinmod.com/api/v1/users/filloutSafetyDetails
+     * @param {string|number|null} birthday Your birthday. Should be parseable by new Date(x).
+     * @param {string|null} country Your country, in country-code form.
+     * @throws {PenguinModAPIError} Note the API will reject requests to set information that has already been set before.
+     * @returns {Promise<null>}
+     */
+    async filloutSafetyDetails(birthday, country) {
         const url = `${this._parent.apiUrl}/v1/users/filloutSafetyDetails`;
 
         if (birthday && !this.parseBirthday(birthday)) {
             throw new PenguinModAPIError("InvalidBirthday", "Birthday must be a valid date.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
         }
-
         if (country && !countryLookup.countryCodes.includes(country)) {
             throw new PenguinModAPIError("InvalidCountry", "Country must be a valid country code.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
         }
-
         if (!birthday && !country) {
             throw new PenguinModAPIError("MissingOneField", "Must have birthday and/or country", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
         }
@@ -450,7 +457,7 @@ class PenguinModAPIUsers {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                token,
+                token: this._parent.token,
                 birthday,
                 country,
             })

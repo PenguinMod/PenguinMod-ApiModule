@@ -16,6 +16,28 @@ Use of this module for API spam or malicious activity will result in your IP bei
 
 [Privacy Policy](https://penguinmod.com/privacy)
 
+### Tokens
+
+You will need a PenguinMod account token to use the sign-in only endpoints.
+
+#### NEVER SHARE YOUR PENGUINMOD TOKEN WITH OTHERS.
+A PenguinMod moderator and developer will **NEVER** ask for your PenguinMod token. **You are being tricked if someone is asking for your token.**
+
+#### NEVER USE YOUR PENGUINMOD TOKEN OR PASSWORD DIRECTLY IN YOUR CODE.
+If you are developing code that can be found online, you should always be careful to never place your password or token in a place where people can access it.
+
+Currently, you can obtain your `token` from LocalStorage under the key `token`:
+```js
+// NEVER SHARE YOUR PENGUINMOD TOKEN WITH OTHERS.
+// A PenguinMod moderator and developer will NEVER ask for your PenguinMod token.
+localStorage.getItem("token")
+```
+*This only works on the Home page at [penguinmod.com](https://penguinmod.com) [(PenguinMod-Home)](https://github.com/PenguinMod/PenguinMod-Home), your token is not available in the Editor.*
+
+If your token was grabbed by another user, program, site, etc., you can reset it by changing your password or logging out of your account.
+
+Tokens may also expire automatically after a long time.
+
 ### Errors
 
 Errors thrown by the API will reject with a `PenguinModAPIError`.
@@ -47,15 +69,18 @@ Other notable `PenguinModAPIError` properties:
 
 The `PenguinModAPIError` class is exported by this module if you need it for any purpose.
 
-### Creating accounts
+### Creating accounts & Creating tokens from passwords
 
 You will likely not be able to create accounts on the official PenguinMod servers programatically
 using PenguinMod-ApiModule due to the requirement of a captcha token.
 
+The `passwordLogin` endpoint also requires a captcha token, so you cannot log into an account using only it's password
+on the official servers.
+
 If you do find a way to create accounts on the official PenguinMod servers, remember that use of PenguinMod-ApiModule for abuse or malicious activity
 is against [PenguinMod's Terms of Service](https://penguinmod.com/terms) and will result in your IP being blocked.
 
-If you want to create accounts on a local or custom version of PenguinMod-BackendApi without Cloudflare Captcha, you will
+If you want to create accounts (or login via password) on a local or custom version of PenguinMod-BackendApi without Cloudflare Captcha, you will
 have to set the `.env` variable `CFCaptchaEnabled` to `false`. If you are also using PenguinMod-Home locally, you may also have to set
 the `.env` variable `PUBLIC_CAPTCHA_ENABLED` to `false` there too.
 

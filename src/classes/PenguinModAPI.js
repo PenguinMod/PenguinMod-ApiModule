@@ -14,7 +14,7 @@ class PenguinModAPI {
      * @param {string?} options.id The ID of the account to use. Both ID and username can be defined, but at least one should be given to use login-required endpoints. If omitted, use setId later.
      * @param {string?} options.username The username of the account to use. Both ID and username can be defined, but at least one should be given to use login-required endpoints. If omitted, use setUsername later.
      * @param {string?} options.token If omitted, use setToken later.
-     * @param {string?} options.apiUrl Sets the base API url. See PenguinModAPI.apiUrl for info. If omitted, use setApiUrl later.
+     * @param {string?} options.apiUrl Sets the base API url. See PenguinModAPI.apiUrl or setApiUrl for info. If omitted, use setApiUrl later.
      * @returns {PenguinModAPI} PenguinModClient
      */
     constructor(options = {}) {
@@ -49,6 +49,23 @@ class PenguinModAPI {
         this.users = new PenguinModAPIUsers(this);
         /** @type {PenguinModAPIProjects} */
         this.projects = new PenguinModAPIProjects(this);
+    }
+    /**
+     * The new `token` of the account you want to use.
+     * @param {string} token The new token to use.
+     */
+    setToken(token) {
+        this.token = token;
+    }
+    /**
+     * The new `apiUrl` to use.
+     * Most endpoints will append a version like /v1 before the endpoint.
+     * 
+     * By default, ApiModule will use "https://projects.penguinmod.com/api"
+     * @param {string} apiUrl The new base URL to use.
+     */
+    setApiUrl(apiUrl) {
+        this.apiUrl = apiUrl;
     }
 
     /**

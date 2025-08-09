@@ -12,6 +12,10 @@ Use with caution in your own work, since breaking changes may be made often.
 
 Use of this module for API spam or malicious activity will result in your IP being blocked.
 
+[Terms of Service](https://penguinmod.com/terms)
+
+[Privacy Policy](https://penguinmod.com/privacy)
+
 ### Errors
 
 Errors thrown by the API will reject with a `PenguinModAPIError`.
@@ -43,6 +47,29 @@ Other notable `PenguinModAPIError` properties:
 
 The `PenguinModAPIError` class is exported by this module if you need it for any purpose.
 
+### Creating accounts
+
+You will likely not be able to create accounts on the official PenguinMod servers programatically
+using PenguinMod-ApiModule due to the requirement of a captcha token.
+
+If you do find a way to create accounts on the official PenguinMod servers, remember that use of PenguinMod-ApiModule for abuse or malicious activity
+is against [PenguinMod's Terms of Service](https://penguinmod.com/terms) and will result in your IP being blocked.
+
+If you want to create accounts on a local or custom version of PenguinMod-BackendApi without Cloudflare Captcha, you will
+have to set the `.env` variable `CFCaptchaEnabled` to `false`. If you are also using PenguinMod-Home locally, you may also have to set
+the `.env` variable `PUBLIC_CAPTCHA_ENABLED` to `false` there too.
+
+Once the `CFCaptchaEnabled` variable is updated on the API, the `captcha_token` argument is no longer used by the API.
+
+Here is a code example for making accounts locally:
+
+```js
+PenguinModClient.users.createAccount("MyRobot1", "a_super_safe_password", null, "01-01-2000", "US").then((token) => {
+    PenguinModClient.setToken(token);
+    // the new account can be used now
+}).catch(console.log);
+```
+
 ## Example
 
 ```js
@@ -64,6 +91,7 @@ PenguinModClient.users.getUsername("01JPZVED48ZT6H4VVMBZT6V2PE").then(console.lo
 PenguinModClient.users.getPFP("PenguinMod").then(console.log).catch(console.log); // Uint8Array
 PenguinModClient.users.getProfile("PenguinMod").then(console.log).catch(console.log); // Profile
 PenguinModClient.users.userExists("PenguinMod").then(console.log).catch(console.log); // boolean
+PenguinModClient.users.createAccount("MyRobot1", "a_super_safe_password", "cloudflare captcha token here", "01-01-2000", "US").then(console.log).catch(console.log); // string, returns the token for the new account
 
 // projects endpoints
 PenguinModClient.projects.canUploadProjects().then(console.log).catch(console.log); // boolean
@@ -88,6 +116,7 @@ PenguinModClient.users.hasBlocked("PenguinMod").then(console.log).catch(console.
 PenguinModClient.users.getMyFeed().then(console.log).catch(console.log); // Array<FeedItem>
 PenguinModClient.users.requestRankUp().then(() => console.log("success")).catch(console.log); // void
 PenguinModClient.users.setEmail("exampleemail@example.com").catch(console.log); // void
+PenguinModClient.users.changePassword("oldpassword", "newpassword").then(console.log).catch(console.log); // string, makes a new token for the account
 
 // projects endpoints
 PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean

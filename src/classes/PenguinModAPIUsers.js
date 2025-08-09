@@ -353,6 +353,32 @@ class PenguinModAPIUsers {
         }, this._parent, utils.RequestType.JSON);
         return data.token;
     }
+    /**
+     * Change your username.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/changeUsername
+     * @param {string} newUsername Your new username.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async changeUsername(newUsername) {
+        const url = `${this._parent.apiUrl}/v1/users/changeUsername`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "Missing token");
+
+        const usernameDoesNotMeetLength = newUsername.length < 3 || newUsername.length > 20;
+        const usernameHasIllegalChars = newUsername.match(/[^a-z0-9\-_]/i);
+        utils.assert(!usernameDoesNotMeetLength, url, "InvalidUsernameLength", "Username must be between 3 and 20 characters long.");
+        utils.assert(!usernameHasIllegalChars, url, "InvalidUsernameChars", "Username can only contain letters, numbers, dashes and underscores.");
+
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                newUsername,
+            })
+        }, this._parent, utils.RequestType.JSON);
+    }
 
     parseBirthday(birthday) {
         if (!birthday) return;
@@ -434,6 +460,7 @@ class PenguinModAPIUsers {
     /**
      * Adds legal safety details to the currently logged in account.
      * It is recommended to set all of this information if it is missing, since some laws may require this information for us to abide by them.
+     * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/filloutSafetyDetails
      * @param {string|number|null} birthday Your birthday. Should be parseable by new Date(x).
      * @param {string|null} country Your country, in country-code form.
@@ -464,23 +491,160 @@ class PenguinModAPIUsers {
         }, this._parent, utils.RequestType.None);
     }
 
+    /**
+     * Logs out of the account, invalidating the current token.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/logout
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async logout() {
+        const url = `${this._parent.apiUrl}/v1/users/logout`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Allows you to log into an account from a provided username and password.
+     * This will return a new token which can be used to access the specified account.
+     * @link https://projects.penguinmod.com/api/v1/users/passwordLogin
+     * @param {string} username The username of the account.
+     * @param {string} password The password of the account.
+     * @param {string} captcha_token The captcha token from cloudflare.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<string>} A token for the account specified.
+     */
+    async passwordLogin(username, password, captcha_token) {
+        const url = `${this._parent.apiUrl}/v1/users/passwordLogin`;
+        const login = await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username,
+                password,
+                captcha_token
+            })
+        }, this._parent, utils.RequestType.JSON);
+        return login.token;
+    }
+    /**
+     * Verifies that a token results in a valid login.
+     * Usually it's best to just use the token for the action you want to perform and see if the request fails, so you don't need to request the API twice.
+     * @link https://projects.penguinmod.com/api/v1/users/tokenlogin
+     * @param {string} token The token to use.
+     * @throws {PenguinModAPIError} Will throw if the login is invalid.
+     * @returns {Promise<null>}
+     */
+    async tokenLogin(token) {
+        const url = `${this._parent.apiUrl}/v1/users/tokenlogin?token=${encodeURIComponent(token)}`;
+        await utils.doBasicRequest(url, null, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Returns the amount of messages this user has.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/getmessagecount
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<number>}
+     */
+    async getMessageCount() {
+        const url = `${this._parent.apiUrl}/v1/users/getmessagecount?token=${encodeURIComponent(this._parent.token)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.count;
+    }
+    /**
+     * Returns the amount of unread messages this user has. This also counts policy updates that have not been seen yet.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/getunreadmessagecount
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<number>}
+     */
+    async getUnreadMessageCount() {
+        const url = `${this._parent.apiUrl}/v1/users/getunreadmessagecount?token=${encodeURIComponent(this._parent.token)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.count;
+    }
+
+    /**
+     * Marks every message sent to the user as read.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/markallmessagesasread
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async markAllMessagesAsRead() {
+        const url = `${this._parent.apiUrl}/v1/users/markallmessagesasread`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Marks a specific message sent to the user as read.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/markmessageasread
+     * @param {string} id The ID of the message to mark as read.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async markMessageAsRead(id) {
+        const url = `${this._parent.apiUrl}/v1/users/markmessageasread`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                messageID: id,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Returns the amount of projects a specific user has uploaded.
+     * @link https://projects.penguinmod.com/api/v1/users/getprojectcountofuser
+     * @param {string} username The user to check.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<number>}
+     */
+    async getProjectCountOfUser(username) {
+        const url = `${this._parent.apiUrl}/v1/users/getprojectcountofuser`;
+        const data = await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                target: username,
+            })
+        }, this._parent, utils.RequestType.JSON);
+        return data.count;
+    }
+    /**
+     * Gets a specific user's badges.
+     * @link https://projects.penguinmod.com/api/v1/users/getBadges
+     * @param {string} username The user to check.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<string>>}
+     */
+    async getBadges(username) {
+        const url = `${this._parent.apiUrl}/v1/users/getBadges?username=${encodeURIComponent(username)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.badges;
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/logout
-    // TODO: /api/v1/users/passwordLogin
-    // TODO: /api/v1/users/tokenlogin
     // TODO: /api/v1/users/resetpassword/reset
     // TODO: /api/v1/users/resetpassword/sendEmail
     // TODO: /api/v1/users/resetpassword/sendVerifyEmail
-    // TODO: /api/v1/users/getmessagecount
     // TODO: /api/v1/users/getmessages
-    // TODO: /api/v1/users/getunreadmessagecount
     // TODO: /api/v1/users/getunreadmessages
-    // TODO: /api/v1/users/markallmessagesasread
-    // TODO: /api/v1/users/markmessageasread
     // TODO: /api/v1/users/sendmessage
     // TODO: /api/v1/users/changeUsername
-    // TODO: /api/v1/users/getBadges
-    // TODO: /api/v1/users/getprojectcountofuser
     // TODO: /api/v1/users/isBanned
     // TODO: /api/v1/users/privateProfile
     // TODO: /api/v1/users/setmyfeaturedproject

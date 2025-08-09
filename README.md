@@ -119,6 +119,10 @@ PenguinModClient.users.getPFP("PenguinMod").then(console.log).catch(console.log)
 PenguinModClient.users.getProfile("PenguinMod").then(console.log).catch(console.log); // Profile
 PenguinModClient.users.userExists("PenguinMod").then(console.log).catch(console.log); // boolean
 PenguinModClient.users.createAccount("MyRobot1", "a_super_safe_password", "cloudflare captcha token here", "01-01-2000", "US").then(console.log).catch(console.log); // string, returns the token for the new account
+PenguinModClient.users.passwordLogin("PenguinMod", "totally_our_password", "cloudflare captcha token here").then(console.log).catch(console.log); // string, a new token to use
+PenguinModClient.users.tokenLogin("an_account_token_here").catch(console.log); // void
+PenguinModClient.users.getProjectCountOfUser("PenguinMod").then(console.log).catch(console.log); // number
+PenguinModClient.users.getBadges("PenguinMod").then(console.log).catch(console.log); // Array<string>
 
 // projects endpoints
 PenguinModClient.projects.canUploadProjects().then(console.log).catch(console.log); // boolean
@@ -145,6 +149,12 @@ PenguinModClient.users.requestRankUp().then(() => console.log("success")).catch(
 PenguinModClient.users.setEmail("exampleemail@example.com").catch(console.log); // void
 PenguinModClient.users.changePassword("oldpassword", "newpassword").then(console.log).catch(console.log); // string, makes a new token for the account
 PenguinModClient.users.filloutSafetyDetails("01-01-2000", "US").then(console.log).catch(console.log); // void
+PenguinModClient.users.logout().catch(console.log); // void
+PenguinModClient.users.getMessageCount().then(console.log).catch(console.log); // number
+PenguinModClient.users.getUnreadMessageCount().then(console.log).catch(console.log); // number
+PenguinModClient.users.markAllMessagesAsRead().catch(console.log); // void
+PenguinModClient.users.markMessageAsRead("01JXQYAJF425G60QK1ENH7RQY0").catch(console.log); // void
+PenguinModClient.users.changeUsername("SuperGuy3333").catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean

@@ -269,6 +269,8 @@ class PenguinModAPIProjects {
     // TODO: /api/v1/projects/getremixes
     // TODO: /api/v1/projects/searchprojects
     // TODO: /api/v1/projects/searchusers
+    // TODO: /api/v1/projects/deletethumb
+    // TODO: /api/v1/projects/setCanBeFeatured
 }
 
 module.exports = PenguinModAPIProjects;

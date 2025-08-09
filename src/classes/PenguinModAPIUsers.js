@@ -1,5 +1,5 @@
 const utils = require("../misc/utils.js");
-const countryLookup = require("../misc/countryLookup.js");
+const countryLookup = require("../misc/country-lookup.json");
 const PenguinModAPIError = require("./PenguinModAPIError.js");
 
 /**
@@ -221,6 +221,27 @@ class PenguinModAPIUsers {
     }
 
     /**
+     * Set your account's bio.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/setBio
+     * @throws {PenguinModAPIError}
+     * @param {string} bio New bio.
+     * @returns {Promise<null>}
+     */
+    async setBio(bio) {
+        const url = `${this._parent.apiUrl}/v1/users/setBio`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                bio
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
      * Check if a user exists by their username
      * @link https://projects.penguinmod.com/api/v1/users/userexists
      * @param {string} username The user's username
@@ -433,7 +454,6 @@ class PenguinModAPIUsers {
     // TODO: /api/v1/users/getprojectcountofuser
     // TODO: /api/v1/users/isBanned
     // TODO: /api/v1/users/privateProfile
-    // TODO: /api/v1/users/setBio
     // TODO: /api/v1/users/setmyfeaturedproject
     // TODO: /api/v1/users/setpfp
     // TODO: /api/v1/users/customization/setCustomization

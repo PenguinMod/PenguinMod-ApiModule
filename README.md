@@ -77,6 +77,9 @@ PenguinModClient.misc.markGuidelinesAsRead().catch(console.log); // void
 PenguinModClient.misc.markTOSAsRead().catch(console.log); // void
 PenguinModClient.misc.markPrivacyPolicyAsRead().catch(console.log); // void
 
+// users endpoints
+PenguinModClient.users.setBio("This is my About Me").then(console.log).catch(console.log); // string
+
 // projects endpoints
 PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean
 PenguinModClient.projects.hasVoted("sigma").then(console.log).catch(console.log); // boolean

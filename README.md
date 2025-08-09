@@ -74,7 +74,9 @@ PenguinModClient.users.createAccount("MyRobot1", "a_super_safe_password", null, 
 
 ```js
 const { PenguinModAPI } = require("../index");
-const PenguinModClient = new PenguinModAPI();
+const PenguinModClient = new PenguinModAPI({
+    token: "super-secret-token", // NEVER share your account's token to anyone.
+});
 
 // core endpoints
 PenguinModClient.checkOnline().then(console.log).catch(console.log); // boolean

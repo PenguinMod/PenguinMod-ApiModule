@@ -323,8 +323,7 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * Change your password.
-     * Also refreshes your token.
+     * Change your password. Also refreshes your token.
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/changePassword
      * @param {string} old_password Your current password.
@@ -334,20 +333,20 @@ class PenguinModAPIUsers {
      */
     async changePassword(old_password, new_password) {
         const url = `${this._parent.apiUrl}/v1/users/changePassword`;
-        if (new_password.length < 6 || new_password.length > 20) {
-            throw new PenguinModAPIError("InvalidPasswordLength", "Password must be between 6 and 20 characters long.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
-        }
-        let username = this._parent.username;
-        if (!username) {
-            utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
-            const info = await this.getInfo();
-            username = info.username;
-        }
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "Missing token");
+
+        const passwordDoesNotMeetLength = new_password.length < 8 || new_password.length > 50;
+        const passwordMeetsTextInclude = new_password.match(/[a-z]/) && new_password.match(/[A-Z]/);
+        const passwordMeetsSpecialInclude = new_password.match(/[0-9]/) && new_password.match(/[^a-z0-9]/i);
+        utils.assert(!passwordDoesNotMeetLength, url, "InvalidPasswordLength", "Password must be between 8 and 50 characters long.");
+        utils.assert(passwordMeetsTextInclude, url, "InvalidPasswordText", "Password must contain at least one letter.");
+        utils.assert(passwordMeetsSpecialInclude, url, "InvalidPasswordSpecial", "Password must contain at least one number and one special character.");
+
         const data = await utils.doBasicRequest(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                username,
+                token: this._parent.token,
                 old_password,
                 new_password
             })

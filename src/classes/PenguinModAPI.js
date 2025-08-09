@@ -11,15 +11,11 @@ const PenguinModAPIProjects = require("./PenguinModAPIProjects.js");
 class PenguinModAPI {
     /**
      * @param {Object} options Optional.
-     * @param {string?} options.id The ID of the account to use. Both ID and username can be defined, but at least one should be given to use login-required endpoints. If omitted, use setId later.
-     * @param {string?} options.username The username of the account to use. Both ID and username can be defined, but at least one should be given to use login-required endpoints. If omitted, use setUsername later.
      * @param {string?} options.token If omitted, use setToken later.
      * @param {string?} options.apiUrl Sets the base API url. See PenguinModAPI.apiUrl or setApiUrl for info. If omitted, use setApiUrl later.
      * @returns {PenguinModAPI} PenguinModClient
      */
     constructor(options = {}) {
-        this.id = options.id;
-        this.username = options.username;
         this.token = options.token;
 
         /**
@@ -30,18 +26,6 @@ class PenguinModAPI {
          * @type {string}
          */
         this.apiUrl = options.apiUrl || "https://projects.penguinmod.com/api";
-        /**
-         * If an endpoint requires id to be set but only username is set, this will get the ID from username.
-         * If an endpoint requires username to be set but only id is set, this will get the username from ID.
-         * 
-         * Recommended to keep enabled because the API may change an endpoint to require different information later.
-         * 
-         * It's also just recommended to always set username and ID together, or fetch it from the API to save it.
-         * 
-         * Default is true.
-         * @type {boolean}
-         */
-        this.resolveDetails = options.resolveDetails !== false; // so its true by default
 
         /** @type {PenguinModAPIMisc} */
         this.misc = new PenguinModAPIMisc(this);
@@ -77,31 +61,6 @@ class PenguinModAPI {
      */
     injectOptions(options, url) {
         return options;
-    }
-
-    /**
-     * Fetches the API to get the username by ID, and sets this client's username to the fetched username.
-     * @param {string} id The ID to use to fetch username.
-     * @throws {"UserNotFound"|PenguinModAPIError} Throws "UserNotFound" if the user is not found.
-     * @returns {Promise<string>} The username from ID
-     */
-    async setUsernameFromId(id) {
-        const username = await this.users.getUsername(id);
-        if (!username) throw "UserNotFound";
-        this.username = username;
-        return username;
-    }
-    /**
-     * Fetches the API to get the ID by username, and sets this client's ID to the fetched ID.
-     * @param {string} username The username to use to fetch ID.
-     * @throws {"UserNotFound"|PenguinModAPIError} Throws "UserNotFound" if the user is not found.
-     * @returns {Promise<string>} The ID from username
-     */
-    async setIdFromUsername(username) {
-        const id = await this.users.getId(username);
-        if (!id) throw "UserNotFound";
-        this.id = id;
-        return id;
     }
 
     /**

@@ -59,14 +59,15 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * Block a user.
+     * Block a user. Optionally, unblock a user by passing `shouldUnblock` as `true`.
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/blockuser
      * @param {string} targetUsername The username of the user you want to block.
+     * @param {boolean?} shouldUnblock Whether to unblock this user or not.
      * @throws {PenguinModAPIError}
      * @returns {Promise<null>}
      */
-    async blockUser(targetUsername) {
+    async blockUser(targetUsername, shouldUnblock) {
         const url = `${this._parent.apiUrl}/v1/users/blockuser`;
         utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
         await utils.doBasicRequest(url, {
@@ -74,23 +75,39 @@ class PenguinModAPIUsers {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 token: this._parent.token,
-                target: targetUsername
+                target: targetUsername,
+                active: !shouldUnblock
             })
         }, this._parent, utils.RequestType.JSON);
     }
 
     /**
+     * @typedef {Object} FeedItemData
+     * @property {string?} id The user ID or project ID. Depends on the type of FeedItem.
+     * @property {string?} username The username of the user who followed you, if the FeedItem type is `"follow"`.
+     * @property {string?} name The name of the uploaded project or remix. Depends on the type of FeedItem.
+     */
+    /**
+     * @typedef {Object} FeedItem
+     * @property {"follow"|"upload"|"remix"} type The type of the feed item.
+     * @property {number} date The time in milliseconds when this feed item was made.
+     * @property {number} expireAt The time in milliseconds when this feed item will expire.
+     * @property {FeedItemData?} data Extra data attached to this feed item. Will be formatted differently for different FeedItem types.
+     * @property {string?} id The user ID attached to this feed item. Used to see who followed, uploaded, or remixed.
+     * @property {string?} username The username attached to this feed item. Used to see who followed, uploaded, or remixed.
+     */
+    /**
      * Get your feed.
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/getmyfeed
      * @throws {PenguinModAPIError}
-     * @returns {Promise<Array<object>>}
+     * @returns {Promise<Array<FeedItem>>}
      */
     async getMyFeed() {
         const url = `${this._parent.apiUrl}/v1/users/getmyfeed?token=${encodeURIComponent(this._parent.token)}`;
         utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
-        const feed = await utils.doBasicRequest(url, null, this._parent, true, true);
-        return feed;
+        const feed = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return feed.feed;
     }
 
     /**
@@ -120,9 +137,9 @@ class PenguinModAPIUsers {
      * @throws {PenguinModAPIError}
      * @returns {Promise<boolean|null>} If blocking or not, null if not found
      */
-    async hasblocked(username) {
+    async hasBlocked(username) {
         const token = this._parent.token;
-        const url = `${this._parent.apiUrl}/v1/users/hasblocked?username=${encodeURIComponent(username)}&token=${encodeURIComponent(token)}`;
+        const url = `${this._parent.apiUrl}/v1/users/hasblocked?target=${encodeURIComponent(username)}&token=${encodeURIComponent(token)}`;
         utils.assert(!!token, url, "Reauthenticate", "No token is registered.");
         try {
             const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
@@ -165,7 +182,7 @@ class PenguinModAPIUsers {
         try {
             const has_token = !!this._parent.token;
             const token_str = has_token ? `&token=${this._parent.token}` : "";
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/profile?username${encodeURIComponent(username)}${token_str}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/profile?target=${encodeURIComponent(username)}${token_str}`, null, this._parent, utils.RequestType.JSON);
             return json; 
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "NotFound") {
@@ -179,11 +196,17 @@ class PenguinModAPIUsers {
      * Request a rank up.
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/requestrankup
-     * @throws {PenguinModAPIError}
+     * @throws {PenguinModAPIError} Usually this only throws if the user cannot rank up at this time.
      * @returns {Promise<null>}
      */
     async requestRankUp() {
-        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/requestrankup?token=${encodeURIComponent(this._parent.token)}`, null, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/requestrankup`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+            })
+        }, this._parent, utils.RequestType.None);
     }
 
     /**
@@ -253,7 +276,7 @@ class PenguinModAPIUsers {
             return false;
         }
 
-        const url = `${this._parent.apiUrl}/v1/users/userexists`;
+        const url = `${this._parent.apiUrl}/v1/users/userexists?username=${encodeURIComponent(username)}`;
         const exists = (await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON)).exists;
 
         return exists;

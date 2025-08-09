@@ -61,6 +61,9 @@ PenguinModClient.misc.getLastPolicyUpdate().then(console.log).catch(console.log)
 // users endpoints
 PenguinModClient.users.getId("PenguinMod").then(console.log).catch(console.log); // string
 PenguinModClient.users.getUsername("01JPZVED48ZT6H4VVMBZT6V2PE").then(console.log).catch(console.log); // string
+PenguinModClient.users.getPFP("PenguinMod").then(console.log).catch(console.log); // Uint8Array
+PenguinModClient.users.getProfile("PenguinMod").then(console.log).catch(console.log); // Profile
+PenguinModClient.users.userExists("PenguinMod").then(console.log).catch(console.log); // boolean
 
 // projects endpoints
 PenguinModClient.projects.canUploadProjects().then(console.log).catch(console.log); // boolean
@@ -78,7 +81,13 @@ PenguinModClient.misc.markTOSAsRead().catch(console.log); // void
 PenguinModClient.misc.markPrivacyPolicyAsRead().catch(console.log); // void
 
 // users endpoints
-PenguinModClient.users.setBio("This is my About Me").then(console.log).catch(console.log); // string
+PenguinModClient.users.getInfo().then(console.log).catch(console.log); // SelfInfo
+PenguinModClient.users.setBio("This is my About Me").catch(console.log); // void
+PenguinModClient.users.blockUser("PenguinMod").catch(console.log); // void
+PenguinModClient.users.hasBlocked("PenguinMod").then(console.log).catch(console.log); // boolean
+PenguinModClient.users.getMyFeed().then(console.log).catch(console.log); // Array<FeedItem>
+PenguinModClient.users.requestRankUp().then(() => console.log("success")).catch(console.log); // void
+PenguinModClient.users.setEmail("exampleemail@example.com").catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean

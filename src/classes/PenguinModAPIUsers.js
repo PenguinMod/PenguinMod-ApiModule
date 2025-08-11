@@ -80,6 +80,28 @@ class PenguinModAPIUsers {
             })
         }, this._parent, utils.RequestType.JSON);
     }
+    /**
+     * Follow a user. Optionally, unfollow a user by passing `shouldUnfollow` as `true`.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/follow
+     * @param {string} targetUsername The username of the user you want to follow.
+     * @param {boolean?} shouldUnfollow Whether to unfollow this user or not.
+     * @throws {PenguinModAPIError} Will also throw if following a followed user, or unfollowing a non-followed user.
+     * @returns {Promise<null>}
+     */
+    async followUser(targetUsername, shouldUnfollow) {
+        const url = `${this._parent.apiUrl}/v1/users/follow`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target: targetUsername,
+                toggle: !shouldUnfollow
+            })
+        }, this._parent, utils.RequestType.JSON);
+    }
 
     /**
      * @typedef {Object} FeedItemData
@@ -398,6 +420,7 @@ class PenguinModAPIUsers {
     /**
      * Create an account.
      * Returns a token.
+     * Requires a Cloudflare Captcha token.
      * @link https://projects.penguinmod.com/api/v1/users/createAccount
      * @param {string} username Your new username.
      * @param {string} password Your new password. 
@@ -511,6 +534,7 @@ class PenguinModAPIUsers {
     /**
      * Allows you to log into an account from a provided username and password.
      * This will return a new token which can be used to access the specified account.
+     * Requires a Cloudflare Captcha token.
      * @link https://projects.penguinmod.com/api/v1/users/passwordLogin
      * @param {string} username The username of the account.
      * @param {string} password The password of the account.
@@ -637,20 +661,76 @@ class PenguinModAPIUsers {
         return data.badges;
     }
 
+    /**
+     * Reset an account's password using information from an email's reset password link.
+     * You can only get `emailState` from a PenguinMod email, it is the `state` query parameter from a https://penguinmod.com/resetpassword URL.
+     * @link https://projects.penguinmod.com/api/v1/users/resetpassword/reset
+     * @param {string} email Which email asked to reset a password. This email must have a valid PenguinMod account attached to it.
+     * @param {string} emailState A specific code sent in an email's password reset link.
+     * @param {string} newPassword The new password to use for the email's account.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async resetPassword(email, emailState, newPassword) {
+        const url = `${this._parent.apiUrl}/v1/users/resetpassword/reset`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email,
+                state: emailState,
+                password: newPassword,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Send a password reset request via email. Returns the URL that the user can visit to reset their password.
+     * Requires a Cloudflare Captcha token.
+     * @link https://projects.penguinmod.com/api/v1/users/resetpassword/sendEmail
+     * @param {string} email Which email to request a password reset for. This email must have a valid PenguinMod account attached to it.
+     * @param {string} captcha_token The captcha token from cloudflare.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async sendResetPasswordEmail(email, captcha_token) {
+        const url = `${this._parent.apiUrl}/v1/users/resetpassword/sendEmail`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email,
+                captcha_token,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Sends an email to this account's inbox that allows this account's email to be verified.
+     * An email must be attached to this account, and the email cannot already be verified.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/resetpassword/sendVerifyEmail
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async sendVerifyEmail() {
+        const url = `${this._parent.apiUrl}/v1/users/resetpassword/sendVerifyEmail`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/resetpassword/reset
-    // TODO: /api/v1/users/resetpassword/sendEmail
-    // TODO: /api/v1/users/resetpassword/sendVerifyEmail
     // TODO: /api/v1/users/getmessages
     // TODO: /api/v1/users/getunreadmessages
     // TODO: /api/v1/users/sendmessage
-    // TODO: /api/v1/users/changeUsername
     // TODO: /api/v1/users/isBanned
     // TODO: /api/v1/users/privateProfile
     // TODO: /api/v1/users/setmyfeaturedproject
     // TODO: /api/v1/users/setpfp
     // TODO: /api/v1/users/customization/setCustomization
-    // TODO: /api/v1/users/follow
     // TODO: /api/v1/users/meta/getfollowercount
     // TODO: /api/v1/users/meta/getfollowers
     // TODO: /api/v1/users/isfollowing

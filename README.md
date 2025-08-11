@@ -69,13 +69,15 @@ Other notable `PenguinModAPIError` properties:
 
 The `PenguinModAPIError` class is exported by this module if you need it for any purpose.
 
-### Creating accounts & Creating tokens from passwords
+### Captcha-locked features
 
 You will likely not be able to create accounts on the official PenguinMod servers programatically
 using PenguinMod-ApiModule due to the requirement of a captcha token.
 
 The `passwordLogin` endpoint also requires a captcha token, so you cannot log into an account using only it's password
 on the official servers.
+
+The `sendResetPasswordEmail` function also requires a captcha token.
 
 If you do find a way to create accounts on the official PenguinMod servers, remember that use of PenguinMod-ApiModule for abuse or malicious activity
 is against [PenguinMod's Terms of Service](https://penguinmod.com/terms) and will result in your IP being blocked.
@@ -123,6 +125,8 @@ PenguinModClient.users.passwordLogin("PenguinMod", "totally_our_password", "clou
 PenguinModClient.users.tokenLogin("an_account_token_here").catch(console.log); // void
 PenguinModClient.users.getProjectCountOfUser("PenguinMod").then(console.log).catch(console.log); // number
 PenguinModClient.users.getBadges("PenguinMod").then(console.log).catch(console.log); // Array<string>
+PenguinModClient.users.resetPassword("exampleemail@example.com", "email state", "NewSecurePassword1234!").catch(console.log); // void
+PenguinModClient.users.sendResetPasswordEmail("exampleemail@example.com", "cloudflare captcha token here").catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.canUploadProjects().then(console.log).catch(console.log); // boolean
@@ -155,6 +159,8 @@ PenguinModClient.users.getUnreadMessageCount().then(console.log).catch(console.l
 PenguinModClient.users.markAllMessagesAsRead().catch(console.log); // void
 PenguinModClient.users.markMessageAsRead("01JXQYAJF425G60QK1ENH7RQY0").catch(console.log); // void
 PenguinModClient.users.changeUsername("SuperGuy3333").catch(console.log); // void
+PenguinModClient.users.followUser("PenguinMod").catch(console.log); // void
+PenguinModClient.users.sendVerifyEmail().catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean

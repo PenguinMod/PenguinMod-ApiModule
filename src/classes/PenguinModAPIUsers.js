@@ -285,6 +285,86 @@ class PenguinModAPIUsers {
             })
         }, this._parent, utils.RequestType.None);
     }
+    /**
+     * Makes a specific project featured on your profile.
+     * The specified project must belong to you in order for it to be visible to other users on the frontend.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/setmyfeaturedproject
+     * @param {string} projectId The project ID of the project to feature on your profile.
+     * @param {number} featuredTitle This is a 1-index based number that chooses which featured label to use in the list of labels on the frontend.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async setMyFeaturedProject(projectId, featuredTitle) {
+        const url = `${this._parent.apiUrl}/v1/users/setmyfeaturedproject`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                project: projectId,
+                title: featuredTitle,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Saves an arbitrary object (with restrictions) to your profile.
+     * For exact restrictions, see the `seeBlockedUserCustomization` function in https://github.com/PenguinMod/PenguinMod-BackendApi/blob/main/api/v1/db/UserManager.js
+     * 
+     * Requires token.
+     * Only accessible on accounts with the "donator" badge.
+     * @link https://projects.penguinmod.com/api/v1/users/customization/setCustomization
+     * @param {Object} customData The arbitrary object to save.
+     * @param {string} modTarget A specific user to set the customizations for. This parameter is only allowed if you are a moderator.
+     * @throws {PenguinModAPIError} Usually this will only throw if the data is invalid, or you try to set someone else's customizations without being a moderator.
+     * @returns {Promise<null>}
+     */
+    async setCustomization(customData, modTarget) {
+        const url = `${this._parent.apiUrl}/v1/users/customization/setCustomization`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                customization: customData,
+                target: modTarget,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Disables someone else's customizations from being visible, and disables their ability to use the customization feature.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/customization/setCustomization
+     * @param {string} target The user to revoke customizations from
+     * @param {boolean} isDisabled `true` to revoke customizations, `false` to give them back.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async setCustomizationDisabled(target, isDisabled) {
+        const url = `${this._parent.apiUrl}/v1/users/customization/setCustomizationDisabled`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target,
+                toggle: !isDisabled,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Gets a specific user's donator customization.
+     * @link https://projects.penguinmod.com/api/v1/users/customization/getCustomization
+     * @param {string} username The user to check.
+     * @throws {PenguinModAPIError} Will also throw for accounts that do not have the "donator" badge.
+     * @returns {Promise<Object>} Resolves to an arbitrary object, see `setCustomization`
+     */
+    async getCustomization(username) {
+        const url = `${this._parent.apiUrl}/v1/users/customization/getCustomization?target=${encodeURIComponent(username)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.customization;
+    }
 
     /**
      * Check if a user exists by their username
@@ -302,6 +382,18 @@ class PenguinModAPIUsers {
         const exists = (await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON)).exists;
 
         return exists;
+    }
+    /**
+     * Check if a user is banned
+     * @link https://projects.penguinmod.com/api/v1/users/isBanned
+     * @param {string} username The user's username
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<boolean>}
+     */
+    async isBanned(username) {
+        const url = `${this._parent.apiUrl}/v1/users/isBanned?username=${encodeURIComponent(username)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.isBanned;
     }
 
     /**
@@ -722,15 +814,34 @@ class PenguinModAPIUsers {
         }, this._parent, utils.RequestType.None);
     }
 
+    /**
+     * Updates details about this account's private status.
+     * `makePrivateToFollowing` only applies if the account is private.
+     * Both parameters must be supplied to this function.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/privateProfile
+     * @param {boolean} makePrivate Makes this profile private if `true`, and not private if `false`.
+     * @param {boolean} makePrivateToFollowing Makes this profile only accessible to people you follow if `true`, and private to all if `false`. Only applies if the profile is private.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async privateProfile(makePrivate, makePrivateToFollowing) {
+        const url = `${this._parent.apiUrl}/v1/users/privateProfile`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                privateProfile: makePrivate,
+                privateToFollowing: makePrivateToFollowing,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
     // TODO: /api/v1/users/getmessages
     // TODO: /api/v1/users/getunreadmessages
-    // TODO: /api/v1/users/sendmessage
-    // TODO: /api/v1/users/isBanned
-    // TODO: /api/v1/users/privateProfile
-    // TODO: /api/v1/users/setmyfeaturedproject
     // TODO: /api/v1/users/setpfp
-    // TODO: /api/v1/users/customization/setCustomization
     // TODO: /api/v1/users/meta/getfollowercount
     // TODO: /api/v1/users/meta/getfollowers
     // TODO: /api/v1/users/isfollowing

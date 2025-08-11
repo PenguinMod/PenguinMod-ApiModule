@@ -127,6 +127,8 @@ PenguinModClient.users.getProjectCountOfUser("PenguinMod").then(console.log).cat
 PenguinModClient.users.getBadges("PenguinMod").then(console.log).catch(console.log); // Array<string>
 PenguinModClient.users.resetPassword("exampleemail@example.com", "email state", "NewSecurePassword1234!").catch(console.log); // void
 PenguinModClient.users.sendResetPasswordEmail("exampleemail@example.com", "cloudflare captcha token here").catch(console.log); // void
+PenguinModClient.users.isBanned("PenguinMod").then(console.log).catch(console.log); // boolean
+PenguinModClient.users.getCustomization("PenguinMod").then(console.log).catch(console.log); // {} arbitrary object
 
 // projects endpoints
 PenguinModClient.projects.canUploadProjects().then(console.log).catch(console.log); // boolean
@@ -161,6 +163,9 @@ PenguinModClient.users.markMessageAsRead("01JXQYAJF425G60QK1ENH7RQY0").catch(con
 PenguinModClient.users.changeUsername("SuperGuy3333").catch(console.log); // void
 PenguinModClient.users.followUser("PenguinMod").catch(console.log); // void
 PenguinModClient.users.sendVerifyEmail().catch(console.log); // void
+PenguinModClient.users.privateProfile(true, false).catch(console.log); // void
+PenguinModClient.users.setMyFeaturedProject("sigma", 12).catch(console.log); // void
+PenguinModClient.users.setCustomization({ you_can_put: "custom_data" }).catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean
@@ -173,6 +178,9 @@ PenguinModClient.projects.hasVoted("sigma").then(console.log).catch(console.log)
 PenguinModClient.misc.getProfanityList().then(console.log).catch(console.log);
 PenguinModClient.misc.setLastPolicyUpdate(["guidelines", "tos", "privacyPolicy"]).catch(console.log); // void
 PenguinModClient.misc.setProfanityList({ "illegalWords": ["badword"] }).catch(console.log); // void
+
+// users endpoints
+PenguinModClient.users.setCustomizationDisabled("PenguinMod", true).catch(console.log);
 
 // projects endpoints
 PenguinModClient.projects.hasLovedAdmin("sigma", "PenguinMod").then(console.log).catch(console.log); // boolean

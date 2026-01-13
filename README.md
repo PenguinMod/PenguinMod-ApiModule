@@ -156,10 +156,6 @@ PenguinModClient.users.setEmail("exampleemail@example.com").catch(console.log); 
 PenguinModClient.users.changePassword("oldpassword", "newpassword").then(console.log).catch(console.log); // string, makes a new token for the account
 PenguinModClient.users.filloutSafetyDetails("01-01-2000", "US").then(console.log).catch(console.log); // void
 PenguinModClient.users.logout().catch(console.log); // void
-PenguinModClient.users.getMessageCount().then(console.log).catch(console.log); // number
-PenguinModClient.users.getUnreadMessageCount().then(console.log).catch(console.log); // number
-PenguinModClient.users.markAllMessagesAsRead().catch(console.log); // void
-PenguinModClient.users.markMessageAsRead("01JXQYAJF425G60QK1ENH7RQY0").catch(console.log); // void
 PenguinModClient.users.changeUsername("SuperGuy3333").catch(console.log); // void
 PenguinModClient.users.followUser("PenguinMod").catch(console.log); // void
 PenguinModClient.users.sendVerifyEmail().catch(console.log); // void
@@ -167,6 +163,12 @@ PenguinModClient.users.privateProfile(true, false).catch(console.log); // void
 PenguinModClient.users.setMyFeaturedProject("sigma", 12).catch(console.log); // void
 PenguinModClient.users.setCustomization({ you_can_put: "custom_data" }).catch(console.log); // void
 PenguinModClient.users.getMessages().then(console.log).catch(console.log); // Array<Message>
+PenguinModClient.users.getUnreadMessages().then(console.log).catch(console.log); // Array<Message>
+PenguinModClient.users.getMessageCount().then(console.log).catch(console.log); // number
+PenguinModClient.users.getUnreadMessageCount().then(console.log).catch(console.log); // number
+PenguinModClient.users.markAllMessagesAsRead().catch(console.log); // void
+PenguinModClient.users.markMessageAsRead("01JXQYAJF425G60QK1ENH7RQY0").catch(console.log); // void
+PenguinModClient.users.setPFP(arraybuffer).catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean

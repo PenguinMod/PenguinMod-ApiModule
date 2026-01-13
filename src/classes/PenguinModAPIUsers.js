@@ -661,68 +661,6 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * Returns the amount of messages this user has.
-     * Requires token.
-     * @link https://projects.penguinmod.com/api/v1/users/getmessagecount
-     * @throws {PenguinModAPIError}
-     * @returns {Promise<number>}
-     */
-    async getMessageCount() {
-        const url = `${this._parent.apiUrl}/v1/users/getmessagecount?token=${encodeURIComponent(this._parent.token)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
-        return data.count;
-    }
-    /**
-     * Returns the amount of unread messages this user has. This also counts policy updates that have not been seen yet.
-     * Requires token.
-     * @link https://projects.penguinmod.com/api/v1/users/getunreadmessagecount
-     * @throws {PenguinModAPIError}
-     * @returns {Promise<number>}
-     */
-    async getUnreadMessageCount() {
-        const url = `${this._parent.apiUrl}/v1/users/getunreadmessagecount?token=${encodeURIComponent(this._parent.token)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
-        return data.count;
-    }
-
-    /**
-     * Marks every message sent to the user as read.
-     * Requires token.
-     * @link https://projects.penguinmod.com/api/v1/users/markallmessagesasread
-     * @throws {PenguinModAPIError}
-     * @returns {Promise<null>}
-     */
-    async markAllMessagesAsRead() {
-        const url = `${this._parent.apiUrl}/v1/users/markallmessagesasread`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-            })
-        }, this._parent, utils.RequestType.None);
-    }
-    /**
-     * Marks a specific message sent to the user as read.
-     * Requires token.
-     * @link https://projects.penguinmod.com/api/v1/users/markmessageasread
-     * @param {string} id The ID of the message to mark as read.
-     * @throws {PenguinModAPIError}
-     * @returns {Promise<null>}
-     */
-    async markMessageAsRead(id) {
-        const url = `${this._parent.apiUrl}/v1/users/markmessageasread`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                messageID: id,
-            })
-        }, this._parent, utils.RequestType.None);
-    }
-
-    /**
      * Returns the amount of projects a specific user has uploaded.
      * @link https://projects.penguinmod.com/api/v1/users/getprojectcountofuser
      * @param {string} username The user to check.
@@ -855,11 +793,11 @@ class PenguinModAPIUsers {
      * @property {string?} reason A punishment reason for MessageFragments of type `tempban`, `ban`
      * @property {string?} title The affected project's title, used in `delete`, `reject` (sometimes)
      * @property {string?} projectID A project ID, used in `remix` to point to the new remix's ID.
-     * @property {MessageFragmentProjectFragment} project A small bit of project info, used in `projectFeatured`, `reject`, `restored`
-     * @property {MessageFragmentProjectFragment} oldProject A small bit of project info, used in `remix` to refer to the remixed project
-     * @property {MessageFragmentProjectFragment} newProject A small bit of project info, used in `remix` to refer to the new remix
+     * @property {MessageFragmentProjectFragment?} project A small bit of project info, used in `projectFeatured`, `reject`, `restored`
+     * @property {MessageFragmentProjectFragment?} oldProject A small bit of project info, used in `remix` to refer to the remixed project
+     * @property {MessageFragmentProjectFragment?} newProject A small bit of project info, used in `remix` to refer to the new remix
      * @property {string?} badge A badge ID, used in `newBadge` to reference the added badge.
-     * @property {MessageFragmentUserFragment} user A small bit of user info, used in `followerAdded`
+     * @property {MessageFragmentUserFragment|string|null} user A small bit of user info, or a user id depending on the endpoint. Used in `followerAdded`
      * @property {number?} time The amount of time given in a punishment, used in `tempban`
      * @property {boolean?} hardReject Whether or not the project rejection was a hard reject (project deletion). Used in `reject`
      * @property {string?} text Custom text added to a `custom` message. Note that this type is not accessible in the API and is only recognized by the front-end. Used in `custom`
@@ -887,10 +825,98 @@ class PenguinModAPIUsers {
         const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
         return data.messages;
     }
+    /**
+     * Gets any unread messages that this user has. 
+     * @link https://projects.penguinmod.com/api/v1/users/getunreadmessages
+     * @param {number?} page Which page of messages to look at. If not provided, page will be 0.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<Message>>}
+     */
+    async getUnreadMessages(page) {
+        const token = this._parent.token;
+        const url = `${this._parent.apiUrl}/v1/users/getunreadmessages?token=${encodeURIComponent(token)}&page=${page}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.messages;
+    }
+    /**
+     * Returns the amount of messages this user has.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/getmessagecount
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<number>}
+     */
+    async getMessageCount() {
+        const url = `${this._parent.apiUrl}/v1/users/getmessagecount?token=${encodeURIComponent(this._parent.token)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.count;
+    }
+    /**
+     * Returns the amount of unread messages this user has. This also counts policy updates that have not been seen yet.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/getunreadmessagecount
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<number>}
+     */
+    async getUnreadMessageCount() {
+        const url = `${this._parent.apiUrl}/v1/users/getunreadmessagecount?token=${encodeURIComponent(this._parent.token)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.count;
+    }
+    /**
+     * Marks every message sent to the user as read.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/markallmessagesasread
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async markAllMessagesAsRead() {
+        const url = `${this._parent.apiUrl}/v1/users/markallmessagesasread`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Marks a specific message sent to the user as read.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/markmessageasread
+     * @param {string} id The ID of the message to mark as read.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async markMessageAsRead(id) {
+        const url = `${this._parent.apiUrl}/v1/users/markmessageasread`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                messageID: id,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Sets the profile picture of this account. Note that only `image/png` and `image/jpeg` are supported, and the image must not be recognized as `application/octet-stream`.
+     * @link https://projects.penguinmod.com/api/v1/users/setpfp
+     * @param {ArrayBuffer} file The new profile picture to use.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async setPFP(file) {
+        const url = `${this._parent.apiUrl}/v1/users/setpfp?token=${encodeURIComponent(this._parent.token)}`;
+        const formData = new FormData();
+        formData.append("picture", new Blob([file]));
+
+        await utils.doFormDataRequest(url, {
+            method: "POST",
+        }, formData, this._parent, utils.RequestType.JSON);
+    }
 
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/getunreadmessages
-    // TODO: /api/v1/users/setpfp
     // TODO: /api/v1/users/meta/getfollowercount
     // TODO: /api/v1/users/meta/getfollowers
     // TODO: /api/v1/users/isfollowing

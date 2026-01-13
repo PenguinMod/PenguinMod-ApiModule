@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 const PenguinModAPIError = require("../classes/PenguinModAPIError");
 
 const safeParseJSON = (possibleJson, forceObject) => {
@@ -87,6 +89,63 @@ const doBasicRequest = (url, options, apiClass, requestType) => {
         });
     });
 };
+/**
+ * @param {string} url 
+ * @param {RequestInit?} options 
+ * @param {FormData?} formData Any FormData to send with the request.
+ * @param {PenguinModAPI} apiClass Required to add headers.
+ * @param {string} requestType The type that the result of the request is parsed as (i.e. text, json, etc). Use the RequestType object.
+ * @returns {Promise<any>}
+ */
+const doFormDataRequest = async (url, options, formData, apiClass, requestType) => {
+    if (!apiClass) throw new Error("Provide apiClass to doFormDataRequest");
+    options = apiClass.injectOptions(options, url);
+    if (!options) options = {};
+    if (!options.headers) options.headers = {};
+    options.headers["PenguinMod-Tooling"] = "PenguinMod-ApiModule";
+
+    let axiosResponseType = null;
+    if (requestType === RequestType.Text) axiosResponseType = 'text';
+    if (requestType === RequestType.ArrayBuffer) axiosResponseType = 'arraybuffer';
+    if (requestType === RequestType.JSON) axiosResponseType = 'json';
+
+    try {
+        const response = await axios({
+            url: url,
+            method: options.method || "GET",
+            data: formData,
+            headers: options.headers,
+            responseType: axiosResponseType,
+        });
+
+        // text requests can fail with json so we parse them
+        const responseData = response.data;
+        const jsonResp = (typeof responseData === "string")
+            ? safeParseJSON(responseData)
+            : responseData;
+        if (jsonResp && jsonResp.error) {
+            throw new PenguinModAPIError(jsonResp.error, responseData, response.status, responseData, false, url, options);
+        }
+
+        if (responseData instanceof ArrayBuffer && !(response.status >= 200 && response.status < 400)) {
+            // Note: Your original code rejects if status is 200-400 for ArrayBuffers.
+            // I am keeping that logic here as requested.
+            throw new PenguinModAPIError("FormDataRequestArrayBufferFailed", "FormDataRequestArrayBufferFailed", response.status, responseData, true, url, options);
+        }
+
+        return responseData;
+    } catch (err) {
+        if (err instanceof PenguinModAPIError) throw err;
+
+        if (axios.isCancel(err)) {
+            throw new PenguinModAPIError("FormDataRequestAborted", "FormDataRequestAborted", PenguinModAPIError.UNKNOWN_CODE, null, false, url, options, null, err);
+        }
+
+        const errorMessage = err.response ? (err.response.data ? err.response.data.error || "FormDataRequestFailed" : "FormDataRequestFailed") : "FormDataRequestFailed";
+        const status = err.response ? err.response.status : PenguinModAPIError.UNKNOWN_CODE;
+        throw new PenguinModAPIError("FormDataRequestFailed", errorMessage, status, err.response, false, url, options, null, err);
+    }
+};
 
 /**
  * Assert a bool. Error if false.
@@ -105,6 +164,7 @@ const assert = (val, url, message="AssertFailed", detail="Assert failed.") => {
 module.exports = {
     safeParseJSON,
     doBasicRequest,
+    doFormDataRequest,
     RequestType,
     assert
 };

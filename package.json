@@ -16,5 +16,8 @@
     "url": "https://github.com/PenguinMod/PenguinMod-ApiModule/issues"
   },
   "homepage": "https://github.com/PenguinMod/PenguinMod-ApiModule#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "axios": "^1.13.2"
+  }
 }

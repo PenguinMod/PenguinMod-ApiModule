@@ -166,6 +166,7 @@ PenguinModClient.users.sendVerifyEmail().catch(console.log); // void
 PenguinModClient.users.privateProfile(true, false).catch(console.log); // void
 PenguinModClient.users.setMyFeaturedProject("sigma", 12).catch(console.log); // void
 PenguinModClient.users.setCustomization({ you_can_put: "custom_data" }).catch(console.log); // void
+PenguinModClient.users.getMessages().then(console.log).catch(console.log); // Array<Message>
 
 // projects endpoints
 PenguinModClient.projects.hasLoved("sigma").then(console.log).catch(console.log); // boolean

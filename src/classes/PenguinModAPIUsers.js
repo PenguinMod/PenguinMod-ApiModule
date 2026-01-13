@@ -838,8 +838,57 @@ class PenguinModAPIUsers {
         }, this._parent, utils.RequestType.None);
     }
 
+    /**
+     * @typedef {Object} MessageFragmentUserFragment
+     * @property {string} id The ID of the user attached to the MessageFragment.
+     * @property {string} username The username of the user attached to the MessageFragment.
+     */
+    /**
+     * @typedef {Object} MessageFragmentProjectFragment
+     * @property {string} id The ID of the project attached to the MessageFragment.
+     * @property {string} title The title of the project attached to the MessageFragment.
+     */
+    /**
+     * @typedef {Object} MessageFragment
+     * @property {"newBadge"|"projectFeatured"|"delete"|"reject"|"modMessage"|"disputeResponse"|"restored"|"remix"|"followerAdded"|"tempban"|"ban"|"unban"|"custom"} type The type of message that this MessageFragment is apart of.
+     * @property {string?} message Message content for MessageFragments of type `reject`, `delete`, `modMessage`, `disputeResponse`
+     * @property {string?} reason A punishment reason for MessageFragments of type `tempban`, `ban`
+     * @property {string?} title The affected project's title, used in `delete`, `reject` (sometimes)
+     * @property {string?} projectID A project ID, used in `remix` to point to the new remix's ID.
+     * @property {MessageFragmentProjectFragment} project A small bit of project info, used in `projectFeatured`, `reject`, `restored`
+     * @property {MessageFragmentProjectFragment} oldProject A small bit of project info, used in `remix` to refer to the remixed project
+     * @property {MessageFragmentProjectFragment} newProject A small bit of project info, used in `remix` to refer to the new remix
+     * @property {string?} badge A badge ID, used in `newBadge` to reference the added badge.
+     * @property {MessageFragmentUserFragment} user A small bit of user info, used in `followerAdded`
+     * @property {number?} time The amount of time given in a punishment, used in `tempban`
+     * @property {boolean?} hardReject Whether or not the project rejection was a hard reject (project deletion). Used in `reject`
+     * @property {string?} text Custom text added to a `custom` message. Note that this type is not accessible in the API and is only recognized by the front-end. Used in `custom`
+     */
+    /**
+     * @typedef {Object} Message
+     * @property {string} id A unique ID of the message.
+     * @property {string} receiver ID of the person receiving the message
+     * @property {MessageFragment} message The message should follow the format specified in the schema
+     * @property {boolean} disputable True if the message is disputable (can be replied to), false if not
+     * @property {boolean} read Whether or not the message has been read.
+     * @property {number} date The time in milliseconds when this message was sent.
+     * @property {string|0|null} projectID A project ID attached to this message, for message types that imply a project ID is neccessary. Will be 0 or not defined if not provided.
+     */
+    /**
+     * Gets any messages that this user has.
+     * @link https://projects.penguinmod.com/api/v1/users/getmessages
+     * @param {number?} page Which page of messages to look at. If not provided, page will be 0.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<Message>>}
+     */
+    async getMessages(page) {
+        const token = this._parent.token;
+        const url = `${this._parent.apiUrl}/v1/users/getmessages?token=${encodeURIComponent(token)}&page=${page}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.messages;
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/getmessages
     // TODO: /api/v1/users/getunreadmessages
     // TODO: /api/v1/users/setpfp
     // TODO: /api/v1/users/meta/getfollowercount

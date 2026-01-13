@@ -1,3 +1,6 @@
+# Work in Progress
+This module is a heavy work-in-progress. Please read the whole README before making an issue or pull request.
+
 # PenguinMod-ApiModule
 
 PenguinMod-ApiModule is intended to make interacting with the PenguinMod API simple and easy.

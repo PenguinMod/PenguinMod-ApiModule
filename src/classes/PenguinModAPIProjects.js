@@ -124,7 +124,7 @@ class PenguinModAPIProjects {
      * @link https://projects.penguinmod.com/api/v1/projects/hasLoved
      * @param {string} projectId The project to check.
      * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
-     * @returns {Promise<{boolean}>}
+     * @returns {Promise<boolean>}
      */
     async hasLoved(projectId) {
         const url = `${this._parent.apiUrl}/v1/projects/hasLoved?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`;
@@ -142,7 +142,7 @@ class PenguinModAPIProjects {
      * @link https://projects.penguinmod.com/api/v1/projects/hasVoted
      * @param {string} projectId The project to check.
      * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
-     * @returns {Promise<{boolean}>}
+     * @returns {Promise<boolean>}
      */
     async hasVoted(projectId) {
         const url = `${this._parent.apiUrl}/v1/projects/hasVoted?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`;
@@ -163,7 +163,7 @@ class PenguinModAPIProjects {
      * @param {string} projectId The project to check.
      * @param {string} targetUsername The target user by username.
      * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
-     * @returns {Promise<{boolean}>}
+     * @returns {Promise<boolean>}
      */
     async hasLovedAdmin(projectId, targetUsername) {
         const url = `${this._parent.apiUrl}/v1/projects/hasLovedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`;
@@ -183,7 +183,7 @@ class PenguinModAPIProjects {
      * @param {string} projectId The project to check.
      * @param {string} targetUsername The target user by username.
      * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
-     * @returns {Promise<{boolean}>}
+     * @returns {Promise<boolean>}
      */
     async hasVotedAdmin(projectId, targetUsername) {
         const url = `${this._parent.apiUrl}/v1/projects/hasVotedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`;

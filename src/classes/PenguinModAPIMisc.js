@@ -22,7 +22,7 @@ class PenguinModAPIMisc {
      * This will get the API's server stats such as number of users and projects.
      * @link https://projects.penguinmod.com/api/v1/misc/getStats
      * @throws {PenguinModAPIError}
-     * @returns {Promise<{userCount:number, bannedCount:number, projectCount:number, remixCount:number, featuredCount:number, totalViews:number, mongodb_stats:object}>} The statistics of the server's content.
+     * @returns {Promise<PenguinModTypes.ServerStatistics>} The statistics of the server's content.
      */
     async getStats() {
         return await utils.doBasicRequest(`${this._parent.apiUrl}/v1/misc/getStats`, null, this._parent, utils.RequestType.JSON);
@@ -108,7 +108,7 @@ class PenguinModAPIMisc {
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/misc/getProfanityList
      * @throws {PenguinModAPIError}
-     * @returns {Promise<{illegalWords:Array<string>, illegalWebsites:Array<string>, spacedOutWordsOnly:Array<string>, potentiallyUnsafeWords:Array<string>, potentiallyUnsafeWordsSpacedOut:Array<string>, legalExtensions:Array<string>}>} The current profanity list.
+     * @returns {Promise<PenguinModTypes.ProfanityList>} The current profanity list.
      */
     async getProfanityList() {
         const url = `${this._parent.apiUrl}/v1/misc/getProfanityList?token=${encodeURIComponent(this._parent.token)}`;
@@ -141,7 +141,7 @@ class PenguinModAPIMisc {
      * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/misc/setProfanityList
-     * @param {{illegalWords:Array<string>, illegalWebsites:Array<string>, spacedOutWordsOnly:Array<string>, potentiallyUnsafeWords:Array<string>, potentiallyUnsafeWordsSpacedOut:Array<string>, legalExtensions:Array<string>}} newProfanityList 
+     * @param {PenguinModTypes.ProfanityList} newProfanityList 
      * @throws {PenguinModAPIError} Commonly throws if an object was not provided, any extra keys are added to the list, any of the keys are not arrays, or any of the arrays contain non-strings.
      * @returns {Promise<void>}
      */

@@ -212,4 +212,50 @@ declare namespace PenguinModTypes {
         /** The username attached to this feed item. Used to see who followed, uploaded, or remixed. */
         username?: string;
     }
+
+    /** Profanity filter applied to many parts of the site. */
+    interface ProfanityList {
+        /** Only flagged under certain conditions. */
+        illegalWords: string[];
+        /** Only flagged under certain conditions. */
+        illegalWebsites: string[];
+        /** Only flagged under certain conditions. */
+        spacedOutWordsOnly: string[];
+        /** Only flagged under certain conditions. */
+        potentiallyUnsafeWords: string[];
+        /** Only flagged under certain conditions. */
+        potentiallyUnsafeWordsSpacedOut: string[];
+        /**
+         * A whitelist of permitted extension IDs (ie, `pen`, `text`, `translate`)
+         * or extension URLs (ie, `"https://example.com/files/extension.js"`)
+         * that are considered safe to use.
+         */
+        legalExtensions: string[];
+        /** Only flagged under certain conditions. */
+        unsafeUsernames: string[];
+        /** Only flagged under certain conditions. */
+        potentiallyUnsafeUsernames: string[];
+    }
+
+    /** Stats about the server and its contents. */
+    interface ServerStatistics {
+        /** Counts how many accounts are on the server */
+        userCount: number?;
+        /** Counts how many banned accounts are on the server */
+        bannedCount: number?;
+        /** Counts how many projects are on the server */
+        projectCount: number?;
+        /** Counts how many projects are remixes on the server */
+        remixCount: number?;
+        /** Counts how many accounts are featured on the server */
+        featuredCount: number?;
+        /** Counts the total amount of views across all projects that are on the server */
+        totalViews: number?;
+        /** How much memory is being used on the server. Currently disabled. */
+        current_mem_usage: any | null;
+        /** Currently disabled. */
+        comp_mem_usage: {} | null;
+        /** Any information about the MongoDB process. Currently disabled. */
+        mongodb_stats: {} | null;
+    }
 }

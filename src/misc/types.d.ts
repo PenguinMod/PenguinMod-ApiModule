@@ -30,7 +30,7 @@ declare namespace PenguinModTypes {
         /** The ID of the project. */
         id: string;
         /** The title of the project. */
-        title: string?;
+        title?: string;
     }
 
     // EXTENSIONS OF THE IMPORTANT CLASSES
@@ -240,17 +240,17 @@ declare namespace PenguinModTypes {
     /** Stats about the server and its contents. */
     interface ServerStatistics {
         /** Counts how many accounts are on the server */
-        userCount: number?;
+        userCount: number | undefined;
         /** Counts how many banned accounts are on the server */
-        bannedCount: number?;
+        bannedCount: number | undefined;
         /** Counts how many projects are on the server */
-        projectCount: number?;
+        projectCount: number | undefined;
         /** Counts how many projects are remixes on the server */
-        remixCount: number?;
+        remixCount: number | undefined;
         /** Counts how many accounts are featured on the server */
-        featuredCount: number?;
+        featuredCount: number | undefined;
         /** Counts the total amount of views across all projects that are on the server */
-        totalViews: number?;
+        totalViews: number | undefined;
         /** How much memory is being used on the server. Currently disabled. */
         current_mem_usage: any | null;
         /** Currently disabled. */

@@ -42,9 +42,7 @@ class PenguinModAPIProjects {
      * Gets the amount of loves (likes) a project has.
      * @link https://projects.penguinmod.com/api/v1/projects/getLoves
      * @param {string} projectId The project to get loves for.
-     * @throws {"InvalidProjectID"} Will throw if the project ID is invalid.
-     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
-     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
      * @returns {Promise<number>} The amount of loves (likes) the project has.
      */
     async getLoves(projectId) {
@@ -52,12 +50,6 @@ class PenguinModAPIProjects {
             const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getLoves?projectID=${encodeURIComponent(projectId)}`, null, this._parent, utils.RequestType.JSON);
             return json.loves;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "InvalidProjectID") {
-                throw "InvalidProjectID";
-            }
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
-                throw "ProjectNotFound";
-            }
             throw err;
         }
     }
@@ -65,9 +57,7 @@ class PenguinModAPIProjects {
      * Gets the amount of votes a project has.
      * @link https://projects.penguinmod.com/api/v1/projects/getVotes
      * @param {string} projectId The project to get votes for.
-     * @throws {"InvalidProjectID"} Will throw if the project ID is invalid.
-     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
-     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
      * @returns {Promise<number>} The amount of votes the project has.
      */
     async getVotes(projectId) {
@@ -75,12 +65,6 @@ class PenguinModAPIProjects {
             const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getVotes?projectID=${encodeURIComponent(projectId)}`, null, this._parent, utils.RequestType.JSON);
             return json.votes;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "InvalidProjectID") {
-                throw "InvalidProjectID";
-            }
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
-                throw "ProjectNotFound";
-            }
             throw err;
         }
     }
@@ -93,7 +77,7 @@ class PenguinModAPIProjects {
      * @param {number?} options.page Determines which page of projects should be returned. If not provided, page will be 0.
      * @param {boolean?} options.reverse Whether or not to show oldest projects first. Default is false.
      * @param {boolean?} options.login Whether or not to provide login info. Should be true for moderators who want to see unranked user's projects. Default is true.
-     * @throws {"ViewingDisabled"|PenguinModAPIError} Throws "ViewingDisabled" if viewing projects is disabled.
+     * @throws {PenguinModAPIError} Can also throw if viewing projects is disabled.
      * @returns {Promise<Array<PenguinModTypes.Project>>} An array of PenguinMod projects.
      */
     async getProjects(options) {
@@ -112,9 +96,6 @@ class PenguinModAPIProjects {
             const json = await utils.doBasicRequest(url.toString(), null, this._parent, utils.RequestType.JSON);
             return json;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Viewing is disabled") {
-                throw "ViewingDisabled";
-            }
             throw err;
         }
     }
@@ -124,8 +105,7 @@ class PenguinModAPIProjects {
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/projects/getuserstatewrapper
      * @param {string} projectId The project to check.
-     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
-     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
      * @returns {Promise<{hasLoved:boolean, hasVoted:boolean}>}
      */
     async getUserState(projectId) {
@@ -135,9 +115,6 @@ class PenguinModAPIProjects {
             const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
-                throw "ProjectNotFound";
-            }
             throw err;
         }
     }
@@ -146,8 +123,7 @@ class PenguinModAPIProjects {
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/projects/hasLoved
      * @param {string} projectId The project to check.
-     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
-     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
      * @returns {Promise<{boolean}>}
      */
     async hasLoved(projectId) {
@@ -157,9 +133,6 @@ class PenguinModAPIProjects {
             const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json.hasLoved;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
-                throw "ProjectNotFound";
-            }
             throw err;
         }
     }
@@ -168,8 +141,7 @@ class PenguinModAPIProjects {
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/projects/hasVoted
      * @param {string} projectId The project to check.
-     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
-     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
      * @returns {Promise<{boolean}>}
      */
     async hasVoted(projectId) {
@@ -179,9 +151,6 @@ class PenguinModAPIProjects {
             const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json.hasVoted;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
-                throw "ProjectNotFound";
-            }
             throw err;
         }
     }
@@ -193,8 +162,7 @@ class PenguinModAPIProjects {
      * @link https://projects.penguinmod.com/api/v1/projects/hasLovedAdmin
      * @param {string} projectId The project to check.
      * @param {string} targetUsername The target user by username.
-     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
-     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
      * @returns {Promise<{boolean}>}
      */
     async hasLovedAdmin(projectId, targetUsername) {
@@ -204,9 +172,6 @@ class PenguinModAPIProjects {
             const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json.hasLoved;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
-                throw "ProjectNotFound";
-            }
             throw err;
         }
     }
@@ -217,8 +182,7 @@ class PenguinModAPIProjects {
      * @link https://projects.penguinmod.com/api/v1/projects/hasVotedAdmin
      * @param {string} projectId The project to check.
      * @param {string} targetUsername The target user by username.
-     * @throws {"ProjectNotFound"} Will throw if no project was found with the specified ID.
-     * @throws {PenguinModAPIError} Thrown in any other case.
+     * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
      * @returns {Promise<{boolean}>}
      */
     async hasVotedAdmin(projectId, targetUsername) {
@@ -228,9 +192,6 @@ class PenguinModAPIProjects {
             const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
             return json.hasVoted;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Project not found") {
-                throw "ProjectNotFound";
-            }
             throw err;
         }
     }

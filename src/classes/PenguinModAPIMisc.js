@@ -142,10 +142,7 @@ class PenguinModAPIMisc {
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/misc/setProfanityList
      * @param {{illegalWords:Array<string>, illegalWebsites:Array<string>, spacedOutWordsOnly:Array<string>, potentiallyUnsafeWords:Array<string>, potentiallyUnsafeWordsSpacedOut:Array<string>, legalExtensions:Array<string>}} newProfanityList 
-     * @throws {"InvalidFormatExtra"} Will throw if any extra keys are added to the list object
-     * @throws {"InvalidFormatNonArray"} Will throw if any of the keys are not arrays
-     * @throws {"InvalidFormatNonString"} Will throw if any of the arrays contain non-strings
-     * @throws {PenguinModAPIError} Any other exception, including not providing an object as the list.
+     * @throws {PenguinModAPIError} Commonly throws if an object was not provided, any extra keys are added to the list, any of the keys are not arrays, or any of the arrays contain non-strings.
      * @returns {Promise<void>}
      */
     async setProfanityList(newProfanityList) {
@@ -161,15 +158,6 @@ class PenguinModAPIMisc {
                 })
             }, this._parent, utils.RequestType.JSON);
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Invalid inner words object") {
-                throw "InvalidFormatNonArray";
-            }
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Invalid word") {
-                throw "InvalidFormatNonString";
-            }
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Invalid key") {
-                throw "InvalidFormatExtra";
-            }
             throw err;
         }
     }

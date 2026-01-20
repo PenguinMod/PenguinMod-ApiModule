@@ -258,4 +258,34 @@ declare namespace PenguinModTypes {
         /** Any information about the MongoDB process. Currently disabled. */
         mongodb_stats: {} | null;
     }
+
+    /** A search query in object form. Arbitrary properties may also be present. */
+    interface SearchQuery {
+        /** The actual search query, text that should be looked for. */
+        query: string;
+
+        /** Sorts the results by a certain condition. */
+        sort?: "newest" | "oldest" | "views" | "votes" | "loves";
+        /** Only shows results before the specified date (if it can be read as a date). */
+        before?: string;
+        /** Only shows results after the specified date (if it can be read as a date). */
+        after?: string;
+        /** Reverses the results before paging is done. */
+        reverse?: boolean;
+
+        /** Only show results with this ID. */
+        id?: string;
+        /** Show only content by the specified user. */
+        by?: string;
+        /** Show only projects remixing the specified project ID. */
+        remixes?: string;
+        /** If specified, show only studios in results (true) or exclude studios in results (false) */
+        studio?: boolean;
+        /** If specified, show only myself in results (true) or exclude myself in results (false) */
+        me?: boolean;
+        /** If specified, include featured (true) or exclude featured (false) */
+        featured?: boolean;
+        /** If specified, show only unranked projects in results (true) or exclude unranked projects in results (false). May not be available to all users. */
+        unranked?: boolean;
+    }
 }

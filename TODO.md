@@ -8,6 +8,7 @@ All of these TODOs should be completed before ApiModule is considered to have a 
 - [x] ApiModule header (see src/misc/utils.js)
 - [x] Make TODOs in every PenguinModAPI file that lists which endpoints need to be implemented for that section
 - [x] PenguinModProject interface (see src/classes/PenguinModAPIProjects.js)
+- [ ] PenguinModDiscovery should probably be used on backend later on (rip ian)
 
 ## Endpoint classes
 

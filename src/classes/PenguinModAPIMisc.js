@@ -1,9 +1,7 @@
 const utils = require("../misc/utils.js");
 const PenguinModAPIError = require("./PenguinModAPIError.js");
+/** @typedef {import("./PenguinModAPI")} PenguinModAPI */
 
-/**
- * @typedef {import("./PenguinModAPI")} PenguinModAPI
- */
 /**
  * @class This class is used to interface with the miscellaneous endpoints within the PenguinMod API.
  * Should only be accessed through PenguinModAPI.misc

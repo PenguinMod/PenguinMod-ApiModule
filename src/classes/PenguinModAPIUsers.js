@@ -1,10 +1,8 @@
 const utils = require("../misc/utils.js");
 const countryLookup = require("../misc/country-lookup.json");
 const PenguinModAPIError = require("./PenguinModAPIError.js");
+/** @typedef {import("./PenguinModAPI")} PenguinModAPI */
 
-/**
- * @typedef {import("./PenguinModAPI")} PenguinModAPI
- */
 /**
  * @class This class is used to interface with endpoints related to users within the PenguinMod API.
  * Should only be accessed through PenguinModAPI.users
@@ -104,26 +102,11 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * @typedef {Object} FeedItemData
-     * @property {string?} id The user ID or project ID. Depends on the type of FeedItem.
-     * @property {string?} username The username of the user who followed you, if the FeedItem type is `"follow"`.
-     * @property {string?} name The name of the uploaded project or remix. Depends on the type of FeedItem.
-     */
-    /**
-     * @typedef {Object} FeedItem
-     * @property {"follow"|"upload"|"remix"} type The type of the feed item.
-     * @property {number} date The time in milliseconds when this feed item was made.
-     * @property {number} expireAt The time in milliseconds when this feed item will expire.
-     * @property {FeedItemData?} data Extra data attached to this feed item. Will be formatted differently for different FeedItem types.
-     * @property {string?} id The user ID attached to this feed item. Used to see who followed, uploaded, or remixed.
-     * @property {string?} username The username attached to this feed item. Used to see who followed, uploaded, or remixed.
-     */
-    /**
      * Get your feed.
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/getmyfeed
      * @throws {PenguinModAPIError}
-     * @returns {Promise<Array<FeedItem>>}
+     * @returns {Promise<Array<PenguinModTypes.FeedItem>>}
      */
     async getMyFeed() {
         const url = `${this._parent.apiUrl}/v1/users/getmyfeed?token=${encodeURIComponent(this._parent.token)}`;
@@ -175,30 +158,12 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * @typedef {Object} Profile
-     * @property {string} id The ID of the user.
-     * @property {string} username The username of the user.
-     * @property {string} real_username The username of the user, with capitalization preserved.
-     * @property {Array<string>} badges The badges of the user.
-     * @property {boolean} donator If the user is a donator.
-     * @property {number} rank The rank of the user. 0 represents new penguin, 1 represents penguin.
-     * @property {string} bio The user's bio.
-     * @property {number} myFeaturedProject the user's featured project.
-     * @property {number} myFeaturedProjectTitle An enum-ish of the titles. Each integer represents a different title.
-     * @property {number} followers The follower count of the user.
-     * @property {boolean} canrankup If the user can rank up.
-     * @property {boolean} privateProfile If the user's account is private.
-     * @property {boolean} canFollowingSeeProfile If people the user follows can see the users account when the account is private.
-     * @property {boolean} isFollowing If the user is following you.
-     */
-
-    /**
      * Get the profile of a user.
      * Token is optional. If the user has a private account, it can be viewed only if they allow followees to view and they're following you, or if you're a mod/admin.
      * @link https://projects.penguinmod.com/api/v1/users/profile
      * @param {string} username Username of the target.
      * @throws {PenguinModAPIError}
-     * @returns {Promise<Profile|null>} Either the resulting profile or null if not found (not found could be given from a profile whose user is currently banned).
+     * @returns {Promise<PenguinModTypes.UserProfile|null>} Either the resulting profile or null if not found (not found could be given from a profile whose user is currently banned).
      */
     async getProfile(username) {
         try {
@@ -397,35 +362,11 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * @typedef {Object} SelfInfo
-     * @property {string} id Your ID.
-     * @property {string} username Your username.
-     * @property {string} real_username Your username with capitalization preserved.
-     * @property {boolean} admin If you're an admin or not.
-     * @property {boolean} approver If you're a mod or not
-     * @property {boolean} isBanned if you're banned or not.
-     * @property {Array<string>} badges Your badges.
-     * @property {boolean} donator If you're a donator or not.
-     * @property {number} rank Your rank. 0 for new penguin, 1 for penguin.
-     * @property {number} myFeaturedProject The ID of the project featured on your profile. Defaults to -1.
-     * @property {number} myFeaturedProjectTitle The index of the subtitle of the project featured on your profile. Defaults to -1.
-     * @property {number} cubes Unused currently.
-     * @property {number} firstLogin Unix timestamp (with milliseconds) of your first login.
-     * @property {number} lastLogin Unix timestamp (with milliseconds) of your most recent login.
-     * @property {number} lastLogin Unix timestamp (with milliseconds) of your last project upload/update.
-     * @property {string} email Your email.
-     * @property {boolean} emailVerified If your email is verified or not.
-     * @property {boolean} birthdayEntered If your birthday is entered or not.
-     * @property {boolean} countryEntered If your country is entered or not.
-     * @property {string} country Your country of residence, in country-code form.
-     */
-
-    /**
      * Get your info.
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/userfromcode
      * @throws {PenguinModAPIError}
-     * @returns {Promise<SelfInfo>}
+     * @returns {Promise<PenguinModTypes.UserIdentity>}
      */
     async getInfo() {
         const url = `${this._parent.apiUrl}/v1/users/userfromcode?token=${this._parent.token}`;
@@ -777,47 +718,11 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * @typedef {Object} MessageFragmentUserFragment
-     * @property {string} id The ID of the user attached to the MessageFragment.
-     * @property {string} username The username of the user attached to the MessageFragment.
-     */
-    /**
-     * @typedef {Object} MessageFragmentProjectFragment
-     * @property {string} id The ID of the project attached to the MessageFragment.
-     * @property {string} title The title of the project attached to the MessageFragment.
-     */
-    /**
-     * @typedef {Object} MessageFragment
-     * @property {"newBadge"|"projectFeatured"|"delete"|"reject"|"modMessage"|"disputeResponse"|"restored"|"remix"|"followerAdded"|"tempban"|"ban"|"unban"|"custom"} type The type of message that this MessageFragment is apart of.
-     * @property {string?} message Message content for MessageFragments of type `reject`, `delete`, `modMessage`, `disputeResponse`
-     * @property {string?} reason A punishment reason for MessageFragments of type `tempban`, `ban`
-     * @property {string?} title The affected project's title, used in `delete`, `reject` (sometimes)
-     * @property {string?} projectID A project ID, used in `remix` to point to the new remix's ID.
-     * @property {MessageFragmentProjectFragment?} project A small bit of project info, used in `projectFeatured`, `reject`, `restored`
-     * @property {MessageFragmentProjectFragment?} oldProject A small bit of project info, used in `remix` to refer to the remixed project
-     * @property {MessageFragmentProjectFragment?} newProject A small bit of project info, used in `remix` to refer to the new remix
-     * @property {string?} badge A badge ID, used in `newBadge` to reference the added badge.
-     * @property {MessageFragmentUserFragment|string|null} user A small bit of user info, or a user id depending on the endpoint. Used in `followerAdded`
-     * @property {number?} time The amount of time given in a punishment, used in `tempban`
-     * @property {boolean?} hardReject Whether or not the project rejection was a hard reject (project deletion). Used in `reject`
-     * @property {string?} text Custom text added to a `custom` message. Note that this type is not accessible in the API and is only recognized by the front-end. Used in `custom`
-     */
-    /**
-     * @typedef {Object} Message
-     * @property {string} id A unique ID of the message.
-     * @property {string} receiver ID of the person receiving the message
-     * @property {MessageFragment} message The message should follow the format specified in the schema
-     * @property {boolean} disputable True if the message is disputable (can be replied to), false if not
-     * @property {boolean} read Whether or not the message has been read.
-     * @property {number} date The time in milliseconds when this message was sent.
-     * @property {string|0|null} projectID A project ID attached to this message, for message types that imply a project ID is neccessary. Will be 0 or not defined if not provided.
-     */
-    /**
      * Gets any messages that this user has.
      * @link https://projects.penguinmod.com/api/v1/users/getmessages
      * @param {number?} page Which page of messages to look at. If not provided, page will be 0.
      * @throws {PenguinModAPIError}
-     * @returns {Promise<Array<Message>>}
+     * @returns {Promise<Array<PenguinModTypes.Message>>}
      */
     async getMessages(page) {
         const token = this._parent.token;
@@ -830,7 +735,7 @@ class PenguinModAPIUsers {
      * @link https://projects.penguinmod.com/api/v1/users/getunreadmessages
      * @param {number?} page Which page of messages to look at. If not provided, page will be 0.
      * @throws {PenguinModAPIError}
-     * @returns {Promise<Array<Message>>}
+     * @returns {Promise<Array<PenguinModTypes.Message>>}
      */
     async getUnreadMessages(page) {
         const token = this._parent.token;

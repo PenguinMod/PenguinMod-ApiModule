@@ -1,6 +1,7 @@
 const axios = require("axios");
 
 const PenguinModAPIError = require("../classes/PenguinModAPIError");
+/** @typedef {import("../classes/PenguinModAPI")} PenguinModAPI */
 
 const safeParseJSON = (possibleJson, forceObject) => {
     try {
@@ -23,9 +24,6 @@ const RequestType = {
     ArrayBuffer: "arrbuff"
 };
 
-/**
- * @typedef {import("../classes/PenguinModAPI")} PenguinModAPI
- */
 /**
  * @param {string} url 
  * @param {RequestInit?} options 

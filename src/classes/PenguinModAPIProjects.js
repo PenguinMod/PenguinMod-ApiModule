@@ -1,9 +1,7 @@
 const utils = require("../misc/utils.js");
 const PenguinModAPIError = require("./PenguinModAPIError.js");
+/** @typedef {import("./PenguinModAPI")} PenguinModAPI */
 
-/**
- * @typedef {import("./PenguinModAPI")} PenguinModAPI
- */
 /**
  * @class This class is used to interface with endpoints related to projects within the PenguinMod API.
  * Should only be accessed through PenguinModAPI.projects
@@ -87,47 +85,16 @@ class PenguinModAPIProjects {
         }
     }
 
-
-    // TODO: This should be merged with MessageFragmentUserFragment
-    /**
-     * @typedef {Object} ProjectUserFragment
-     * @property {string} id The ID of the user attached to the Project.
-     * @property {string} username The username of the user attached to the Project.
-     */
-    /**
-     * @typedef {Object} Project
-     * @property {string} id The ID of the project
-     * @property {ProjectUserFragment|string|null} author Some info on the author of the project, or a user ID depending on the endpoint.
-     * @property {string?} title The title of the project
-     * @property {string?} instructions The instructions attached to this project.
-     * @property {string?} notes The notes attached to this project.
-     * @property {string|"0"|null} remix If this project is a remix, this will be the project ID of the project it remixed. Either `"0"` or not defined for non-remix projects.
-     * @property {boolean} featured True if this project is featured.
-     * @property {number} views The amount of times someone has visited the project page for this project.
-     * @property {number} date The time in milliseconds that this project was published.
-     * @property {number?} lastUpdate The time in milliseconds that this project was last updated.
-     * @property {string?} rating The age-rating of this project. This property has specific intended values, but they have not been determined nor implemented yet.
-     * @property {boolean?} public True if this project can be seen by others
-     * @property {boolean?} softRejected True if this project is soft-rejected (hidden for review)
-     * @property {boolean?} hardReject True if this project is hard-rejected (subject for deletion.)
-     * @property {number?} hardRejectTime The time in milliseconds that this project was hard-rejected.
-     * @property {number?} impressions The amount of times this project has been seen on the site.
-     * @property {boolean?} noFeature True if this project cannot be featured.
-     * @property {number?} featureDate The time in milliseconds that this project was featured.
-     * @property {boolean?} manuallyFeatured True if this project was manually featured.
-     */
-
     /**
      * Gets a list of all projects uploaded by ranked users on the site.
      * If logged in as a moderator, this will also include projects uploaded by unranked users.
      * @link https://projects.penguinmod.com/api/v1/projects/getprojects
-     * @todo Make a PenguinModProject interface that defines the properties a project will have.
      * @param {Object} options Optional.
      * @param {number?} options.page Determines which page of projects should be returned. If not provided, page will be 0.
      * @param {boolean?} options.reverse Whether or not to show oldest projects first. Default is false.
      * @param {boolean?} options.login Whether or not to provide login info. Should be true for moderators who want to see unranked user's projects. Default is true.
      * @throws {"ViewingDisabled"|PenguinModAPIError} Throws "ViewingDisabled" if viewing projects is disabled.
-     * @returns {Promise<Array<Project>>} An array of PenguinMod projects.
+     * @returns {Promise<Array<PenguinModTypes.Project>>} An array of PenguinMod projects.
      */
     async getProjects(options) {
         if (!options) options = {};

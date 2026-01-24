@@ -24,6 +24,8 @@ declare namespace PenguinModTypes {
         id: string;
         /** The username of the user. */
         username: string;
+        /** Whether or not the user is banned. */
+        banned?: boolean;
     }
     /** A small bit of project info when not all info is needed */
     interface StubProject {

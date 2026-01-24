@@ -79,6 +79,29 @@ class PenguinModAPIUsers {
         }, this._parent, utils.RequestType.JSON);
     }
     /**
+     * Check if you're blocking a given user.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/users/hasblocked
+     * @param {string} username Who you want to check if you're blocking.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<boolean|null>} If blocking or not, null if not found
+     */
+    async hasBlocked(username) {
+        const token = this._parent.token;
+        const url = `${this._parent.apiUrl}/v1/users/hasblocked?target=${encodeURIComponent(username)}&token=${encodeURIComponent(token)}`;
+        utils.assert(!!token, url, "Reauthenticate", "No token is registered.");
+        try {
+            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+            return json.has_blocked;
+        } catch (err) {
+            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Target not found") {
+                return null;
+            }
+            throw err;
+        }
+    }
+
+    /**
      * Follow a user. Optionally, unfollow a user by passing `shouldUnfollow` as `true`.
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/follow
@@ -99,6 +122,43 @@ class PenguinModAPIUsers {
                 toggle: !shouldUnfollow
             })
         }, this._parent, utils.RequestType.JSON);
+    }
+    /**
+     * Gets the amount of followers a user has.
+     * @link https://projects.penguinmod.com/api/v1/users/meta/getfollowercount
+     * @param {string} username The username of the user you want to check followers for.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<number>}
+     */
+    async getFollowerCount(username) {
+        const url = `${this._parent.apiUrl}/v1/users/meta/getfollowercount?username=${encodeURIComponent(username)}`;
+        const followers = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return followers.count;
+    }
+    /**
+     * Gets the followers a user has.
+     * @link https://projects.penguinmod.com/api/v1/users/meta/getfollowers
+     * @param {string} username The username of the user you want to check followers for.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.StubUser>>}
+     */
+    async getFollowers(username) {
+        const url = `${this._parent.apiUrl}/v1/users/meta/getfollowers?username=${encodeURIComponent(username)}`;
+        const followers = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return followers;
+    }
+    /**
+     * Checks if a user is following another user.
+     * @link https://projects.penguinmod.com/api/v1/users/isfollowing
+     * @param {string} username The username of the user you want to check followers for.
+     * @param {string} target The target user you want to check if they are following.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<boolean>}
+     */
+    async isFollowing(username, target) {
+        const url = `${this._parent.apiUrl}/v1/users/isfollowing?username=${encodeURIComponent(username)}&target=${encodeURIComponent(target)}`;
+        const following = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return following.following;
     }
 
     /**
@@ -128,29 +188,6 @@ class PenguinModAPIUsers {
             return pfp;
         } catch (err) {
             if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "NotFound") {
-                return null;
-            }
-            throw err;
-        }
-    }
-
-    /**
-     * Check if you're blocking a given user.
-     * Requires token.
-     * @link https://projects.penguinmod.com/api/v1/users/hasblocked
-     * @param {string} username Who you want to check if you're blocking.
-     * @throws {PenguinModAPIError}
-     * @returns {Promise<boolean|null>} If blocking or not, null if not found
-     */
-    async hasBlocked(username) {
-        const token = this._parent.token;
-        const url = `${this._parent.apiUrl}/v1/users/hasblocked?target=${encodeURIComponent(username)}&token=${encodeURIComponent(token)}`;
-        utils.assert(!!token, url, "Reauthenticate", "No token is registered.");
-        try {
-            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
-            return json.has_blocked; 
-        } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Target not found") {
                 return null;
             }
             throw err;
@@ -822,9 +859,6 @@ class PenguinModAPIUsers {
     }
 
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/meta/getfollowercount
-    // TODO: /api/v1/users/meta/getfollowers
-    // TODO: /api/v1/users/isfollowing
     // TODO: /api/v1/users/ban
     // TODO: /api/v1/users/getAlts
     // TODO: /api/v1/users/setbioadmin

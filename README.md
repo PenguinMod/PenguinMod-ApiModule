@@ -161,6 +161,9 @@ PenguinModClient.users.filloutSafetyDetails("01-01-2000", "US").then(console.log
 PenguinModClient.users.logout().catch(console.log); // void
 PenguinModClient.users.changeUsername("SuperGuy3333").catch(console.log); // void
 PenguinModClient.users.followUser("PenguinMod").catch(console.log); // void
+PenguinModClient.users.getFollowerCount("PenguinMod").then(console.log).catch(console.log); // number
+PenguinModClient.users.getFollowers("PenguinMod").then(console.log).catch(console.log); // Array<StubUser>
+PenguinModClient.users.isFollowing("JeremyGamer13", "PenguinMod").then(console.log).catch(console.log); // boolean
 PenguinModClient.users.sendVerifyEmail().catch(console.log); // void
 PenguinModClient.users.privateProfile(true, false).catch(console.log); // void
 PenguinModClient.users.setMyFeaturedProject("sigma", 12).catch(console.log); // void

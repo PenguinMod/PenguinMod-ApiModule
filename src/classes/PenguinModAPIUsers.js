@@ -288,6 +288,29 @@ class PenguinModAPIUsers {
         }, this._parent, utils.RequestType.None);
     }
     /**
+     * Set another account's bio.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/setbioadmin
+     * @throws {PenguinModAPIError}
+     * @param {string} target The target user to edit the bio for.
+     * @param {string} bio New bio.
+     * @returns {Promise<null>}
+     */
+    async setBioAdmin(target, bio) {
+        const url = `${this._parent.apiUrl}/v1/users/setbioadmin`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target,
+                bio
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
      * Makes a specific project featured on your profile.
      * The specified project must belong to you in order for it to be visible to other users on the frontend.
      * Requires token.
@@ -304,6 +327,30 @@ class PenguinModAPIUsers {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 token: this._parent.token,
+                project: projectId,
+                title: featuredTitle,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Makes a specific project featured on someone else's profile.
+     * The specified project must belong to the user in order for it to be visible to other users on the frontend.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/setmyfeaturedprojectadmin
+     * @param {string} projectId The project ID of the project to feature on your profile.
+     * @param {number} featuredTitle This is a 1-index based number that chooses which featured label to use in the list of labels on the frontend.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async setMyFeaturedProjectAdmin(target, projectId, featuredTitle) {
+        const url = `${this._parent.apiUrl}/v1/users/setmyfeaturedprojectadmin`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target: target,
                 project: projectId,
                 title: featuredTitle,
             })
@@ -842,7 +889,9 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * Sets the profile picture of this account. Note that only `image/png` and `image/jpeg` are supported, and the image must not be recognized as `application/octet-stream`.
+     * Sets the profile picture of this account.
+     * Note that only `image/png` and `image/jpeg` are supported, and the image must not be recognized as `application/octet-stream`.
+     * Requires token.
      * @link https://projects.penguinmod.com/api/v1/users/setpfp
      * @param {ArrayBuffer} file The new profile picture to use.
      * @throws {PenguinModAPIError}
@@ -857,17 +906,119 @@ class PenguinModAPIUsers {
             method: "POST",
         }, formData, this._parent, utils.RequestType.JSON);
     }
+    /**
+     * Sets the profile picture of another user's account.
+     * Note that only `image/png` and `image/jpeg` are supported, and the image must not be recognized as `application/octet-stream`.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/setpfpadmin
+     * @param {ArrayBuffer} file The new profile picture to use.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async setPFPAdmin(target, file) {
+        const url = `${this._parent.apiUrl}/v1/users/setpfpadmin`;
+        const formData = new FormData();
+        formData.append("token", this._parent.token);
+        formData.append("target", target);
+        formData.append("picture", new Blob([file]));
+
+        await utils.doFormDataRequest(url, {
+            method: "POST",
+        }, formData, this._parent, utils.RequestType.JSON);
+    }
+
+    /**
+     * Bans a user on the server. Handles permanent bans, temporary bans, and unbans.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/ban
+     * @param {string} target The user to ban.
+     * @param {string} reason A reason to ban them for. Cannot be longer than 512 characters.
+     * @param {boolean?} doUnban If true, will unban the user.
+     * @param {number?} time A duration to ban the user for. If not set, the ban will be permanent.
+     * @param {boolean?} removeFollows If false, will not remove the followers and following users from a permanently banned user.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async ban(target, reason, doUnban, time, removeFollows) {
+        const url = `${this._parent.apiUrl}/v1/users/ban`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target: target,
+                reason: reason,
+                toggle: doUnban !== true,
+                time: time || 0,
+                remove_follows: removeFollows !== false,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Bans an IP from accessing the server. Handles IP bans and unbans.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/banip
+     * @param {string} targetIP The IP to ban.
+     * @param {boolean?} doUnban If true, will unban the IP.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async banIP(targetIP, doUnban) {
+        const url = `${this._parent.apiUrl}/v1/users/banip`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                targetIP: targetIP,
+                toggle: doUnban !== true,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Bans a user's IP from accessing the server. Handles user IP bans and unbans.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/banuserip
+     * @param {string} target The target user to ban.
+     * @param {boolean?} doUnban If true, will unban the user.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async banUserIP(target, doUnban) {
+        const url = `${this._parent.apiUrl}/v1/users/banuserip`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target: target,
+                toggle: doUnban !== true,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Gets the alternate accounts (alts) that were made by this user.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/getAlts
+     * @param {string} target The target user to get the alts for.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<string>>} The list of usernames for accounts this user made.
+     */
+    async getAlts(target) {
+        const url = `${this._parent.apiUrl}/v1/users/getAlts?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.alts;
+    }
 
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/ban
-    // TODO: /api/v1/users/getAlts
-    // TODO: /api/v1/users/setbioadmin
-    // TODO: /api/v1/users/setmyfeaturedprojectadmin
-    // TODO: /api/v1/users/setpfpadmin
     // TODO: /api/v1/users/changeusernameadmin
     // TODO: /api/v1/users/assignPossition
-    // TODO: /api/v1/users/banip
-    // TODO: /api/v1/users/banuserip
     // TODO: /api/v1/users/setbadgesmultiple
     // TODO: /api/v1/users/changeprojectid
     // TODO: /api/v1/users/deleteaccount

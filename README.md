@@ -190,6 +190,13 @@ PenguinModClient.misc.setProfanityList({ "illegalWords": ["badword"] }).catch(co
 
 // users endpoints
 PenguinModClient.users.setCustomizationDisabled("PenguinMod", true).catch(console.log);
+PenguinModClient.users.ban("PenguinMod", "I'm so evil").catch(console.log); // void
+PenguinModClient.users.banIP("127.0.0.1").catch(console.log); // void
+PenguinModClient.users.banUserIP("PenguinMod", false).catch(console.log); // void
+PenguinModClient.users.getAlts("PenguinMod").then(console.log).catch(console.log); // Array<string>
+PenguinModClient.users.setBioAdmin("PenguinMod", "bananana").catch(console.log); // void
+PenguinModClient.users.setMyFeaturedProjectAdmin("PenguinMod", "sigma", 4).catch(console.log); // void
+PenguinModClient.users.setPFPAdmin("PenguinMod", arraybuffer).catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.hasLovedAdmin("sigma", "PenguinMod").then(console.log).catch(console.log); // boolean

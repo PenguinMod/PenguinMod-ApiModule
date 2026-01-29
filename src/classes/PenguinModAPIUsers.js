@@ -1024,6 +1024,29 @@ class PenguinModAPIUsers {
             })
         }, this._parent, utils.RequestType.None);
     }
+    /**
+     * Uses a regex to ban or unban many users at once.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/massbanregex
+     * @param {string} targetRegex The regex to use to ban.
+     * @param {boolean?} doUnban If true, will unban the users.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<number>} Returns the amount of banned users.
+     */
+    async massBanRegex(targetRegex, doUnban) {
+        const url = `${this._parent.apiUrl}/v1/users/massbanregex`;
+        const result = await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                targetRegex,
+                toggle: doUnban !== true,
+            })
+        }, this._parent, utils.RequestType.JSON);
+        return result.count;
+    }
 
     /**
      * Gets the alternate accounts (alts) that were made by this user.
@@ -1169,6 +1192,20 @@ class PenguinModAPIUsers {
         return data.admins;
     }
     /**
+     * Gets all moderators on the server.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/getmods
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.StubUser>>}
+     */
+    async getMods() {
+        const url = `${this._parent.apiUrl}/v1/users/getmods?token=${encodeURIComponent(this._parent.token)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.mods;
+    }
+
+    /**
      * Gets all the accounts associated with an IP address.
      * Requires token.
      * Only accessible on admin accounts.
@@ -1187,7 +1224,7 @@ class PenguinModAPIUsers {
      * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/users/getAllIPs
-     * @param {string} target The target users to get IPs from.
+     * @param {string} target The target user to get IPs from.
      * @throws {PenguinModAPIError}
      * @returns {Promise<Array<PenguinModTypes.IPAddress>>}
      */
@@ -1197,14 +1234,83 @@ class PenguinModAPIUsers {
         return data.ips;
     }
 
-    // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/getemail
-    // TODO: /api/v1/users/getmods
-    // TODO: /api/v1/users/getworstoffenders
-    // TODO: /api/v1/users/isadmin
-    // TODO: /api/v1/users/ismod
-    // TODO: /api/v1/users/massbanregex
-    // TODO: /api/v1/users/verifyfollowers
+    /**
+     * Gets the email attached to an account.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/getemail
+     * @param {string} target The target user to get the email of.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<string|null>}
+     */
+    async getEmail(target) {
+        const url = `${this._parent.apiUrl}/v1/users/getemail?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.email;
+    }
+
+    /**
+     * For debugging MongoDB.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/getworstoffenders
+     * @param {number?} page Which page of messages to look at. If not provided, page will be 0.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<any>}
+     */
+    async getWorstOffenders(page) {
+        const url = `${this._parent.apiUrl}/v1/users/getworstoffenders?token=${encodeURIComponent(this._parent.token)}&page=${encodeURIComponent(page)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.items;
+    }
+
+    /**
+     * Checks if a user is an admin
+     * @link https://projects.penguinmod.com/api/v1/users/isadmin
+     * @param {string} target Which user to check
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<boolean>}
+     */
+    async isAdmin(target) {
+        const url = `${this._parent.apiUrl}/v1/users/isadmin?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.isAdmin;
+    }
+    /**
+     * Checks if a user is an admin
+     * @link https://projects.penguinmod.com/api/v1/users/ismod
+     * @param {string} target Which user to check
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<boolean>}
+     */
+    async isMod(target) {
+        const url = `${this._parent.apiUrl}/v1/users/ismod?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.isMod;
+    }
+
+    /**
+     * Removes banned followers from a user's follower list.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/verifyfollowers
+     * @param {string} target The target user to filter the follow list of
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async verifyFollowers(target) {
+        const url = `${this._parent.apiUrl}/v1/users/verifyfollowers`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    // TODO: Add these OAuth endpoints
     // TODO: /api/v1/users/addoauthmethod
     // TODO: /api/v1/users/addscratchlogin
     // TODO: /api/v1/users/addpasswordtooauth
@@ -1212,8 +1318,7 @@ class PenguinModAPIUsers {
     // TODO: /api/v1/users/loginoauthaccount
     // TODO: /api/v1/users/removeoauthmethod
 
-    // NOTE FOR THESE: These are redirected to from the frontend, not fetched. Perhaps cleanup these into one function that redirects to the correct method so we avoid worrying about different methods, in case they're changed?
-
+    // TODO: These are redirected to from the frontend, not fetched. Perhaps cleanup these into one function that redirects to the correct method so we avoid worrying about different methods, in case they're changed?
     // TODO: /api/v1/users/githubcallback/addpasswordfinal
     // TODO: /api/v1/users/googlecallback/addpasswordfinal
     // TODO: /api/v1/users/scratchaddpasswordfinal

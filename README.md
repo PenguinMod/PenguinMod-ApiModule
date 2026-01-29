@@ -193,6 +193,7 @@ PenguinModClient.users.setCustomizationDisabled("PenguinMod", true).catch(consol
 PenguinModClient.users.ban("PenguinMod", "I'm so evil").catch(console.log); // void
 PenguinModClient.users.banIP("127.0.0.1").catch(console.log); // void
 PenguinModClient.users.banUserIP("PenguinMod", false).catch(console.log); // void
+PenguinModClient.users.massBanRegex("EvilRobot[0-9]+").then(console.log).catch(console.log); // number
 PenguinModClient.users.getAlts("PenguinMod").then(console.log).catch(console.log); // Array<string>
 PenguinModClient.users.setBioAdmin("PenguinMod", "bananana").catch(console.log); // void
 PenguinModClient.users.setMyFeaturedProjectAdmin("PenguinMod", "sigma", 4).catch(console.log); // void
@@ -204,8 +205,14 @@ PenguinModClient.users.setBadgesMultiple(["PenguinMod", "JeremyGamer13"], ["dona
 PenguinModClient.users.deleteAccount("PenguinModEvilEdition", "Too Evil").catch(console.log); // void
 PenguinModClient.users.deleteAllEmails().catch(console.log); // void
 PenguinModClient.users.getAdmins().then(console.log).catch(console.log); // Array<StubUser>
+PenguinModClient.users.getMods().then(console.log).catch(console.log); // Array<StubUser>
 PenguinModClient.users.getAllAccountsWithIP("0:0:0:0:0:0:0:1").then(console.log).catch(console.log); // Array<PenguinModTypes.StubUser>
-PenguinModClient.users.getAllIPs("poopyguy2").then(console.log).catch(console.log); // Array<PenguinModTypes.IPAddress>
+PenguinModClient.users.getAllIPs("PenguinMod").then(console.log).catch(console.log); // Array<PenguinModTypes.IPAddress>
+PenguinModClient.users.getEmail("PenguinMod").then(console.log).catch(console.log); // string
+PenguinModClient.users.getWorstOffenders().then(console.log).catch(console.log); // any
+PenguinModClient.users.isAdmin("PenguinMod").then(console.log).catch(console.log); // boolean
+PenguinModClient.users.isMod("PenguinMod").then(console.log).catch(console.log); // boolean
+PenguinModClient.users.verifyFollowers("poopyguy3").catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.hasLovedAdmin("sigma", "PenguinMod").then(console.log).catch(console.log); // boolean

@@ -1,3 +1,5 @@
+const pmp_protobuf = require("pmp-protobuf");
+
 const utils = require("../misc/utils.js");
 const PenguinModAPIError = require("./PenguinModAPIError.js");
 /** @typedef {import("./PenguinModAPI")} PenguinModAPI */
@@ -218,6 +220,57 @@ class PenguinModAPIProjects {
                 newId
             })
         }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Gets the metadata from a project.
+     * @link https://projects.penguinmod.com/api/v1/projects/getproject
+     * @param {string} projectID The ID of the project to pull from.
+     * @param {boolean?} safe Will return a default set of "No Project Found" information if the project does not exist.
+     * @throws {PenguinModAPIError} Can also throw if viewing projects is disabled.
+     * @returns {Promise<PenguinModTypes.Project>} The project information
+     */
+    async getProjectMeta(projectID, safe) {
+        const url = `${this._parent.apiUrl}/v1/projects/getproject?requestType=metadata&projectID=${encodeURIComponent(projectID)}${safe ? `&safe=${encodeURIComponent(safe)}` : ""}`;
+        const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return json;
+    }
+    /**
+     * Gets the thumbnail from a project.
+     * @link https://projects.penguinmod.com/api/v1/projects/getproject
+     * @param {string} projectID The ID of the project to pull from.
+     * @param {boolean?} safe Will return a default set of "No Project Found" information if the project does not exist.
+     * @throws {PenguinModAPIError} Can also throw if viewing projects is disabled.
+     * @returns {Promise<ArrayBuffer>} The project thumbnail
+     */
+    async getProjectThumbnail(projectID, safe) {
+        const url = `${this._parent.apiUrl}/v1/projects/getproject?requestType=thumbnail&projectID=${encodeURIComponent(projectID)}${safe ? `&safe=${encodeURIComponent(safe)}` : ""}`;
+        const arrayBuffer = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.ArrayBuffer);
+        return arrayBuffer;
+    }
+    /**
+     * Gets a project file from the server
+     * @link https://projects.penguinmod.com/api/v1/projects/getprojectwrapper
+     * @param {string} projectId The ID of the project to pull from.
+     * @param {boolean?} safe Will return a default set of "No Project Found" information if the project does not exist.
+     * @param {boolean?} assets If false, will not return any assets in the .pmp project.
+     * @throws {PenguinModAPIError} Can also throw if viewing projects is disabled.
+     * @returns {Promise<ArrayBuffer>} The .pmp project
+     */
+    async getProjectFile(projectId, safe, assets) {
+        const url = `${this._parent.apiUrl}/v1/projects/getprojectwrapper?projectId=${encodeURIComponent(projectId)}${safe ? `&safe=${encodeURIComponent(safe)}` : ""}${typeof assets === "boolean" ? `&assets=${encodeURIComponent(assets)}` : ""}`;
+        const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        
+        const blob = new Uint8Array(json.project.data);
+        const packedAssets = [];
+        for (const asset of json.assets) {
+            const uint8 = new Uint8Array(asset.buffer.data);
+            packedAssets.push({
+                id: asset.id,
+                buffer: uint8.buffer,
+            });
+        }
+        return pmp_protobuf.protobufToPMP(blob, packedAssets);
     }
 
     // TODO: /api/v1/projects/getproject

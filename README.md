@@ -140,6 +140,9 @@ PenguinModClient.projects.getProjects().then(console.log).catch(console.log); //
 PenguinModClient.projects.getLoves("sigma").then(console.log).catch(console.log); // number
 PenguinModClient.projects.getVotes("sigma").then(console.log).catch(console.log); // number
 PenguinModClient.projects.getUserState("sigma").then(console.log).catch(console.log); // { hasLoved:boolean, hasVoted:boolean }
+PenguinModClient.projects.getProjectMeta("sigma").then(console.log).catch(console.log); // Project
+PenguinModClient.projects.getProjectThumbnail("sigma").then(console.log).catch(console.log); // ArrayBuffer
+PenguinModClient.projects.getProjectFile("sigma").then(console.log).catch(console.log); // ArrayBuffer
 
 // SIGN IN ONLY!
 // misc endpoints

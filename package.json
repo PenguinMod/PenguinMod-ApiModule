@@ -18,6 +18,7 @@
   "homepage": "https://github.com/PenguinMod/PenguinMod-ApiModule#readme",
   "description": "",
   "dependencies": {
-    "axios": "^1.13.2"
+    "axios": "^1.13.2",
+    "pmp-protobuf": "^1.6.0"
   }
 }

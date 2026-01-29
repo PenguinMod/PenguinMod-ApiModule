@@ -216,9 +216,14 @@ PenguinModClient.users.getWorstOffenders().then(console.log).catch(console.log);
 PenguinModClient.users.isAdmin("PenguinMod").then(console.log).catch(console.log); // boolean
 PenguinModClient.users.isMod("PenguinMod").then(console.log).catch(console.log); // boolean
 PenguinModClient.users.verifyFollowers("poopyguy3").catch(console.log); // void
+PenguinModClient.users.toggleAccountCreation(false).catch(console.log); // void
 
 // projects endpoints
 PenguinModClient.projects.hasLovedAdmin("sigma", "PenguinMod").then(console.log).catch(console.log); // boolean
 PenguinModClient.projects.hasVotedAdmin("sigma", "PenguinMod").then(console.log).catch(console.log); // boolean
+PenguinModClient.projects.getWhoLoved("sigma").then(console.log).catch(console.log); // Array<string>
+PenguinModClient.projects.getWhoVoted("sigma").then(console.log).catch(console.log); // Array<string>
 PenguinModClient.projects.changeProjectId("sigma", "banana").catch(console.log); // void
+PenguinModClient.projects.toggleViewing(true).catch(console.log); // void
+PenguinModClient.projects.toggleUploading(false).catch(console.log); // void
 ```

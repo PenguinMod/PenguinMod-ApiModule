@@ -199,6 +199,37 @@ class PenguinModAPIProjects {
     }
 
     /**
+     * Returns which users have loved (liked) a project.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/projects/getWhoLoved
+     * @param {string} projectID The project to check.
+     * @param {number?} page Which page of usernames to look at. If not provided, page will be 0.
+     * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
+     * @returns {Promise<Array<string>>}
+     */
+    async getWhoLoved(projectID, page) {
+        const url = `${this._parent.apiUrl}/v1/projects/getWhoLoved?projectID=${encodeURIComponent(projectID)}&token=${encodeURIComponent(this._parent.token)}&page=${encodeURIComponent(page)}`;
+        const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return json.loves;
+    }
+    /**
+     * Returns which users have voted for a project.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/projects/getWhoVoted
+     * @param {string} projectID The project to check.
+     * @param {number?} page Which page of usernames to look at. If not provided, page will be 0.
+     * @throws {PenguinModAPIError} Commonly throws if the project ID is invalid or no project was found.
+     * @returns {Promise<Array<string>>}
+     */
+    async getWhoVoted(projectID, page) {
+        const url = `${this._parent.apiUrl}/v1/projects/getWhoVoted?projectID=${encodeURIComponent(projectID)}&token=${encodeURIComponent(this._parent.token)}&page=${encodeURIComponent(page)}`;
+        const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return json.votes;
+    }
+
+    /**
      * Changes the ID of a project. Makes old links break but the new ID can be any string.
      * Requires token.
      * Only accessible on admin accounts.
@@ -273,8 +304,47 @@ class PenguinModAPIProjects {
         return pmp_protobuf.protobufToPMP(blob, packedAssets);
     }
 
-    // TODO: /api/v1/projects/getproject
-    // TODO: /api/v1/projects/getprojectwrapper
+    /**
+     * Toggles viewing projects on or off. Prevents most endpoints that return projects from working properly.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/projects/toggleviewing
+     * @param {string} toggle True to enable, false to disable.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async toggleViewing(toggle) {
+        const url = `${this._parent.apiUrl}/v1/projects/toggleviewing`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                toggle
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Toggles uploading projects on or off. Prevents users from uploading or updating projects.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/projects/toggleuploading
+     * @param {string} toggle True to enable, false to disable.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async toggleUploading(toggle) {
+        const url = `${this._parent.apiUrl}/v1/projects/toggleuploading`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                toggle
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // TODO: /api/v1/projects/updateProject
     // TODO: /api/v1/projects/uploadProject
     // TODO: /api/v1/projects/getWhoLoved
@@ -285,9 +355,6 @@ class PenguinModAPIProjects {
     // TODO: /api/v1/projects/interactions/showMeMore
     // TODO: /api/v1/projects/interactions/voteToggle
     // TODO: /api/v1/projects/manualfeature
-    // TODO: /api/v1/projects/toggleaccountcreation
-    // TODO: /api/v1/projects/toggleuploading
-    // TODO: /api/v1/projects/toggleviewing
     // TODO: /api/v1/projects/deletemodmessage
     // TODO: /api/v1/projects/hardDeleteProject
     // TODO: /api/v1/projects/dispute

@@ -1310,6 +1310,28 @@ class PenguinModAPIUsers {
         }, this._parent, utils.RequestType.None);
     }
 
+    /**
+     * Toggles creating accounts on or off. Prevents users from creating accounts on the site.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/projects/toggleaccountcreation
+     * @param {string} toggle True to enable, false to disable.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async toggleAccountCreation(toggle) {
+        // TODO: This should probably not be in projects/
+        const url = `${this._parent.apiUrl}/v1/projects/toggleaccountcreation`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                toggle
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // TODO: Add these OAuth endpoints
     // TODO: /api/v1/users/addoauthmethod
     // TODO: /api/v1/users/addscratchlogin

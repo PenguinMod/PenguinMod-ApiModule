@@ -195,6 +195,31 @@ class PenguinModAPIProjects {
             throw err;
         }
     }
+
+    /**
+     * Changes the ID of a project. Makes old links break but the new ID can be any string.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/changeprojectid
+     * @param {string} target The target project ID.
+     * @param {string} newId The new project ID.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async changeProjectId(target, newId) {
+        // TODO: This should probably not be under users/
+        const url = `${this._parent.apiUrl}/v1/users/changeprojectid`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target,
+                newId
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // TODO: /api/v1/projects/getproject
     // TODO: /api/v1/projects/getprojectwrapper
     // TODO: /api/v1/projects/updateProject

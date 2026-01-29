@@ -290,4 +290,14 @@ declare namespace PenguinModTypes {
         /** If specified, show only unranked projects in results (true) or exclude unranked projects in results (false). May not be available to all users. */
         unranked?: boolean;
     }
+
+    /** An IP address with information about the user behind it. */
+    interface IPAddress {
+        /** The IPv6 IP */
+        ip: string;
+        /** Whether the IP is banned or not */
+        banned: boolean;
+        /** The last time in milliseconds the IP was used to log in */
+        lastLogin?: number;
+    }
 }

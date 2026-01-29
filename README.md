@@ -197,8 +197,18 @@ PenguinModClient.users.getAlts("PenguinMod").then(console.log).catch(console.log
 PenguinModClient.users.setBioAdmin("PenguinMod", "bananana").catch(console.log); // void
 PenguinModClient.users.setMyFeaturedProjectAdmin("PenguinMod", "sigma", 4).catch(console.log); // void
 PenguinModClient.users.setPFPAdmin("PenguinMod", arraybuffer).catch(console.log); // void
+PenguinModClient.users.changeUsernameAdmin("PenguinMod", "PenguinNotMod").catch(console.log); // void
+PenguinModClient.users.assignPosition("PenguinMod", true, true).catch(console.log); // void
+PenguinModClient.users.setBadges("PenguinMod", ["donator"]).catch(console.log); // void
+PenguinModClient.users.setBadgesMultiple(["PenguinMod", "JeremyGamer13"], ["donator"]).catch(console.log); // void
+PenguinModClient.users.deleteAccount("PenguinModEvilEdition", "Too Evil").catch(console.log); // void
+PenguinModClient.users.deleteAllEmails().catch(console.log); // void
+PenguinModClient.users.getAdmins().then(console.log).catch(console.log); // Array<StubUser>
+PenguinModClient.users.getAllAccountsWithIP("0:0:0:0:0:0:0:1").then(console.log).catch(console.log); // Array<PenguinModTypes.StubUser>
+PenguinModClient.users.getAllIPs("poopyguy2").then(console.log).catch(console.log); // Array<PenguinModTypes.IPAddress>
 
 // projects endpoints
 PenguinModClient.projects.hasLovedAdmin("sigma", "PenguinMod").then(console.log).catch(console.log); // boolean
 PenguinModClient.projects.hasVotedAdmin("sigma", "PenguinMod").then(console.log).catch(console.log); // boolean
+PenguinModClient.projects.changeProjectId("sigma", "banana").catch(console.log); // void
 ```

@@ -384,7 +384,7 @@ class PenguinModAPIUsers {
      * Disables someone else's customizations from being visible, and disables their ability to use the customization feature.
      * Requires token.
      * Only accessible on moderator accounts.
-     * @link https://projects.penguinmod.com/api/v1/users/customization/setCustomization
+     * @link https://projects.penguinmod.com/api/v1/users/customization/setCustomizationDisabled
      * @param {string} target The user to revoke customizations from
      * @param {boolean} isDisabled `true` to revoke customizations, `false` to give them back.
      * @throws {PenguinModAPIError}
@@ -514,6 +514,30 @@ class PenguinModAPIUsers {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 token: this._parent.token,
+                newUsername,
+            })
+        }, this._parent, utils.RequestType.JSON);
+    }
+    /**
+     * Change another user's username.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/changeusernameadmin
+     * @param {string} target The target user to rename.
+     * @param {string} newUsername The user's new username.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async changeUsernameAdmin(target, newUsername) {
+        const url = `${this._parent.apiUrl}/v1/users/changeusernameadmin`;
+        utils.assert(!!this._parent.token, url, "Reauthenticate", "Missing token");
+
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target,
                 newUsername,
             })
         }, this._parent, utils.RequestType.JSON);
@@ -959,7 +983,7 @@ class PenguinModAPIUsers {
     /**
      * Bans an IP from accessing the server. Handles IP bans and unbans.
      * Requires token.
-     * Only accessible on moderator accounts.
+     * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/users/banip
      * @param {string} targetIP The IP to ban.
      * @param {boolean?} doUnban If true, will unban the IP.
@@ -981,7 +1005,7 @@ class PenguinModAPIUsers {
     /**
      * Bans a user's IP from accessing the server. Handles user IP bans and unbans.
      * Requires token.
-     * Only accessible on moderator accounts.
+     * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/users/banuserip
      * @param {string} target The target user to ban.
      * @param {boolean?} doUnban If true, will unban the user.
@@ -1016,23 +1040,170 @@ class PenguinModAPIUsers {
         return data.alts;
     }
 
+    /**
+     * Makes a user either a moderator or an admin.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/assignPossition
+     * @param {string} target The target user to update the position of.
+     * @param {boolean} admin If true, promotes the user. If false, demotes the user. Must be provided.
+     * @param {boolean} moderator If true, promotes the user. If false, demotes the user. Must be provided.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async assignPosition(target, admin, moderator) {
+        const url = `${this._parent.apiUrl}/v1/users/assignPossition`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target,
+                admin,
+                approver: moderator
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Sets a user's badge list.
+     * These badges are defined by the frontend, so unrecognized badges will not be rendered but still get added.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/setBadges
+     * @param {string} target The target user to update the badges of.
+     * @param {Array<string>} badges The badge IDs to give out.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async setBadges(target, badges) {
+        const url = `${this._parent.apiUrl}/v1/users/setBadges`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target,
+                badges
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Gives several users badges at once. Unlike setBadges, this adds to the badge list for each user.
+     * These badges are defined by the frontend, so unrecognized badges will not be rendered but still get added.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/setbadgesmultiple
+     * @param {string} targets The target user to update the badges of.
+     * @param {Array<string>} badges The badge IDs to give out.
+     * @param {boolean?} removing True if you want to remove these badges from each user instead.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async setBadgesMultiple(targets, badges, removing) {
+        const url = `${this._parent.apiUrl}/v1/users/setbadgesmultiple`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                targets,
+                badges,
+                removing
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Permanently deletes an account on the server
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/deleteaccount
+     * @param {string} target The target user to delete.
+     * @param {string} reason A reason to delete their account.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async deleteAccount(target, reason) {
+        const url = `${this._parent.apiUrl}/v1/users/deleteaccount`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target,
+                reason
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Forgets any sent emails. Meant for debugging.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/deleteallemails
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async deleteAllEmails() {
+        const url = `${this._parent.apiUrl}/v1/users/deleteallemails`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Gets all admins on the server.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/getadmins
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.StubUser>>}
+     */
+    async getAdmins() {
+        const url = `${this._parent.apiUrl}/v1/users/getadmins?token=${encodeURIComponent(this._parent.token)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.admins;
+    }
+    /**
+     * Gets all the accounts associated with an IP address.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/getAllAccountsWithIP
+     * @param {string} target The target IP address to find IPs from.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.StubUser>>}
+     */
+    async getAllAccountsWithIP(target) {
+        const url = `${this._parent.apiUrl}/v1/users/getAllAccountsWithIP?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.users;
+    }
+    /**
+     * Gets all the IP addresses associated with an account.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/users/getAllIPs
+     * @param {string} target The target users to get IPs from.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.IPAddress>>}
+     */
+    async getAllIPsOf(target) {
+        const url = `${this._parent.apiUrl}/v1/users/getAllIPs?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        return data.ips;
+    }
+
     // NOTE: Some of these are not real endpoints and are just meant to be loaded in a browser.
-    // TODO: /api/v1/users/changeusernameadmin
-    // TODO: /api/v1/users/assignPossition
-    // TODO: /api/v1/users/setbadgesmultiple
-    // TODO: /api/v1/users/changeprojectid
-    // TODO: /api/v1/users/deleteaccount
-    // TODO: /api/v1/users/deleteallemails
-    // TODO: /api/v1/users/getadmins
-    // TODO: /api/v1/users/getAllAccountsWithIP
-    // TODO: /api/v1/users/getAllIPs
     // TODO: /api/v1/users/getemail
     // TODO: /api/v1/users/getmods
     // TODO: /api/v1/users/getworstoffenders
     // TODO: /api/v1/users/isadmin
     // TODO: /api/v1/users/ismod
     // TODO: /api/v1/users/massbanregex
-    // TODO: /api/v1/users/setBadges
     // TODO: /api/v1/users/verifyfollowers
     // TODO: /api/v1/users/addoauthmethod
     // TODO: /api/v1/users/addscratchlogin

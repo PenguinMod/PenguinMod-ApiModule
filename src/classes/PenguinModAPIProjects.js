@@ -82,6 +82,7 @@ class PenguinModAPIProjects {
      * @throws {PenguinModAPIError} Can also throw if viewing projects is disabled.
      * @returns {Promise<Array<PenguinModTypes.Project>>} An array of PenguinMod projects.
      */
+    // TODO: Probably remove this object and just make it params
     async getProjects(options) {
         if (!options) options = {};
         try {
@@ -91,6 +92,36 @@ class PenguinModAPIProjects {
             }
             if (typeof options.reverse === "boolean") {
                 url.searchParams.set("reverse", options.reverse);
+            }
+            if (options.login !== false && this._parent.token) {
+                url.searchParams.set("token", this._parent.token);
+            }
+            const json = await utils.doBasicRequest(url.toString(), null, this._parent, utils.RequestType.JSON);
+            return json;
+        } catch (err) {
+            throw err;
+        }
+    }
+    // TODO: Fill this out properly
+    /**
+     * Gets a list of all projects uploaded by ranked users on the site.
+     * If logged in as a moderator, this will also include projects uploaded by unranked users.
+     * @link https://projects.penguinmod.com/api/v1/projects/getprojectsbyauthor
+     * @param {Object} options Optional.
+     * @param {number?} options.page Determines which page of projects should be returned. If not provided, page will be 0.
+     * @param {boolean?} options.reverse Whether or not to show oldest projects first. Default is false.
+     * @param {boolean?} options.login Whether or not to provide login info. Should be true for moderators who want to see unranked user's projects. Default is true.
+     * @throws {PenguinModAPIError} Can also throw if viewing projects is disabled.
+     * @returns {Promise<Array<PenguinModTypes.Project>>} An array of PenguinMod projects.
+     */
+    // TODO: Probably remove this object and just make it params
+    async getProjectsByAuthor(authorUsername, options) {
+        if (!options) options = {};
+        try {
+            const url = new URL(`${this._parent.apiUrl}/v1/projects/getprojectsbyauthor`);
+            url.searchParams.set("authorUsername", authorUsername);
+            if (typeof options.page === "number") {
+                url.searchParams.set("page", options.page);
             }
             if (options.login !== false && this._parent.token) {
                 url.searchParams.set("token", this._parent.token);
@@ -345,6 +376,29 @@ class PenguinModAPIProjects {
         }, this._parent, utils.RequestType.None);
     }
 
+    /**
+     * Toggles uploading projects on or off. Prevents users from uploading or updating projects.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/projects/hardreject
+     * @param {string} project True to enable, false to disable.
+     * @param {string} message True to enable, false to disable.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async hardReject(project, message) {
+        const url = `${this._parent.apiUrl}/v1/projects/hardreject`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                project,
+                message
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // TODO: /api/v1/projects/updateProject
     // TODO: /api/v1/projects/uploadProject
     // TODO: /api/v1/projects/interactions/loveToggle
@@ -365,7 +419,6 @@ class PenguinModAPIProjects {
     // TODO: /api/v1/projects/frontpage
     // TODO: /api/v1/projects/getfeaturedprojects
     // TODO: /api/v1/projects/getmyprojects
-    // TODO: /api/v1/projects/getprojectsbyauthor
     // TODO: /api/v1/projects/getrandomproject
     // TODO: /api/v1/projects/getremixes
     // TODO: /api/v1/projects/searchprojects

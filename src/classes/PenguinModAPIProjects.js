@@ -499,9 +499,31 @@ class PenguinModAPIProjects {
         }, this._parent, utils.RequestType.None);
     }
 
+    /**
+     * Manually sets a project to either be featured or not. Alerts the project owner when featuring.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/api/v1/projects/manualfeature
+     * @param {string} project The projects ID.
+     * @param {boolean} featured If the project should or should not be featured.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async toggleProjectFeatured(project, featured) {
+        const url = `${this._parent.apiUrl}/v1/projects/interactions/manualfeature`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                project,
+                toggle: featured
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // TODO: /api/v1/projects/updateProject
     // TODO: /api/v1/projects/uploadProject
-    // TODO: /api/v1/projects/manualfeature
     // TODO: /api/v1/projects/deletemodmessage
     // TODO: /api/v1/projects/hardDeleteProject
     // TODO: /api/v1/projects/dispute

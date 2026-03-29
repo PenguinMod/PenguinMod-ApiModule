@@ -75,25 +75,22 @@ class PenguinModAPIProjects {
      * Gets a list of all projects uploaded by ranked users on the site.
      * If logged in as a moderator, this will also include projects uploaded by unranked users.
      * @link https://projects.penguinmod.com/api/v1/projects/getprojects
-     * @param {Object} options Optional.
-     * @param {number?} options.page Determines which page of projects should be returned. If not provided, page will be 0.
-     * @param {boolean?} options.reverse Whether or not to show oldest projects first. Default is false.
-     * @param {boolean?} options.login Whether or not to provide login info. Should be true for moderators who want to see unranked user's projects. Default is true.
+     * @param {number?} page Determines which page of projects should be returned. If not provided, page will be 0.
+     * @param {boolean?} reverse Whether or not to show oldest projects first. Default is false.
+     * @param {boolean?} login Whether or not to provide login info. Should be true for moderators who want to see unranked user's projects. Default is true.
      * @throws {PenguinModAPIError} Can also throw if viewing projects is disabled.
      * @returns {Promise<Array<PenguinModTypes.Project>>} An array of PenguinMod projects.
      */
-    // TODO: Probably remove this object and just make it params
-    async getProjects(options) {
-        if (!options) options = {};
+    async getProjects(page, reverse, login) {
         try {
             const url = new URL(`${this._parent.apiUrl}/v1/projects/getprojects`);
-            if (typeof options.page === "number") {
-                url.searchParams.set("page", options.page);
+            if (typeof page === "number") {
+                url.searchParams.set("page", page);
             }
-            if (typeof options.reverse === "boolean") {
-                url.searchParams.set("reverse", options.reverse);
+            if (typeof reverse === "boolean") {
+                url.searchParams.set("reverse", reverse);
             }
-            if (options.login !== false && this._parent.token) {
+            if (login !== false && this._parent.token) {
                 url.searchParams.set("token", this._parent.token);
             }
             const json = await utils.doBasicRequest(url.toString(), null, this._parent, utils.RequestType.JSON);
@@ -102,28 +99,23 @@ class PenguinModAPIProjects {
             throw err;
         }
     }
-    // TODO: Fill this out properly
     /**
-     * Gets a list of all projects uploaded by ranked users on the site.
-     * If logged in as a moderator, this will also include projects uploaded by unranked users.
+     * Gets a list of all projects uploaded by a user on the site.
      * @link https://projects.penguinmod.com/api/v1/projects/getprojectsbyauthor
-     * @param {Object} options Optional.
-     * @param {number?} options.page Determines which page of projects should be returned. If not provided, page will be 0.
-     * @param {boolean?} options.reverse Whether or not to show oldest projects first. Default is false.
-     * @param {boolean?} options.login Whether or not to provide login info. Should be true for moderators who want to see unranked user's projects. Default is true.
-     * @throws {PenguinModAPIError} Can also throw if viewing projects is disabled.
+     * @param {string} authorUsername The user to look at.
+     * @param {number?} page Which page of projects to look at. If not provided, page will be 0.
+     * @param {boolean?} login Whether or not to provide login info. Should be true for moderators who want to see private user's projects. Default is true.
+     * @throws {PenguinModAPIError}
      * @returns {Promise<Array<PenguinModTypes.Project>>} An array of PenguinMod projects.
      */
-    // TODO: Probably remove this object and just make it params
-    async getProjectsByAuthor(authorUsername, options) {
-        if (!options) options = {};
+    async getProjectsByAuthor(authorUsername, page, login) {
         try {
             const url = new URL(`${this._parent.apiUrl}/v1/projects/getprojectsbyauthor`);
             url.searchParams.set("authorUsername", authorUsername);
-            if (typeof options.page === "number") {
-                url.searchParams.set("page", options.page);
+            if (typeof page === "number") {
+                url.searchParams.set("page", page);
             }
-            if (options.login !== false && this._parent.token) {
+            if (login !== false && this._parent.token) {
                 url.searchParams.set("token", this._parent.token);
             }
             const json = await utils.doBasicRequest(url.toString(), null, this._parent, utils.RequestType.JSON);

@@ -381,8 +381,8 @@ class PenguinModAPIProjects {
      * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/projects/hardreject
-     * @param {string} project True to enable, false to disable.
-     * @param {string} message True to enable, false to disable.
+     * @param {string} project The projects ID.
+     * @param {string} message The message to send to the projects owner.
      * @throws {PenguinModAPIError}
      * @returns {Promise<null>}
      */
@@ -399,13 +399,50 @@ class PenguinModAPIProjects {
         }, this._parent, utils.RequestType.None);
     }
 
+    /**
+     * Toggles if we have/have not loved this project.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/projects/interactions/loveToggle
+     * @param {string} project The projects ID.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async loveProject(project) {
+        const url = `${this._parent.apiUrl}/v1/projects/interactions/loveToggle`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                project
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Toggles if we have/have not voted for this project.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/projects/interactions/voteToggle
+     * @param {string} project The projects ID.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async voteProject(project) {
+        const url = `${this._parent.apiUrl}/v1/projects/interactions/voteToggle`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                project
+            })
+        }, this._parent, utils.RequestType.None);
+    }
     // TODO: /api/v1/projects/updateProject
     // TODO: /api/v1/projects/uploadProject
-    // TODO: /api/v1/projects/interactions/loveToggle
     // TODO: /api/v1/projects/interactions/registerView
     // TODO: /api/v1/projects/interactions/showMeLess
     // TODO: /api/v1/projects/interactions/showMeMore
-    // TODO: /api/v1/projects/interactions/voteToggle
     // TODO: /api/v1/projects/manualfeature
     // TODO: /api/v1/projects/deletemodmessage
     // TODO: /api/v1/projects/hardDeleteProject

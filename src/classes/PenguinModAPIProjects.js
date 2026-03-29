@@ -438,11 +438,69 @@ class PenguinModAPIProjects {
             })
         }, this._parent, utils.RequestType.None);
     }
+
+    /**
+     * Registers that this account has seen this project.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/projects/interactions/registerView
+     * @param {string} project The projects ID.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async viewProject(project) {
+        const url = `${this._parent.apiUrl}/v1/projects/interactions/registerView`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                project
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Requests that less of this kind of project be suggested.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/projects/interactions/showMeLess
+     * @param {string} project The projects ID.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async showMeLessOf(project) {
+        const url = `${this._parent.apiUrl}/v1/projects/interactions/showMeLess`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                project
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
+    /**
+     * Requests that more of this kind of project be suggested.
+     * Requires token.
+     * @link https://projects.penguinmod.com/api/v1/projects/interactions/showMeMore
+     * @param {string} project The projects ID.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async showMeMoreOf(project) {
+        const url = `${this._parent.apiUrl}/v1/projects/interactions/showMeMore`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                project
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // TODO: /api/v1/projects/updateProject
     // TODO: /api/v1/projects/uploadProject
-    // TODO: /api/v1/projects/interactions/registerView
-    // TODO: /api/v1/projects/interactions/showMeLess
-    // TODO: /api/v1/projects/interactions/showMeMore
     // TODO: /api/v1/projects/manualfeature
     // TODO: /api/v1/projects/deletemodmessage
     // TODO: /api/v1/projects/hardDeleteProject

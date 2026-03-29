@@ -510,7 +510,7 @@ class PenguinModAPIProjects {
      * @returns {Promise<null>}
      */
     async toggleProjectFeatured(project, featured) {
-        const url = `${this._parent.apiUrl}/v1/projects/interactions/manualfeature`;
+        const url = `${this._parent.apiUrl}/v1/projects/manualfeature`;
         await utils.doBasicRequest(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -522,26 +522,51 @@ class PenguinModAPIProjects {
         }, this._parent, utils.RequestType.None);
     }
 
-    // TODO: /api/v1/projects/updateProject
-    // TODO: /api/v1/projects/uploadProject
+    /**
+     * Sets if a project can/can not be community featured. This does not control the ability for a project to manually be featured, nor does it remove the existing feature status.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/v1/projects/setCanBeFeatured
+     * @param {string} project The project ID.
+     * @param {boolean} featurable If the project should/should not be able to be featured.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async setCanBeFeatured(project, featurable) {
+        const url = `${this._parent.apiUrl}/v1/projects/setCanBeFeatured`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                project,
+                toggle: featurable
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // TODO: /api/v1/projects/deletemodmessage
-    // TODO: /api/v1/projects/hardDeleteProject
-    // TODO: /api/v1/projects/dispute
-    // TODO: /api/v1/projects/downloadHardReject
-    // TODO: /api/v1/projects/hardreject
     // TODO: /api/v1/projects/modmessage
     // TODO: /api/v1/projects/modresponse
+    // TODO: /api/v1/projects/dispute
+
+    // TODO: /api/v1/projects/searchprojects
+    // TODO: /api/v1/projects/searchusers
+
     // TODO: /api/v1/projects/restore
+    // TODO: /api/v1/projects/hardreject
     // TODO: /api/v1/projects/softreject
+    // TODO: /api/v1/projects/hardDeleteProject
+    // TODO: /api/v1/projects/downloadHardReject
+
+    // TODO: /api/v1/projects/updateProject
+    // TODO: /api/v1/projects/uploadProject
     // TODO: /api/v1/projects/frontpage
     // TODO: /api/v1/projects/getfeaturedprojects
     // TODO: /api/v1/projects/getmyprojects
     // TODO: /api/v1/projects/getrandomproject
     // TODO: /api/v1/projects/getremixes
-    // TODO: /api/v1/projects/searchprojects
-    // TODO: /api/v1/projects/searchusers
     // TODO: /api/v1/projects/deletethumb
-    // TODO: /api/v1/projects/setCanBeFeatured
 }
 
 module.exports = PenguinModAPIProjects;

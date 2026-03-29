@@ -261,6 +261,22 @@ declare namespace PenguinModTypes {
         mongodb_stats: {} | null;
     }
 
+    /** An object containing the sections and information needed to display the home site's front page. */
+    interface FrontPageResults {
+        /** A random hashtag chosen when showing the extra "Projects marked as #{tag}" section. */
+        selectedTag: `#${string}`;
+        /** A page of featured projects. Named `"Latest featured projects"` */
+        featured: Array<Project>,
+        /** A page of projects that nearly have enough votes to be featured. Named `"Projects people want Featured"` */
+        voted: Array<Project>,
+        // /** A page of projects that have a large amount of views. Named `"Most Viewed Projects"` */
+        // viewed: Array<Project>,
+        /** A page of projects that were found under the `selectedTag`. Named `"Projects marked as #{tag}"` */
+        tagged: Array<Project>,
+        /** The latest uploaded projects, only showing unranked projects if logged in. Named `"Latest projects"` */
+        latest: Array<Project>,
+    }
+
     /** A search query in object form. Arbitrary properties may also be present. */
     // TODO: Some of this stuff is just a proposal for a future searching system. Move it elsewhere for now.
     interface SearchQuery {

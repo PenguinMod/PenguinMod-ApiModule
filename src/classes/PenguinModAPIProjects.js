@@ -548,7 +548,26 @@ class PenguinModAPIProjects {
 
     // TODO: /api/v1/projects/updateProject
     // TODO: /api/v1/projects/uploadProject
-    // TODO: /api/v1/projects/frontpage
+    /**
+     * Gets the sections and information used to display the front page.
+     * If logged in as a moderator, this will also include projects uploaded by unranked users.
+     * @link https://projects.penguinmod.com/api/v1/projects/frontpage
+     * @param {boolean?} login Whether or not to provide login info. Should be true for moderators who want to see unranked user's projects. Default is true.
+     * @throws {PenguinModAPIError} Can also throw if ratelimited, since this endpoint has stritcter ratelimiting.
+     * @returns {Promise<PenguinModTypes.FrontPageResults>} The resulting sections and information for the front page.
+     */
+    async getFrontPage(login) {
+        try {
+            const url = new URL(`${this._parent.apiUrl}/v1/projects/frontpage`);
+            if (login !== false && this._parent.token) {
+                url.searchParams.set("token", this._parent.token);
+            }
+            const json = await utils.doBasicRequest(url.toString(), null, this._parent, utils.RequestType.JSON);
+            return json;
+        } catch (err) {
+            throw err;
+        }
+    }
     // TODO: /api/v1/projects/getfeaturedprojects
     // TODO: /api/v1/projects/getmyprojects
     // TODO: /api/v1/projects/getrandomproject

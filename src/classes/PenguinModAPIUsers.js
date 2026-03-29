@@ -1332,6 +1332,96 @@ class PenguinModAPIUsers {
         }, this._parent, utils.RequestType.None);
     }
 
+    /**
+     * Deletes a message sent by a moderator.
+     * Requires token.
+     * Only accessible on admin accounts.
+     * @link https://projects.penguinmod.com/v1/projects/deletemodmessage
+     * @param {string} message The ID of the moderator message to delete.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async deleteModMessage(message) {
+        // TODO: This should probably not be in projects/
+        const url = `${this._parent.apiUrl}/v1/projects/deletemodmessage`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                messageID: message
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Sends a moderator message to any user.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/v1/projects/modmessage
+     * @param {string} user The username of the user to message.
+     * @param {string} content The message content to send to the user.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async sendModMessage(user, content) {
+        // TODO: This should probably not be in projects/
+        const url = `${this._parent.apiUrl}/v1/projects/modmessage`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                target: user,
+                message: content
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Replies to a message.
+     * Requires token.
+     * Only accessible on moderator accounts.
+     * @link https://projects.penguinmod.com/v1/projects/modresponse
+     * @param {string} message The message ID to respond to.
+     * @param {string} content The message content to send to the user.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async sendModReply(message, content) {
+        // TODO: This should probably not be in projects/
+        const url = `${this._parent.apiUrl}/v1/projects/modresponse`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                disputeID: message,
+                message: content
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+    /**
+     * Disputes a moderator message.
+     * Requires token.
+     * @link https://projects.penguinmod.com/v1/projects/dispute
+     * @param {string} message The message ID to respond to.
+     * @param {string} content The message content to send to the user.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async disputeMessage(message, content) {
+        // TODO: This should probably not be in projects/
+        const url = `${this._parent.apiUrl}/v1/projects/dispute`;
+        await utils.doBasicRequest(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: this._parent.token,
+                messageID: message,
+                dispute: content
+            })
+        }, this._parent, utils.RequestType.None);
+    }
+
     // TODO: Add these OAuth endpoints
     // TODO: /api/v1/users/addoauthmethod
     // TODO: /api/v1/users/addscratchlogin

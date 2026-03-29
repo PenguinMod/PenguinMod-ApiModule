@@ -537,11 +537,6 @@ class PenguinModAPIProjects {
         }, this._parent, utils.RequestType.None);
     }
 
-    // TODO: /api/v1/projects/deletemodmessage
-    // TODO: /api/v1/projects/modmessage
-    // TODO: /api/v1/projects/modresponse
-    // TODO: /api/v1/projects/dispute
-
     // TODO: /api/v1/projects/searchprojects
     // TODO: /api/v1/projects/searchusers
 

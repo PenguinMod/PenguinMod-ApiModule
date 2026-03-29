@@ -262,6 +262,7 @@ declare namespace PenguinModTypes {
     }
 
     /** A search query in object form. Arbitrary properties may also be present. */
+    // TODO: Some of this stuff is just a proposal for a future searching system. Move it elsewhere for now.
     interface SearchQuery {
         /** The actual search query, text that should be looked for. */
         query: string;

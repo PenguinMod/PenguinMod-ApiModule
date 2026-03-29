@@ -1360,6 +1360,7 @@ class PenguinModAPIUsers {
      * @link https://projects.penguinmod.com/v1/projects/modmessage
      * @param {string} user The username of the user to message.
      * @param {string} content The message content to send to the user.
+     * @param {boolean?} disputable True if the message is disputable. False by default.
      * @throws {PenguinModAPIError}
      * @returns {Promise<null>}
      */
@@ -1372,7 +1373,8 @@ class PenguinModAPIUsers {
             body: JSON.stringify({
                 token: this._parent.token,
                 target: user,
-                message: content
+                message: content,
+                disputable
             })
         }, this._parent, utils.RequestType.None);
     }

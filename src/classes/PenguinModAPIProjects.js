@@ -27,7 +27,12 @@ class PenguinModAPIProjects {
      * @returns {Promise<boolean>} True if uploading is enabled for all users.
      */
     async canUploadProjects() {
-        const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/canuploadprojects`, null, this._parent, utils.RequestType.JSON);
+        const json = await utils.doBasicRequest(
+            `${this._parent.apiUrl}/v1/projects/canuploadprojects`,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return json.canUpload !== false;
     }
     /**
@@ -37,7 +42,12 @@ class PenguinModAPIProjects {
      * @returns {Promise<boolean>} True if viewing projects is enabled for all users.
      */
     async canViewProjects() {
-        const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/canviewprojects`, null, this._parent, utils.RequestType.JSON);
+        const json = await utils.doBasicRequest(
+            `${this._parent.apiUrl}/v1/projects/canviewprojects`,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return json.viewing !== false;
     }
     /**
@@ -49,7 +59,12 @@ class PenguinModAPIProjects {
      */
     async getLoves(projectId) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getLoves?projectID=${encodeURIComponent(projectId)}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                `${this._parent.apiUrl}/v1/projects/getLoves?projectID=${encodeURIComponent(projectId)}`,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json.loves;
         } catch (err) {
             throw err;
@@ -64,7 +79,12 @@ class PenguinModAPIProjects {
      */
     async getVotes(projectId) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/projects/getVotes?projectID=${encodeURIComponent(projectId)}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                `${this._parent.apiUrl}/v1/projects/getVotes?projectID=${encodeURIComponent(projectId)}`,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json.votes;
         } catch (err) {
             throw err;
@@ -83,7 +103,9 @@ class PenguinModAPIProjects {
      */
     async getProjects(page, reverse, login) {
         try {
-            const url = new URL(`${this._parent.apiUrl}/v1/projects/getprojects`);
+            const url = new URL(
+                `${this._parent.apiUrl}/v1/projects/getprojects`,
+            );
             if (typeof page === "number") {
                 url.searchParams.set("page", page);
             }
@@ -93,7 +115,12 @@ class PenguinModAPIProjects {
             if (login !== false && this._parent.token) {
                 url.searchParams.set("token", this._parent.token);
             }
-            const json = await utils.doBasicRequest(url.toString(), null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                url.toString(),
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json;
         } catch (err) {
             throw err;
@@ -110,7 +137,9 @@ class PenguinModAPIProjects {
      */
     async getProjectsByAuthor(authorUsername, page, login) {
         try {
-            const url = new URL(`${this._parent.apiUrl}/v1/projects/getprojectsbyauthor`);
+            const url = new URL(
+                `${this._parent.apiUrl}/v1/projects/getprojectsbyauthor`,
+            );
             url.searchParams.set("authorUsername", authorUsername);
             if (typeof page === "number") {
                 url.searchParams.set("page", page);
@@ -118,7 +147,12 @@ class PenguinModAPIProjects {
             if (login !== false && this._parent.token) {
                 url.searchParams.set("token", this._parent.token);
             }
-            const json = await utils.doBasicRequest(url.toString(), null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                url.toString(),
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json;
         } catch (err) {
             throw err;
@@ -135,9 +169,19 @@ class PenguinModAPIProjects {
      */
     async getUserState(projectId) {
         const url = `${this._parent.apiUrl}/v1/projects/getuserstatewrapper?projectId=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         try {
-            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                url,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json;
         } catch (err) {
             throw err;
@@ -153,9 +197,19 @@ class PenguinModAPIProjects {
      */
     async hasLoved(projectId) {
         const url = `${this._parent.apiUrl}/v1/projects/hasLoved?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         try {
-            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                url,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json.hasLoved;
         } catch (err) {
             throw err;
@@ -171,9 +225,19 @@ class PenguinModAPIProjects {
      */
     async hasVoted(projectId) {
         const url = `${this._parent.apiUrl}/v1/projects/hasVoted?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         try {
-            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                url,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json.hasVoted;
         } catch (err) {
             throw err;
@@ -192,9 +256,19 @@ class PenguinModAPIProjects {
      */
     async hasLovedAdmin(projectId, targetUsername) {
         const url = `${this._parent.apiUrl}/v1/projects/hasLovedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         try {
-            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                url,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json.hasLoved;
         } catch (err) {
             throw err;
@@ -212,9 +286,19 @@ class PenguinModAPIProjects {
      */
     async hasVotedAdmin(projectId, targetUsername) {
         const url = `${this._parent.apiUrl}/v1/projects/hasVotedAdmin?projectID=${encodeURIComponent(projectId)}&token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(targetUsername)}`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         try {
-            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                url,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json.hasVoted;
         } catch (err) {
             throw err;
@@ -233,7 +317,12 @@ class PenguinModAPIProjects {
      */
     async getWhoLoved(projectID, page) {
         const url = `${this._parent.apiUrl}/v1/projects/getWhoLoved?projectID=${encodeURIComponent(projectID)}&token=${encodeURIComponent(this._parent.token)}&page=${encodeURIComponent(page)}`;
-        const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const json = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return json.loves;
     }
     /**
@@ -248,7 +337,12 @@ class PenguinModAPIProjects {
      */
     async getWhoVoted(projectID, page) {
         const url = `${this._parent.apiUrl}/v1/projects/getWhoVoted?projectID=${encodeURIComponent(projectID)}&token=${encodeURIComponent(this._parent.token)}&page=${encodeURIComponent(page)}`;
-        const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const json = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return json.votes;
     }
 
@@ -265,15 +359,20 @@ class PenguinModAPIProjects {
     async changeProjectId(target, newId) {
         // TODO: This should probably not be under users/
         const url = `${this._parent.apiUrl}/v1/users/changeprojectid`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target,
-                newId
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target,
+                    newId,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -286,7 +385,12 @@ class PenguinModAPIProjects {
      */
     async getProjectMeta(projectID, safe) {
         const url = `${this._parent.apiUrl}/v1/projects/getproject?requestType=metadata&projectID=${encodeURIComponent(projectID)}${safe ? `&safe=${encodeURIComponent(safe)}` : ""}`;
-        const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const json = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return json;
     }
     /**
@@ -299,7 +403,12 @@ class PenguinModAPIProjects {
      */
     async getProjectThumbnail(projectID, safe) {
         const url = `${this._parent.apiUrl}/v1/projects/getproject?requestType=thumbnail&projectID=${encodeURIComponent(projectID)}${safe ? `&safe=${encodeURIComponent(safe)}` : ""}`;
-        const arrayBuffer = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.ArrayBuffer);
+        const arrayBuffer = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.ArrayBuffer,
+        );
         return arrayBuffer;
     }
     /**
@@ -313,7 +422,12 @@ class PenguinModAPIProjects {
      */
     async getProjectFile(projectId, safe, assets) {
         const url = `${this._parent.apiUrl}/v1/projects/getprojectwrapper?projectId=${encodeURIComponent(projectId)}${safe ? `&safe=${encodeURIComponent(safe)}` : ""}${typeof assets === "boolean" ? `&assets=${encodeURIComponent(assets)}` : ""}`;
-        const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const json = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
 
         const blob = new Uint8Array(json.project.data);
         const packedAssets = [];
@@ -338,14 +452,19 @@ class PenguinModAPIProjects {
      */
     async toggleViewing(toggle) {
         const url = `${this._parent.apiUrl}/v1/projects/toggleviewing`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                toggle
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    toggle,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Toggles uploading projects on or off. Prevents users from uploading or updating projects.
@@ -358,14 +477,19 @@ class PenguinModAPIProjects {
      */
     async toggleUploading(toggle) {
         const url = `${this._parent.apiUrl}/v1/projects/toggleuploading`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                toggle
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    toggle,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -380,15 +504,20 @@ class PenguinModAPIProjects {
      */
     async hardReject(project, message) {
         const url = `${this._parent.apiUrl}/v1/projects/hardreject`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                project,
-                message
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project,
+                    message,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -401,14 +530,19 @@ class PenguinModAPIProjects {
      */
     async loveProject(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/loveToggle`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                project
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -421,14 +555,19 @@ class PenguinModAPIProjects {
      */
     async voteProject(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/voteToggle`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                project
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -441,14 +580,19 @@ class PenguinModAPIProjects {
      */
     async viewProject(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/registerView`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                project
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -461,14 +605,19 @@ class PenguinModAPIProjects {
      */
     async showMeLessOf(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/showMeLess`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                project
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -481,14 +630,19 @@ class PenguinModAPIProjects {
      */
     async showMeMoreOf(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/showMeMore`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                project
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -503,15 +657,20 @@ class PenguinModAPIProjects {
      */
     async toggleProjectFeatured(project, featured) {
         const url = `${this._parent.apiUrl}/v1/projects/manualfeature`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                project,
-                toggle: featured
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project,
+                    toggle: featured,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -526,15 +685,20 @@ class PenguinModAPIProjects {
      */
     async setCanBeFeatured(project, featurable) {
         const url = `${this._parent.apiUrl}/v1/projects/setCanBeFeatured`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                project,
-                toggle: featurable
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project,
+                    toggle: featurable,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     // TODO: /api/v1/projects/searchprojects
@@ -546,26 +710,26 @@ class PenguinModAPIProjects {
     // TODO: /api/v1/projects/hardDeleteProject
     // TODO: /api/v1/projects/downloadHardReject
 
-    // TODO: /api/v1/projects/updateProject
-    
     /**
      * For internal use. Gets the size of a project based off its parts, then
      * @param {Blob} protobuf The project.json protobuf
      * @param {([Blob, string])[]} assets The project assets
      * @param {string} url The url of the request, used for errors
      * @throws {PenguinModAPIError}
-     * @returns {Promise<null>} 
+     * @returns {Promise<null>}
      */
     async _checkProjectSize(protobuf, assets, url) {
         // TODO: check the individual size of each asset
-        
+
         const size = assets.reduce(
             (c, v) => c + v[0].size,
             protobuf.size + imageSize,
         );
-        
-        const is_donator = (await this._parent.users.getInfo()).badges.includes("donator");
-        
+
+        const is_donator = (await this._parent.users.getInfo()).badges.includes(
+            "donator",
+        );
+
         if (
             size >
             Number(this._parent.maxUploadSize) *
@@ -626,7 +790,7 @@ class PenguinModAPIProjects {
         );
         const protobuf_u8a = pmp_protobuf.jsonToProtobuf(json);
         const protobuf = new Blob([protobuf_u8a]);
-        
+
         await this._checkProjectSize(protobuf, assets);
 
         if (
@@ -720,7 +884,7 @@ class PenguinModAPIProjects {
             assets = assets_;
             const protobuf_u8a = pmp_protobuf.jsonToProtobuf(json);
             protobuf = new Blob([protobuf_u8a]);
-            
+
             await this._checkProjectSize(protobuf, assets);
         }
 
@@ -782,7 +946,12 @@ class PenguinModAPIProjects {
             if (login !== false && this._parent.token) {
                 url.searchParams.set("token", this._parent.token);
             }
-            const json = await utils.doBasicRequest(url.toString(), null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                url.toString(),
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json;
         } catch (err) {
             throw err;

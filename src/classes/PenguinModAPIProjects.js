@@ -314,7 +314,7 @@ class PenguinModAPIProjects {
     async getProjectFile(projectId, safe, assets) {
         const url = `${this._parent.apiUrl}/v1/projects/getprojectwrapper?projectId=${encodeURIComponent(projectId)}${safe ? `&safe=${encodeURIComponent(safe)}` : ""}${typeof assets === "boolean" ? `&assets=${encodeURIComponent(assets)}` : ""}`;
         const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
-        
+
         const blob = new Uint8Array(json.project.data);
         const packedAssets = [];
         for (const asset of json.assets) {
@@ -547,7 +547,227 @@ class PenguinModAPIProjects {
     // TODO: /api/v1/projects/downloadHardReject
 
     // TODO: /api/v1/projects/updateProject
-    // TODO: /api/v1/projects/uploadProject
+    
+    /**
+     * For internal use. Gets the size of a project based off its parts, then
+     * @param {Blob} protobuf The project.json protobuf
+     * @param {([Blob, string])[]} assets The project assets
+     * @param {string} url The url of the request, used for errors
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>} 
+     */
+    async _checkProjectSize(protobuf, assets, url) {
+        // TODO: check the individual size of each asset
+        
+        const size = assets.reduce(
+            (c, v) => c + v[0].size,
+            protobuf.size + imageSize,
+        );
+        
+        const is_donator = (await this._parent.users.getInfo()).badges.includes("donator");
+        
+        if (
+            size >
+            Number(this._parent.maxUploadSize) *
+                (is_donator ? 1.75 : 1) *
+                1024 *
+                1024
+        )
+            throw new PenguinModAPIError(
+                "ProjectTooLarge",
+                "Your project is too large (the total size is over the limit)",
+                PenguinModAPIError.UNKNOWN_CODE,
+                null,
+                false,
+                url,
+                null,
+                null,
+                null,
+            );
+    }
+
+    /**
+     * Upload a project
+     * @param {Blob} project The PMP file
+     * @param {Blob} thumbnail The thumbnail image
+     * @param {string} title
+     * @param {string} instructions
+     * @param {string} notes
+     * @param {string} remix
+     * @throws {PenguinModAPIError} for errors such as title, instructions, or notes being too long, or errors with uploading
+     * @returns {Promise<string>} The ID of the now uploaded project
+     */
+    async uploadProject(
+        project,
+        thumbnail,
+        title,
+        instructions,
+        notes,
+        remix = "0",
+    ) {
+        if (!project || !thumbnail) {
+            throw new PenguinModAPIError(
+                "MissingFiles",
+                "Missing project file or thumbnail",
+                PenguinModAPIError.UNKNOWN_CODE,
+                null,
+                false,
+                url,
+                null,
+                null,
+                null,
+            );
+        }
+
+        const url = `${this._parent.apiUrl}/v1/projects/uploadProject`;
+
+        const { json, assets } = await pmp_protobuf.PMPToParts(
+            await project.arrayBuffer(),
+        );
+        const protobuf_u8a = pmp_protobuf.jsonToProtobuf(json);
+        const protobuf = new Blob([protobuf_u8a]);
+        
+        await this._checkProjectSize(protobuf, assets);
+
+        if (
+            title.length > 100 ||
+            instructions.length > 4096 ||
+            notes.length > 4096
+        ) {
+            throw new PenguinModAPIError(
+                "ProjectInfoTooLong",
+                "Project title, instructions, or notes are too long",
+                PenguinModAPIError.UNKNOWN_CODE,
+                null,
+                false,
+                url,
+                null,
+                null,
+                null,
+            );
+        }
+
+        const formData = new FormData();
+
+        formData.append("token", this._parent.token);
+        formData.append("title", title);
+        formData.append("instructions", instructions);
+        formData.append("notes", notes);
+        formData.append("remix", remix);
+        assets.forEach((ent) => formData.append("assets", ...ent));
+        formData.append("jsonFile", protobuf);
+        formData.append("thumbnail", thumbnail);
+
+        const { id } = await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                body: formData,
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
+
+        return id;
+    }
+
+    /**
+     * Updates a project
+     * Can be called by either the project owner or a moderator/admin.
+     * @param {string} projectID ID of the project to be updated
+     * @param {Blob?} project The PMP file, or null if not updating the file
+     * @param {Blob?} thumbnail The thumbnail image, or null if not updating the thumbnail
+     * @param {string} title
+     * @param {string} instructions
+     * @param {string} notes
+     * @throws {PenguinModAPIError} for errors such as title, instructions, or notes being too long, or errors with uploading
+     * @returns {Promise<void>}
+     */
+    async updateProject(
+        projectID,
+        project,
+        thumbnail,
+        title,
+        instructions,
+        notes,
+    ) {
+        const updating_file = project != null;
+        const updating_thumb = thumbnail != null;
+
+        if (!projectID) {
+            throw new PenguinModAPIError(
+                "MissingID",
+                "Missing project ID",
+                PenguinModAPIError.UNKNOWN_CODE,
+                null,
+                false,
+                url,
+                null,
+                null,
+                null,
+            );
+        }
+
+        const url = `${this._parent.apiUrl}/v1/projects/updateProject`;
+
+        let protobuf;
+        let assets;
+
+        if (updating_file) {
+            const { json, assets: assets_ } = await pmp_protobuf.PMPToParts(
+                await project.arrayBuffer(),
+            );
+            assets = assets_;
+            const protobuf_u8a = pmp_protobuf.jsonToProtobuf(json);
+            protobuf = new Blob([protobuf_u8a]);
+            
+            await this._checkProjectSize(protobuf, assets);
+        }
+
+        if (
+            title.length > 100 ||
+            instructions.length > 4096 ||
+            notes.length > 4096
+        ) {
+            throw new PenguinModAPIError(
+                "ProjectInfoTooLong",
+                "Project title, instructions, or notes are too long",
+                PenguinModAPIError.UNKNOWN_CODE,
+                null,
+                false,
+                url,
+                null,
+                null,
+                null,
+            );
+        }
+
+        const formData = new FormData();
+
+        formData.append("projectID", projectID);
+        formData.append("token", this._parent.token);
+        formData.append("title", title);
+        formData.append("instructions", instructions);
+        formData.append("notes", notes);
+        if (updating_file) {
+            assets.forEach((ent) => formData.append("assets", ...ent));
+            formData.append("jsonFile", protobuf);
+        }
+        if (updating_thumb) {
+            formData.append("thumbnail", thumbnail);
+        }
+
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                body: formData,
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
+    }
+
     /**
      * Gets the sections and information used to display the front page.
      * If logged in as a moderator, this will also include projects uploaded by unranked users.

@@ -1277,7 +1277,7 @@ class PenguinModAPIUsers {
         return data.isAdmin;
     }
     /**
-     * Checks if a user is an admin
+     * Checks if a user is a mod
      * @link https://projects.penguinmod.com/api/v1/users/ismod
      * @param {string} target Which user to check
      * @throws {PenguinModAPIError}

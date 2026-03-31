@@ -4,4 +4,4 @@ const PenguinModAPIError = require("./classes/PenguinModAPIError.js");
 module.exports = {
     PenguinModAPI,
     PenguinModAPIError,
-}
+};

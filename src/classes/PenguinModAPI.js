@@ -26,6 +26,15 @@ class PenguinModAPI {
          * @type {string}
          */
         this.apiUrl = options.apiUrl || "https://projects.penguinmod.com/api";
+        
+        /**
+         * This is the max upload size for a non-donator.
+         * It is in MB.
+         * 
+         * Default is 32
+         * @type {number}
+         */
+        this.maxUploadSize = options.maxUploadSize || 32;
 
         /** @type {PenguinModAPIMisc} */
         this.misc = new PenguinModAPIMisc(this);

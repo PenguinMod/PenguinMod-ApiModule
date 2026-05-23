@@ -143,7 +143,20 @@ declare namespace PenguinModTypes {
     /** Fields and content attached to a Message */
     interface MessageBody {
         /** The type of message that this MessageBody is apart of. */
-        type: "newBadge" | "projectFeatured" | "delete" | "reject" | "modMessage" | "disputeResponse" | "restored" | "remix" | "followerAdded" | "tempban" | "ban" | "unban" | "custom";
+        type:
+            | "newBadge"
+            | "projectFeatured"
+            | "delete"
+            | "reject"
+            | "modMessage"
+            | "disputeResponse"
+            | "restored"
+            | "remix"
+            | "followerAdded"
+            | "tempban"
+            | "ban"
+            | "unban"
+            | "custom";
         /** Message content for MessageBody of type `reject`, `delete`, `modMessage`, `disputeResponse` */
         message?: string;
         /** A punishment reason for MessageBody of type `tempban`, `ban` */
@@ -266,15 +279,15 @@ declare namespace PenguinModTypes {
         /** A random hashtag chosen when showing the extra "Projects marked as #{tag}" section. */
         selectedTag: `#${string}`;
         /** A page of featured projects. Named `"Latest featured projects"` */
-        featured: Array<Project>,
+        featured: Array<Project>;
         /** A page of projects that nearly have enough votes to be featured. Named `"Projects people want Featured"` */
-        voted: Array<Project>,
+        voted: Array<Project>;
         // /** A page of projects that have a large amount of views. Named `"Most Viewed Projects"` */
         // viewed: Array<Project>,
         /** A page of projects that were found under the `selectedTag`. Named `"Projects marked as #{tag}"` */
-        tagged: Array<Project>,
+        tagged: Array<Project>;
         /** The latest uploaded projects, only showing unranked projects if logged in. Named `"Latest projects"` */
-        latest: Array<Project>,
+        latest: Array<Project>;
     }
 
     /** A search query in object form. Arbitrary properties may also be present. */
@@ -283,6 +296,7 @@ declare namespace PenguinModTypes {
         /** The actual search query, text that should be looked for. */
         query: string;
 
+        // TODO: do we remove oldest in favor of just newest+reverse?
         /** Sorts the results by a certain condition. */
         sort?: "newest" | "oldest" | "views" | "votes" | "loves";
         /** Only shows results before the specified date (if it can be read as a date). */

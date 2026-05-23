@@ -701,14 +701,24 @@ class PenguinModAPIProjects {
         );
     }
 
-    // TODO: /api/v1/projects/searchprojects
-    // TODO: /api/v1/projects/searchusers
-
-    // TODO: /api/v1/projects/restore
-    // TODO: /api/v1/projects/hardreject
-    // TODO: /api/v1/projects/softreject
-    // TODO: /api/v1/projects/hardDeleteProject
-    // TODO: /api/v1/projects/downloadHardReject
+    /**
+     * Search for projects.
+     * @param {string} query The query to be searched.
+     * @param {string} type The type of search. "featured", "newest", "uploaddate", and "views". Defaults to views.
+     * @param {number} page The page of the search. Defaults to 0.
+     * @param {boolean} reverse Whether or not to reverse the sorting. For example, if sorting by newest, when reversed, it will sort by oldest. Defaults to false.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.Project>>}
+     */
+    async searchProjects(query, type = "views", page = 0, reverse = false) {
+        const url = `${this._parent.apiUrl}/v1/projects/searchprojects?query=${query}&type=${type}&page=${page}&reverse=${reverse}&token=${this._parent.token}`;
+        return await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
+    }
 
     /**
      * For internal use. Gets the size of a project based off its parts, then
@@ -957,11 +967,32 @@ class PenguinModAPIProjects {
             throw err;
         }
     }
+
+    /**
+     * Get some random projects.
+     * @param {number} n The number of projects to fetch. Defaults to 0. Max is the max page size (usually 20).
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.Project>>}
+     */
+    async getRandomProjects(n = 1) {
+        const url = `${this._parent.apiUrl}/v1/projects/getrandomproject?n=${n}`;
+        return await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
+    }
+
     // TODO: /api/v1/projects/getfeaturedprojects
     // TODO: /api/v1/projects/getmyprojects
-    // TODO: /api/v1/projects/getrandomproject
     // TODO: /api/v1/projects/getremixes
     // TODO: /api/v1/projects/deletethumb
+    // TODO: /api/v1/projects/restore
+    // TODO: /api/v1/projects/hardreject
+    // TODO: /api/v1/projects/softreject
+    // TODO: /api/v1/projects/hardDeleteProject
+    // TODO: /api/v1/projects/downloadHardReject
 }
 
 module.exports = PenguinModAPIProjects;

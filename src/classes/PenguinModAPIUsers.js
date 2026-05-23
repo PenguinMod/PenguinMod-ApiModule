@@ -28,10 +28,20 @@ class PenguinModAPIUsers {
      */
     async getId(username) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getid?username=${encodeURIComponent(username)}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                `${this._parent.apiUrl}/v1/users/getid?username=${encodeURIComponent(username)}`,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json.id;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "UserNotFound") {
+            if (
+                err &&
+                err instanceof PenguinModAPIError &&
+                err.data &&
+                err.data.error === "UserNotFound"
+            ) {
                 return null;
             }
             throw err;
@@ -46,10 +56,20 @@ class PenguinModAPIUsers {
      */
     async getUsername(id) {
         try {
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getusername?ID=${encodeURIComponent(id)}`, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                `${this._parent.apiUrl}/v1/users/getusername?ID=${encodeURIComponent(id)}`,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json.username || null; // false is returned if no user is found
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "UserNotFound") {
+            if (
+                err &&
+                err instanceof PenguinModAPIError &&
+                err.data &&
+                err.data.error === "UserNotFound"
+            ) {
                 return null;
             }
             throw err;
@@ -67,16 +87,26 @@ class PenguinModAPIUsers {
      */
     async blockUser(targetUsername, shouldUnblock) {
         const url = `${this._parent.apiUrl}/v1/users/blockuser`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target: targetUsername,
-                active: !shouldUnblock
-            })
-        }, this._parent, utils.RequestType.JSON);
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target: targetUsername,
+                    active: !shouldUnblock,
+                }),
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
     }
     /**
      * Check if you're blocking a given user.
@@ -91,10 +121,20 @@ class PenguinModAPIUsers {
         const url = `${this._parent.apiUrl}/v1/users/hasblocked?target=${encodeURIComponent(username)}&token=${encodeURIComponent(token)}`;
         utils.assert(!!token, url, "Reauthenticate", "No token is registered.");
         try {
-            const json = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+            const json = await utils.doBasicRequest(
+                url,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
             return json.has_blocked;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "Target not found") {
+            if (
+                err &&
+                err instanceof PenguinModAPIError &&
+                err.data &&
+                err.data.error === "Target not found"
+            ) {
                 return null;
             }
             throw err;
@@ -112,16 +152,26 @@ class PenguinModAPIUsers {
      */
     async followUser(targetUsername, shouldUnfollow) {
         const url = `${this._parent.apiUrl}/v1/users/follow`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target: targetUsername,
-                toggle: !shouldUnfollow
-            })
-        }, this._parent, utils.RequestType.JSON);
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target: targetUsername,
+                    toggle: !shouldUnfollow,
+                }),
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
     }
     /**
      * Gets the amount of followers a user has.
@@ -132,7 +182,12 @@ class PenguinModAPIUsers {
      */
     async getFollowerCount(username) {
         const url = `${this._parent.apiUrl}/v1/users/meta/getfollowercount?username=${encodeURIComponent(username)}`;
-        const followers = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const followers = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return followers.count;
     }
     /**
@@ -144,7 +199,12 @@ class PenguinModAPIUsers {
      */
     async getFollowers(username) {
         const url = `${this._parent.apiUrl}/v1/users/meta/getfollowers?username=${encodeURIComponent(username)}`;
-        const followers = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const followers = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return followers;
     }
     /**
@@ -157,7 +217,12 @@ class PenguinModAPIUsers {
      */
     async isFollowing(username, target) {
         const url = `${this._parent.apiUrl}/v1/users/isfollowing?username=${encodeURIComponent(username)}&target=${encodeURIComponent(target)}`;
-        const following = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const following = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return following.following;
     }
 
@@ -170,24 +235,44 @@ class PenguinModAPIUsers {
      */
     async getMyFeed() {
         const url = `${this._parent.apiUrl}/v1/users/getmyfeed?token=${encodeURIComponent(this._parent.token)}`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
-        const feed = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        const feed = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return feed.feed;
     }
 
     /**
      * Get the profile picture of a user.
      * @link https://projects.penguinmod.com/api/v1/users/getpfp
-     * @param {string} username The username of the user. 
+     * @param {string} username The username of the user.
      * @throws {PenguinModAPIError}
      * @returns {Promise<Uint8Array|null>} The profile picture as an octet stream, or null if not found.
      */
     async getPFP(username) {
         try {
-            const pfp = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/getpfp?username=${encodeURIComponent(username)}`, null, this._parent, utils.RequestType.ArrayBuffer);
+            const pfp = await utils.doBasicRequest(
+                `${this._parent.apiUrl}/v1/users/getpfp?username=${encodeURIComponent(username)}`,
+                null,
+                this._parent,
+                utils.RequestType.ArrayBuffer,
+            );
             return pfp;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "NotFound") {
+            if (
+                err &&
+                err instanceof PenguinModAPIError &&
+                err.data &&
+                err.data.error === "NotFound"
+            ) {
                 return null;
             }
             throw err;
@@ -206,10 +291,20 @@ class PenguinModAPIUsers {
         try {
             const has_token = !!this._parent.token;
             const token_str = has_token ? `&token=${this._parent.token}` : "";
-            const json = await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/profile?target=${encodeURIComponent(username)}${token_str}`, null, this._parent, utils.RequestType.JSON);
-            return json; 
+            const json = await utils.doBasicRequest(
+                `${this._parent.apiUrl}/v1/users/profile?target=${encodeURIComponent(username)}${token_str}`,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            );
+            return json;
         } catch (err) {
-            if (err && err instanceof PenguinModAPIError && err.data && err.data.error === "NotFound") {
+            if (
+                err &&
+                err instanceof PenguinModAPIError &&
+                err.data &&
+                err.data.error === "NotFound"
+            ) {
                 return null;
             }
             throw err;
@@ -224,23 +319,28 @@ class PenguinModAPIUsers {
      * @returns {Promise<null>}
      */
     async requestRankUp() {
-        await utils.doBasicRequest(`${this._parent.apiUrl}/v1/users/requestrankup`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            `${this._parent.apiUrl}/v1/users/requestrankup`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
      * Check if an email is valid. Same function as used in the API.
      * @param {string} email
-     * @returns {boolean} 
+     * @returns {boolean}
      */
     isValidEmail(email) {
         return email.match(
-            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         );
     }
 
@@ -255,16 +355,31 @@ class PenguinModAPIUsers {
      */
     async setEmail(email) {
         const url = `${this._parent.apiUrl}/v1/users/setEmail`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
-        utils.assert(this.isValidEmail(email), url, "InvalidEmail", `Email '${email}' is not a valid email.`);
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                email
-            })
-        }, this._parent, utils.RequestType.None);
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        utils.assert(
+            this.isValidEmail(email),
+            url,
+            "InvalidEmail",
+            `Email '${email}' is not a valid email.`,
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    email,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -277,15 +392,25 @@ class PenguinModAPIUsers {
      */
     async setBio(bio) {
         const url = `${this._parent.apiUrl}/v1/users/setBio`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                bio
-            })
-        }, this._parent, utils.RequestType.None);
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    bio,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Set another account's bio.
@@ -299,16 +424,26 @@ class PenguinModAPIUsers {
      */
     async setBioAdmin(target, bio) {
         const url = `${this._parent.apiUrl}/v1/users/setbioadmin`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target,
-                bio
-            })
-        }, this._parent, utils.RequestType.None);
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target,
+                    bio,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Makes a specific project featured on your profile.
@@ -322,15 +457,20 @@ class PenguinModAPIUsers {
      */
     async setMyFeaturedProject(projectId, featuredTitle) {
         const url = `${this._parent.apiUrl}/v1/users/setmyfeaturedproject`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                project: projectId,
-                title: featuredTitle,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project: projectId,
+                    title: featuredTitle,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Makes a specific project featured on someone else's profile.
@@ -345,21 +485,26 @@ class PenguinModAPIUsers {
      */
     async setMyFeaturedProjectAdmin(target, projectId, featuredTitle) {
         const url = `${this._parent.apiUrl}/v1/users/setmyfeaturedprojectadmin`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target: target,
-                project: projectId,
-                title: featuredTitle,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target: target,
+                    project: projectId,
+                    title: featuredTitle,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Saves an arbitrary object (with restrictions) to your profile.
      * For exact restrictions, see the `seeBlockedUserCustomization` function in https://github.com/PenguinMod/PenguinMod-BackendApi/blob/main/api/v1/db/UserManager.js
-     * 
+     *
      * Requires token.
      * Only accessible on accounts with the "donator" badge.
      * @link https://projects.penguinmod.com/api/v1/users/customization/setCustomization
@@ -370,15 +515,20 @@ class PenguinModAPIUsers {
      */
     async setCustomization(customData, modTarget) {
         const url = `${this._parent.apiUrl}/v1/users/customization/setCustomization`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                customization: customData,
-                target: modTarget,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    customization: customData,
+                    target: modTarget,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Disables someone else's customizations from being visible, and disables their ability to use the customization feature.
@@ -392,15 +542,20 @@ class PenguinModAPIUsers {
      */
     async setCustomizationDisabled(target, isDisabled) {
         const url = `${this._parent.apiUrl}/v1/users/customization/setCustomizationDisabled`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target,
-                toggle: !isDisabled,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target,
+                    toggle: !isDisabled,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Gets a specific user's donator customization.
@@ -411,7 +566,12 @@ class PenguinModAPIUsers {
      */
     async getCustomization(username) {
         const url = `${this._parent.apiUrl}/v1/users/customization/getCustomization?target=${encodeURIComponent(username)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.customization;
     }
 
@@ -428,7 +588,14 @@ class PenguinModAPIUsers {
         }
 
         const url = `${this._parent.apiUrl}/v1/users/userexists?username=${encodeURIComponent(username)}`;
-        const exists = (await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON)).exists;
+        const exists = (
+            await utils.doBasicRequest(
+                url,
+                null,
+                this._parent,
+                utils.RequestType.JSON,
+            )
+        ).exists;
 
         return exists;
     }
@@ -441,7 +608,12 @@ class PenguinModAPIUsers {
      */
     async isBanned(username) {
         const url = `${this._parent.apiUrl}/v1/users/isBanned?username=${encodeURIComponent(username)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.isBanned;
     }
 
@@ -454,9 +626,19 @@ class PenguinModAPIUsers {
      */
     async getInfo() {
         const url = `${this._parent.apiUrl}/v1/users/userfromcode?token=${this._parent.token}`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "No token is registered.");
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
 
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
 
         return data;
     }
@@ -472,24 +654,52 @@ class PenguinModAPIUsers {
      */
     async changePassword(old_password, new_password) {
         const url = `${this._parent.apiUrl}/v1/users/changePassword`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "Missing token");
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "Missing token",
+        );
 
-        const passwordDoesNotMeetLength = new_password.length < 8 || new_password.length > 50;
-        const passwordMeetsTextInclude = new_password.match(/[a-z]/) && new_password.match(/[A-Z]/);
-        const passwordMeetsSpecialInclude = new_password.match(/[0-9]/) && new_password.match(/[^a-z0-9]/i);
-        utils.assert(!passwordDoesNotMeetLength, url, "InvalidPasswordLength", "Password must be between 8 and 50 characters long.");
-        utils.assert(passwordMeetsTextInclude, url, "InvalidPasswordText", "Password must contain at least one letter.");
-        utils.assert(passwordMeetsSpecialInclude, url, "InvalidPasswordSpecial", "Password must contain at least one number and one special character.");
+        const passwordDoesNotMeetLength =
+            new_password.length < 8 || new_password.length > 50;
+        const passwordMeetsTextInclude =
+            new_password.match(/[a-z]/) && new_password.match(/[A-Z]/);
+        const passwordMeetsSpecialInclude =
+            new_password.match(/[0-9]/) && new_password.match(/[^a-z0-9]/i);
+        utils.assert(
+            !passwordDoesNotMeetLength,
+            url,
+            "InvalidPasswordLength",
+            "Password must be between 8 and 50 characters long.",
+        );
+        utils.assert(
+            passwordMeetsTextInclude,
+            url,
+            "InvalidPasswordText",
+            "Password must contain at least one letter.",
+        );
+        utils.assert(
+            passwordMeetsSpecialInclude,
+            url,
+            "InvalidPasswordSpecial",
+            "Password must contain at least one number and one special character.",
+        );
 
-        const data = await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                old_password,
-                new_password
-            })
-        }, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    old_password,
+                    new_password,
+                }),
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.token;
     }
     /**
@@ -502,21 +712,42 @@ class PenguinModAPIUsers {
      */
     async changeUsername(newUsername) {
         const url = `${this._parent.apiUrl}/v1/users/changeUsername`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "Missing token");
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "Missing token",
+        );
 
-        const usernameDoesNotMeetLength = newUsername.length < 3 || newUsername.length > 20;
+        const usernameDoesNotMeetLength =
+            newUsername.length < 3 || newUsername.length > 20;
         const usernameHasIllegalChars = newUsername.match(/[^a-z0-9\-_]/i);
-        utils.assert(!usernameDoesNotMeetLength, url, "InvalidUsernameLength", "Username must be between 3 and 20 characters long.");
-        utils.assert(!usernameHasIllegalChars, url, "InvalidUsernameChars", "Username can only contain letters, numbers, dashes and underscores.");
+        utils.assert(
+            !usernameDoesNotMeetLength,
+            url,
+            "InvalidUsernameLength",
+            "Username must be between 3 and 20 characters long.",
+        );
+        utils.assert(
+            !usernameHasIllegalChars,
+            url,
+            "InvalidUsernameChars",
+            "Username can only contain letters, numbers, dashes and underscores.",
+        );
 
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                newUsername,
-            })
-        }, this._parent, utils.RequestType.JSON);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    newUsername,
+                }),
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
     }
     /**
      * Change another user's username.
@@ -530,17 +761,27 @@ class PenguinModAPIUsers {
      */
     async changeUsernameAdmin(target, newUsername) {
         const url = `${this._parent.apiUrl}/v1/users/changeusernameadmin`;
-        utils.assert(!!this._parent.token, url, "Reauthenticate", "Missing token");
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "Missing token",
+        );
 
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target,
-                newUsername,
-            })
-        }, this._parent, utils.RequestType.JSON);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target,
+                    newUsername,
+                }),
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
     }
 
     parseBirthday(birthday) {
@@ -564,59 +805,125 @@ class PenguinModAPIUsers {
      * Requires a Cloudflare Captcha token.
      * @link https://projects.penguinmod.com/api/v1/users/createAccount
      * @param {string} username Your new username.
-     * @param {string} password Your new password. 
+     * @param {string} password Your new password.
      * @param {string} captcha_token The captcha token from cloudflare.
      * @param {string|number|null} birthday Your birthday. Should be parseable by new Date(x). Optional, but you're gonna get hassled for it on the frontend sooo just provide it now. You can use `filloutSafetyDetails` later to set the missing info.
      * @param {string|null} country Your country, in country-code form. Same as above - optional but recommended to provide it now. You can use `filloutSafetyDetails` later to set the missing info.
      * @param {string} email Your email. Optional. You can use `setEmail` later to set an email for this account.
      * @throws {PenguinModAPIError}
-     * @returns {Promise<string>} Your new token. 
+     * @returns {Promise<string>} Your new token.
      */
-    async createAccount(username, password, captcha_token, birthday, country, email="") {
+    async createAccount(
+        username,
+        password,
+        captcha_token,
+        birthday,
+        country,
+        email = "",
+    ) {
         const url = `${this._parent.apiUrl}/v1/users/createAccount`;
 
         // validate everything
         // block cuz im sooo sigma
         {
-            const usernameDoesNotMeetLength = username.length < 3 || username.length > 20;
+            const usernameDoesNotMeetLength =
+                username.length < 3 || username.length > 20;
             const usernameHasIllegalChars = username.match(/[^a-z0-9\-_]/i);
 
-            utils.assert(!usernameDoesNotMeetLength, url, "InvalidUsernameLength", "Username must be between 3 and 20 characters long.");
-            utils.assert(!usernameHasIllegalChars, url, "InvalidUsernameChars", "Username can only contain letters, numbers, dashes and underscores.");
+            utils.assert(
+                !usernameDoesNotMeetLength,
+                url,
+                "InvalidUsernameLength",
+                "Username must be between 3 and 20 characters long.",
+            );
+            utils.assert(
+                !usernameHasIllegalChars,
+                url,
+                "InvalidUsernameChars",
+                "Username can only contain letters, numbers, dashes and underscores.",
+            );
 
-            const passwordDoesNotMeetLength = password.length < 8 || password.length > 50;
-            const passwordMeetsTextInclude = password.match(/[a-z]/) && password.match(/[A-Z]/);
-            const passwordMeetsSpecialInclude = password.match(/[0-9]/) && password.match(/[^a-z0-9]/i);
+            const passwordDoesNotMeetLength =
+                password.length < 8 || password.length > 50;
+            const passwordMeetsTextInclude =
+                password.match(/[a-z]/) && password.match(/[A-Z]/);
+            const passwordMeetsSpecialInclude =
+                password.match(/[0-9]/) && password.match(/[^a-z0-9]/i);
 
-            utils.assert(!passwordDoesNotMeetLength, url, "InvalidPasswordLength", "Password must be between 8 and 50 characters long.");
-            utils.assert(passwordMeetsTextInclude, url, "InvalidPasswordText", "Password must contain at least one letter.");
-            utils.assert(passwordMeetsSpecialInclude, url, "InvalidPasswordSpecial", "Password must contain at least one number and one special character.");
+            utils.assert(
+                !passwordDoesNotMeetLength,
+                url,
+                "InvalidPasswordLength",
+                "Password must be between 8 and 50 characters long.",
+            );
+            utils.assert(
+                passwordMeetsTextInclude,
+                url,
+                "InvalidPasswordText",
+                "Password must contain at least one letter.",
+            );
+            utils.assert(
+                passwordMeetsSpecialInclude,
+                url,
+                "InvalidPasswordSpecial",
+                "Password must contain at least one number and one special character.",
+            );
 
             if (email) {
-                utils.assert(this.isValidEmail(email), url, "InvalidEmail", `Email '${email}' is not a valid email.`);
+                utils.assert(
+                    this.isValidEmail(email),
+                    url,
+                    "InvalidEmail",
+                    `Email '${email}' is not a valid email.`,
+                );
             }
 
             if (birthday && !this.parseBirthday(birthday)) {
-                throw new PenguinModAPIError("InvalidBirthday", "Birthday must be a valid date.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+                throw new PenguinModAPIError(
+                    "InvalidBirthday",
+                    "Birthday must be a valid date.",
+                    PenguinModAPIError.UNKNOWN_CODE,
+                    null,
+                    false,
+                    url,
+                    null,
+                    null,
+                    null,
+                );
             }
 
             if (country && !countryLookup.countryCodes.includes(country)) {
-                throw new PenguinModAPIError("InvalidCountry", "Country must be a valid country code.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+                throw new PenguinModAPIError(
+                    "InvalidCountry",
+                    "Country must be a valid country code.",
+                    PenguinModAPIError.UNKNOWN_CODE,
+                    null,
+                    false,
+                    url,
+                    null,
+                    null,
+                    null,
+                );
             }
         }
 
-        const data = await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username,
-                password,
-                captcha_token,
-                birthday,
-                country,
-                email
-            })
-        }, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username,
+                    password,
+                    captcha_token,
+                    birthday,
+                    country,
+                    email,
+                }),
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
 
         return data.token;
     }
@@ -635,24 +942,59 @@ class PenguinModAPIUsers {
         const url = `${this._parent.apiUrl}/v1/users/filloutSafetyDetails`;
 
         if (birthday && !this.parseBirthday(birthday)) {
-            throw new PenguinModAPIError("InvalidBirthday", "Birthday must be a valid date.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+            throw new PenguinModAPIError(
+                "InvalidBirthday",
+                "Birthday must be a valid date.",
+                PenguinModAPIError.UNKNOWN_CODE,
+                null,
+                false,
+                url,
+                null,
+                null,
+                null,
+            );
         }
         if (country && !countryLookup.countryCodes.includes(country)) {
-            throw new PenguinModAPIError("InvalidCountry", "Country must be a valid country code.", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+            throw new PenguinModAPIError(
+                "InvalidCountry",
+                "Country must be a valid country code.",
+                PenguinModAPIError.UNKNOWN_CODE,
+                null,
+                false,
+                url,
+                null,
+                null,
+                null,
+            );
         }
         if (!birthday && !country) {
-            throw new PenguinModAPIError("MissingOneField", "Must have birthday and/or country", PenguinModAPIError.UNKNOWN_CODE, null, false, url, null, null, null);
+            throw new PenguinModAPIError(
+                "MissingOneField",
+                "Must have birthday and/or country",
+                PenguinModAPIError.UNKNOWN_CODE,
+                null,
+                false,
+                url,
+                null,
+                null,
+                null,
+            );
         }
 
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                birthday,
-                country,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    birthday,
+                    country,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -664,13 +1006,18 @@ class PenguinModAPIUsers {
      */
     async logout() {
         const url = `${this._parent.apiUrl}/v1/users/logout`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Allows you to log into an account from a provided username and password.
@@ -685,15 +1032,20 @@ class PenguinModAPIUsers {
      */
     async passwordLogin(username, password, captcha_token) {
         const url = `${this._parent.apiUrl}/v1/users/passwordLogin`;
-        const login = await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username,
-                password,
-                captcha_token
-            })
-        }, this._parent, utils.RequestType.JSON);
+        const login = await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username,
+                    password,
+                    captcha_token,
+                }),
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return login.token;
     }
     /**
@@ -706,7 +1058,12 @@ class PenguinModAPIUsers {
      */
     async tokenLogin(token) {
         const url = `${this._parent.apiUrl}/v1/users/tokenlogin?token=${encodeURIComponent(token)}`;
-        await utils.doBasicRequest(url, null, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -718,13 +1075,18 @@ class PenguinModAPIUsers {
      */
     async getProjectCountOfUser(username) {
         const url = `${this._parent.apiUrl}/v1/users/getprojectcountofuser`;
-        const data = await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                target: username,
-            })
-        }, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    target: username,
+                }),
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.count;
     }
     /**
@@ -736,7 +1098,12 @@ class PenguinModAPIUsers {
      */
     async getBadges(username) {
         const url = `${this._parent.apiUrl}/v1/users/getBadges?username=${encodeURIComponent(username)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.badges;
     }
 
@@ -752,15 +1119,20 @@ class PenguinModAPIUsers {
      */
     async resetPassword(email, emailState, newPassword) {
         const url = `${this._parent.apiUrl}/v1/users/resetpassword/reset`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email,
-                state: emailState,
-                password: newPassword,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email,
+                    state: emailState,
+                    password: newPassword,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Send a password reset request via email. Returns the URL that the user can visit to reset their password.
@@ -773,14 +1145,19 @@ class PenguinModAPIUsers {
      */
     async sendResetPasswordEmail(email, captcha_token) {
         const url = `${this._parent.apiUrl}/v1/users/resetpassword/sendEmail`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email,
-                captcha_token,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email,
+                    captcha_token,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Sends an email to this account's inbox that allows this account's email to be verified.
@@ -792,13 +1169,18 @@ class PenguinModAPIUsers {
      */
     async sendVerifyEmail() {
         const url = `${this._parent.apiUrl}/v1/users/resetpassword/sendVerifyEmail`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -814,15 +1196,20 @@ class PenguinModAPIUsers {
      */
     async privateProfile(makePrivate, makePrivateToFollowing) {
         const url = `${this._parent.apiUrl}/v1/users/privateProfile`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                privateProfile: makePrivate,
-                privateToFollowing: makePrivateToFollowing,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    privateProfile: makePrivate,
+                    privateToFollowing: makePrivateToFollowing,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -835,11 +1222,16 @@ class PenguinModAPIUsers {
     async getMessages(page) {
         const token = this._parent.token;
         const url = `${this._parent.apiUrl}/v1/users/getmessages?token=${encodeURIComponent(token)}&page=${page}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.messages;
     }
     /**
-     * Gets any unread messages that this user has. 
+     * Gets any unread messages that this user has.
      * @link https://projects.penguinmod.com/api/v1/users/getunreadmessages
      * @param {number?} page Which page of messages to look at. If not provided, page will be 0.
      * @throws {PenguinModAPIError}
@@ -848,7 +1240,12 @@ class PenguinModAPIUsers {
     async getUnreadMessages(page) {
         const token = this._parent.token;
         const url = `${this._parent.apiUrl}/v1/users/getunreadmessages?token=${encodeURIComponent(token)}&page=${page}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.messages;
     }
     /**
@@ -860,7 +1257,12 @@ class PenguinModAPIUsers {
      */
     async getMessageCount() {
         const url = `${this._parent.apiUrl}/v1/users/getmessagecount?token=${encodeURIComponent(this._parent.token)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.count;
     }
     /**
@@ -872,7 +1274,12 @@ class PenguinModAPIUsers {
      */
     async getUnreadMessageCount() {
         const url = `${this._parent.apiUrl}/v1/users/getunreadmessagecount?token=${encodeURIComponent(this._parent.token)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.count;
     }
     /**
@@ -884,13 +1291,18 @@ class PenguinModAPIUsers {
      */
     async markAllMessagesAsRead() {
         const url = `${this._parent.apiUrl}/v1/users/markallmessagesasread`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Marks a specific message sent to the user as read.
@@ -902,14 +1314,19 @@ class PenguinModAPIUsers {
      */
     async markMessageAsRead(id) {
         const url = `${this._parent.apiUrl}/v1/users/markmessageasread`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                messageID: id,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    messageID: id,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -926,9 +1343,15 @@ class PenguinModAPIUsers {
         const formData = new FormData();
         formData.append("picture", new Blob([file]));
 
-        await utils.doFormDataRequest(url, {
-            method: "POST",
-        }, formData, this._parent, utils.RequestType.JSON);
+        await utils.doFormDataRequest(
+            url,
+            {
+                method: "POST",
+            },
+            formData,
+            this._parent,
+            utils.RequestType.JSON,
+        );
     }
     /**
      * Sets the profile picture of another user's account.
@@ -947,9 +1370,15 @@ class PenguinModAPIUsers {
         formData.append("target", target);
         formData.append("picture", new Blob([file]));
 
-        await utils.doFormDataRequest(url, {
-            method: "POST",
-        }, formData, this._parent, utils.RequestType.JSON);
+        await utils.doFormDataRequest(
+            url,
+            {
+                method: "POST",
+            },
+            formData,
+            this._parent,
+            utils.RequestType.JSON,
+        );
     }
 
     /**
@@ -967,18 +1396,23 @@ class PenguinModAPIUsers {
      */
     async ban(target, reason, doUnban, time, removeFollows) {
         const url = `${this._parent.apiUrl}/v1/users/ban`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target: target,
-                reason: reason,
-                toggle: doUnban !== true,
-                time: time || 0,
-                remove_follows: removeFollows !== false,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target: target,
+                    reason: reason,
+                    toggle: doUnban !== true,
+                    time: time || 0,
+                    remove_follows: removeFollows !== false,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Bans an IP from accessing the server. Handles IP bans and unbans.
@@ -992,15 +1426,20 @@ class PenguinModAPIUsers {
      */
     async banIP(targetIP, doUnban) {
         const url = `${this._parent.apiUrl}/v1/users/banip`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                targetIP: targetIP,
-                toggle: doUnban !== true,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    targetIP: targetIP,
+                    toggle: doUnban !== true,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Bans a user's IP from accessing the server. Handles user IP bans and unbans.
@@ -1014,15 +1453,20 @@ class PenguinModAPIUsers {
      */
     async banUserIP(target, doUnban) {
         const url = `${this._parent.apiUrl}/v1/users/banuserip`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target: target,
-                toggle: doUnban !== true,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target: target,
+                    toggle: doUnban !== true,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Uses a regex to ban or unban many users at once.
@@ -1036,15 +1480,20 @@ class PenguinModAPIUsers {
      */
     async massBanRegex(targetRegex, doUnban) {
         const url = `${this._parent.apiUrl}/v1/users/massbanregex`;
-        const result = await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                targetRegex,
-                toggle: doUnban !== true,
-            })
-        }, this._parent, utils.RequestType.JSON);
+        const result = await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    targetRegex,
+                    toggle: doUnban !== true,
+                }),
+            },
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return result.count;
     }
 
@@ -1059,7 +1508,12 @@ class PenguinModAPIUsers {
      */
     async getAlts(target) {
         const url = `${this._parent.apiUrl}/v1/users/getAlts?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.alts;
     }
 
@@ -1076,16 +1530,21 @@ class PenguinModAPIUsers {
      */
     async assignPosition(target, admin, moderator) {
         const url = `${this._parent.apiUrl}/v1/users/assignPossition`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target,
-                admin,
-                approver: moderator
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target,
+                    admin,
+                    approver: moderator,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -1101,15 +1560,20 @@ class PenguinModAPIUsers {
      */
     async setBadges(target, badges) {
         const url = `${this._parent.apiUrl}/v1/users/setBadges`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target,
-                badges
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target,
+                    badges,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Gives several users badges at once. Unlike setBadges, this adds to the badge list for each user.
@@ -1125,16 +1589,21 @@ class PenguinModAPIUsers {
      */
     async setBadgesMultiple(targets, badges, removing) {
         const url = `${this._parent.apiUrl}/v1/users/setbadgesmultiple`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                targets,
-                badges,
-                removing
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    targets,
+                    badges,
+                    removing,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -1149,15 +1618,20 @@ class PenguinModAPIUsers {
      */
     async deleteAccount(target, reason) {
         const url = `${this._parent.apiUrl}/v1/users/deleteaccount`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target,
-                reason
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target,
+                    reason,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Forgets any sent emails. Meant for debugging.
@@ -1169,13 +1643,18 @@ class PenguinModAPIUsers {
      */
     async deleteAllEmails() {
         const url = `${this._parent.apiUrl}/v1/users/deleteallemails`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -1188,7 +1667,12 @@ class PenguinModAPIUsers {
      */
     async getAdmins() {
         const url = `${this._parent.apiUrl}/v1/users/getadmins?token=${encodeURIComponent(this._parent.token)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.admins;
     }
     /**
@@ -1201,7 +1685,12 @@ class PenguinModAPIUsers {
      */
     async getMods() {
         const url = `${this._parent.apiUrl}/v1/users/getmods?token=${encodeURIComponent(this._parent.token)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.mods;
     }
 
@@ -1216,7 +1705,12 @@ class PenguinModAPIUsers {
      */
     async getAllAccountsWithIP(target) {
         const url = `${this._parent.apiUrl}/v1/users/getAllAccountsWithIP?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.users;
     }
     /**
@@ -1230,7 +1724,12 @@ class PenguinModAPIUsers {
      */
     async getAllIPsOf(target) {
         const url = `${this._parent.apiUrl}/v1/users/getAllIPs?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.ips;
     }
 
@@ -1245,7 +1744,12 @@ class PenguinModAPIUsers {
      */
     async getEmail(target) {
         const url = `${this._parent.apiUrl}/v1/users/getemail?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.email;
     }
 
@@ -1260,7 +1764,12 @@ class PenguinModAPIUsers {
      */
     async getWorstOffenders(page) {
         const url = `${this._parent.apiUrl}/v1/users/getworstoffenders?token=${encodeURIComponent(this._parent.token)}&page=${encodeURIComponent(page)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.items;
     }
 
@@ -1273,7 +1782,12 @@ class PenguinModAPIUsers {
      */
     async isAdmin(target) {
         const url = `${this._parent.apiUrl}/v1/users/isadmin?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.isAdmin;
     }
     /**
@@ -1285,7 +1799,12 @@ class PenguinModAPIUsers {
      */
     async isMod(target) {
         const url = `${this._parent.apiUrl}/v1/users/ismod?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
-        const data = await utils.doBasicRequest(url, null, this._parent, utils.RequestType.JSON);
+        const data = await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
         return data.isMod;
     }
 
@@ -1300,14 +1819,19 @@ class PenguinModAPIUsers {
      */
     async verifyFollowers(target) {
         const url = `${this._parent.apiUrl}/v1/users/verifyfollowers`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -1322,14 +1846,19 @@ class PenguinModAPIUsers {
     async toggleAccountCreation(toggle) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/toggleaccountcreation`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                toggle
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    toggle,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
 
     /**
@@ -1344,14 +1873,19 @@ class PenguinModAPIUsers {
     async deleteModMessage(message) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/deletemodmessage`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                messageID: message
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    messageID: message,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Sends a moderator message to any user.
@@ -1367,16 +1901,21 @@ class PenguinModAPIUsers {
     async sendModMessage(user, content) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/modmessage`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                target: user,
-                message: content,
-                disputable
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    target: user,
+                    message: content,
+                    disputable,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Replies to a message.
@@ -1391,15 +1930,20 @@ class PenguinModAPIUsers {
     async sendModReply(message, content) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/modresponse`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                disputeID: message,
-                message: content
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    disputeID: message,
+                    message: content,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
     }
     /**
      * Disputes a moderator message.
@@ -1413,15 +1957,38 @@ class PenguinModAPIUsers {
     async disputeMessage(message, content) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/dispute`;
-        await utils.doBasicRequest(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                token: this._parent.token,
-                messageID: message,
-                dispute: content
-            })
-        }, this._parent, utils.RequestType.None);
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    messageID: message,
+                    dispute: content,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
+    }
+
+    /**
+     * Search for users by username.
+     * @param {string} query The search query. Searches by username.
+     * @param {number} page The page of the search.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.BaseUser>>}
+     */
+    async searchUsers(query, page = 0) {
+        // TODO: on the backend, make this a users endpoint
+        const url = `${this._parent.apiUrl}/v1/projects/searchusers?query=${query}&page=${page}`;
+        return await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
     }
 
     // TODO: Add these OAuth endpoints

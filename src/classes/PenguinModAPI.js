@@ -21,16 +21,16 @@ class PenguinModAPI {
         /**
          * This is the API url used for all requests.
          * Most endpoints will append a version like /v1 before the endpoint.
-         * 
+         *
          * Default is "https://projects.penguinmod.com/api"
          * @type {string}
          */
         this.apiUrl = options.apiUrl || "https://projects.penguinmod.com/api";
-        
+
         /**
          * This is the max upload size for a non-donator.
          * It is in MB.
-         * 
+         *
          * Default is 32
          * @type {number}
          */
@@ -53,7 +53,7 @@ class PenguinModAPI {
     /**
      * The new `apiUrl` to use.
      * Most endpoints will append a version like /v1 before the endpoint.
-     * 
+     *
      * By default, ApiModule will use "https://projects.penguinmod.com/api"
      * @param {string} apiUrl The new base URL to use.
      */
@@ -79,7 +79,12 @@ class PenguinModAPI {
      * @returns {Promise<object>} The metadata for the current API version used. Can be in any format.
      */
     async getMetadata() {
-        return await utils.doBasicRequest(`${this.apiUrl}/v1`, null, this, utils.RequestType.JSON);
+        return await utils.doBasicRequest(
+            `${this.apiUrl}/v1`,
+            null,
+            this,
+            utils.RequestType.JSON,
+        );
     }
     /**
      * Requests the ping endpoint as a way to check if the API is online without sending much data.
@@ -89,7 +94,12 @@ class PenguinModAPI {
      */
     async checkOnline() {
         try {
-            return !!(await utils.doBasicRequest(`${this.apiUrl}/v1/ping`, null, this, utils.RequestType.None));
+            return !!(await utils.doBasicRequest(
+                `${this.apiUrl}/v1/ping`,
+                null,
+                this,
+                utils.RequestType.None,
+            ));
         } catch {
             return false;
         }

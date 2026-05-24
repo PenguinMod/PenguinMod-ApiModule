@@ -16,7 +16,7 @@ All of these TODOs should be completed before ApiModule is considered to have a 
 Not listing individual endpoints for convenience, they are all listed within each class.
 
 - [x] Finish PenguinModAPIMisc
-- [ ] Finish PenguinModAPIProjects
+- [x] Finish PenguinModAPIProjects
 - [ ] Finish PenguinModAPIUsers
   - [x] Finish everything but OAuth endpoints
   - [ ] Finish OAuth endpoints

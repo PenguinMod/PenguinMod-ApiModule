@@ -36,6 +36,15 @@ class PenguinModAPI {
          */
         this.maxUploadSize = options.maxUploadSize || 32;
 
+        /**
+         * This is the max asset upload size for a non-donator.
+         * It is in MB.
+         *
+         * Default is 10
+         * @type {number}
+         */
+        this.maxAssetSize = options.maxAssetSize || 10;
+
         /** @type {PenguinModAPIMisc} */
         this.misc = new PenguinModAPIMisc(this);
         /** @type {PenguinModAPIUsers} */

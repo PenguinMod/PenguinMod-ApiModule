@@ -136,27 +136,23 @@ class PenguinModAPIProjects {
      * @returns {Promise<Array<PenguinModTypes.Project>>} An array of PenguinMod projects.
      */
     async getProjectsByAuthor(authorUsername, page, login) {
-        try {
-            const url = new URL(
-                `${this._parent.apiUrl}/v1/projects/getprojectsbyauthor`,
-            );
-            url.searchParams.set("authorUsername", authorUsername);
-            if (typeof page === "number") {
-                url.searchParams.set("page", page);
-            }
-            if (login !== false && this._parent.token) {
-                url.searchParams.set("token", this._parent.token);
-            }
-            const json = await utils.doBasicRequest(
-                url.toString(),
-                null,
-                this._parent,
-                utils.RequestType.JSON,
-            );
-            return json;
-        } catch (err) {
-            throw err;
+        const url = new URL(
+            `${this._parent.apiUrl}/v1/projects/getprojectsbyauthor`,
+        );
+        url.searchParams.set("authorUsername", authorUsername);
+        if (typeof page === "number") {
+            url.searchParams.set("page", page);
         }
+        if (login !== false && this._parent.token) {
+            url.searchParams.set("token", this._parent.token);
+        }
+        const json = await utils.doBasicRequest(
+            url.toString(),
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
+        return json;
     }
 
     /**
@@ -317,6 +313,12 @@ class PenguinModAPIProjects {
      */
     async getWhoLoved(projectID, page) {
         const url = `${this._parent.apiUrl}/v1/projects/getWhoLoved?projectID=${encodeURIComponent(projectID)}&token=${encodeURIComponent(this._parent.token)}&page=${encodeURIComponent(page)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const json = await utils.doBasicRequest(
             url,
             null,
@@ -337,6 +339,12 @@ class PenguinModAPIProjects {
      */
     async getWhoVoted(projectID, page) {
         const url = `${this._parent.apiUrl}/v1/projects/getWhoVoted?projectID=${encodeURIComponent(projectID)}&token=${encodeURIComponent(this._parent.token)}&page=${encodeURIComponent(page)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const json = await utils.doBasicRequest(
             url,
             null,
@@ -359,6 +367,12 @@ class PenguinModAPIProjects {
     async changeProjectId(target, newId) {
         // TODO: This should probably not be under users/
         const url = `${this._parent.apiUrl}/v1/users/changeprojectid`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -452,6 +466,12 @@ class PenguinModAPIProjects {
      */
     async toggleViewing(toggle) {
         const url = `${this._parent.apiUrl}/v1/projects/toggleviewing`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -477,6 +497,12 @@ class PenguinModAPIProjects {
      */
     async toggleUploading(toggle) {
         const url = `${this._parent.apiUrl}/v1/projects/toggleuploading`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -504,6 +530,12 @@ class PenguinModAPIProjects {
      */
     async hardReject(project, message) {
         const url = `${this._parent.apiUrl}/v1/projects/hardreject`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -530,6 +562,12 @@ class PenguinModAPIProjects {
      */
     async loveProject(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/loveToggle`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -555,6 +593,12 @@ class PenguinModAPIProjects {
      */
     async voteProject(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/voteToggle`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -580,6 +624,12 @@ class PenguinModAPIProjects {
      */
     async viewProject(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/registerView`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -605,6 +655,12 @@ class PenguinModAPIProjects {
      */
     async showMeLessOf(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/showMeLess`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -630,6 +686,12 @@ class PenguinModAPIProjects {
      */
     async showMeMoreOf(project) {
         const url = `${this._parent.apiUrl}/v1/projects/interactions/showMeMore`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -657,6 +719,12 @@ class PenguinModAPIProjects {
      */
     async toggleProjectFeatured(project, featured) {
         const url = `${this._parent.apiUrl}/v1/projects/manualfeature`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -685,6 +753,12 @@ class PenguinModAPIProjects {
      */
     async setCanBeFeatured(project, featurable) {
         const url = `${this._parent.apiUrl}/v1/projects/setCanBeFeatured`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -724,16 +798,43 @@ class PenguinModAPIProjects {
      * For internal use. Gets the size of a project based off its parts, then
      * @param {Blob} protobuf The project.json protobuf
      * @param {([Blob, string])[]} assets The project assets
+     * @param {Blob?} thumbnail The thumbnail of the project
      * @param {string} url The url of the request, used for errors
      * @throws {PenguinModAPIError}
      * @returns {Promise<null>}
      */
-    async _checkProjectSize(protobuf, assets, url) {
-        // TODO: check the individual size of each asset
+    async _checkProjectSize(protobuf, assets, thumbnail, url) {
+        const check_asset = (blob, error) => {
+            if (
+                blob.size >
+                Number(this._parent.maxAssetSize) *
+                    (is_donator ? 1.75 : 1) *
+                    1024 *
+                    1024
+            ) {
+                throw error;
+            }
+        };
+        for (const asset of assets) {
+            check_asset(
+                asset[0],
+                new PenguinModAPIError(
+                    "AssetTooLarge",
+                    "One of your assets is too large",
+                ),
+            );
+        }
+        check_asset(
+            thumbnail,
+            new PenguinModAPIError(
+                "ThumbnailTooLarge",
+                "Your project thumbnail exceeds the file size limit.",
+            ),
+        );
 
         const size = assets.reduce(
             (c, v) => c + v[0].size,
-            protobuf.size + imageSize,
+            protobuf.size + (thumbnail ? thumbnail.size : 0),
         );
 
         const is_donator = (await this._parent.users.getInfo()).badges.includes(
@@ -801,7 +902,7 @@ class PenguinModAPIProjects {
         const protobuf_u8a = pmp_protobuf.jsonToProtobuf(json);
         const protobuf = new Blob([protobuf_u8a]);
 
-        await this._checkProjectSize(protobuf, assets);
+        await this._checkProjectSize(protobuf, assets, thumbnail, url);
 
         if (
             title.length > 100 ||
@@ -895,7 +996,7 @@ class PenguinModAPIProjects {
             const protobuf_u8a = pmp_protobuf.jsonToProtobuf(json);
             protobuf = new Blob([protobuf_u8a]);
 
-            await this._checkProjectSize(protobuf, assets);
+            await this._checkProjectSize(protobuf, assets, thumbnail, url);
         }
 
         if (
@@ -947,25 +1048,21 @@ class PenguinModAPIProjects {
      * If logged in as a moderator, this will also include projects uploaded by unranked users.
      * @link https://projects.penguinmod.com/api/v1/projects/frontpage
      * @param {boolean?} login Whether or not to provide login info. Should be true for moderators who want to see unranked user's projects. Default is true.
-     * @throws {PenguinModAPIError} Can also throw if ratelimited, since this endpoint has stritcter ratelimiting.
+     * @throws {PenguinModAPIError}
      * @returns {Promise<PenguinModTypes.FrontPageResults>} The resulting sections and information for the front page.
      */
     async getFrontPage(login) {
-        try {
-            const url = new URL(`${this._parent.apiUrl}/v1/projects/frontpage`);
-            if (login !== false && this._parent.token) {
-                url.searchParams.set("token", this._parent.token);
-            }
-            const json = await utils.doBasicRequest(
-                url.toString(),
-                null,
-                this._parent,
-                utils.RequestType.JSON,
-            );
-            return json;
-        } catch (err) {
-            throw err;
+        const url = new URL(`${this._parent.apiUrl}/v1/projects/frontpage`);
+        if (login !== false && this._parent.token) {
+            url.searchParams.set("token", this._parent.token);
         }
+        const json = await utils.doBasicRequest(
+            url.toString(),
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
+        return json;
     }
 
     /**
@@ -984,15 +1081,240 @@ class PenguinModAPIProjects {
         );
     }
 
-    // TODO: /api/v1/projects/getfeaturedprojects
-    // TODO: /api/v1/projects/getmyprojects
-    // TODO: /api/v1/projects/getremixes
-    // TODO: /api/v1/projects/deletethumb
-    // TODO: /api/v1/projects/restore
-    // TODO: /api/v1/projects/hardreject
-    // TODO: /api/v1/projects/softreject
-    // TODO: /api/v1/projects/hardDeleteProject
-    // TODO: /api/v1/projects/downloadHardReject
+    /**
+     * Get the featured projects.
+     * @param {number} page The page to fetch. Defaults to 0.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.Project>>}
+     */
+    async getFeaturedProjects(page = 0) {
+        const url = `${this._parent.apiUrl}/v1/projects/getfeaturedprojects?page=${page}`;
+        return await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
+    }
+
+    /**
+     * Get the current users projects.
+     * Requires token.
+     * @param {number} page The page to fetch. Defaults to 0.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.Project>>}
+     */
+    async getMyProjects(page = 0) {
+        const url = `${this._parent.apiUrl}/v1/projects/getmyprojects?token=${this._parent.token}&page=${page}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        return await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
+    }
+
+    /**
+     * Get the remixes of a specified project.
+     * @param {string} projectID The ID of the project to get the remixes of.
+     * @param {number} page The page to fetch. Defaults to 0.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.Project>>}
+     */
+    async getRemixes(projectID, page = 0) {
+        const url = `${this._parent.apiUrl}/v1/projects/getremixes?projectID=${projectID}&page=${page}`;
+        return await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
+    }
+
+    /**
+     * Removes a projects thumbnail. Mod only.
+     * Requires token.
+     * @param {string} projectID The projects ID.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async deleteThumbnail(projectID) {
+        const url = `${this._parent.apiUrl}/v1/projects/deletethumb`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    projectID,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
+    }
+
+    /**
+     * Restores a soft rejected project. Mod only.
+     * Requires token.
+     * @param {string} projectID The projects ID.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async restoreProject(projectID) {
+        const url = `${this._parent.apiUrl}/v1/projects/restore`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project: projectID,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
+    }
+
+    /**
+     * Hard rejects a project. Mod only.
+     * Requires token.
+     * @param {string} projectID The projects ID.
+     * @param {string} message The message to be sent to the user and logged.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async hardRejectProject(projectID, message) {
+        const url = `${this._parent.apiUrl}/v1/projects/hardreject`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project: projectID,
+                    message,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
+    }
+
+    /**
+     * Soft rejects a project. Mod only.
+     * Requires token.
+     * @param {string} projectID The projects ID.
+     * @param {string} message The message to be sent to the user and logged.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async softRejectProject(projectID, message) {
+        const url = `${this._parent.apiUrl}/v1/projects/softreject`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project: projectID,
+                    message,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
+    }
+
+    /**
+     * Deletes a project. Either by the author or an admin.
+     * Requires token.
+     * @param {string} projectID The projects ID.
+     * @param {string?} reason The message to be sent to the user and logged if an admin is deleting the project.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async deleteProject(projectID, reason) {
+        const url = `${this._parent.apiUrl}/v1/projects/hardDeleteProject`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    project: projectID,
+                    reason,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
+    }
+
+    /**
+     * Downloads a hard rejected project. Either by the author or an admin.
+     * Requires token.
+     * @param {string} projectID The projects ID.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<{project:ArrayBuffer, assets: Array<{id:string, buffer: ArrayBuffer}>}>}
+     */
+    async downloadHardReject(projectID) {
+        const url = `${this._parent.apiUrl}/v1/projects/downloadHardReject?token=${this._parent.token}&project=${projectID}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        return await utils.doBasicRequest(
+            url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
+    }
 }
 
 module.exports = PenguinModAPIProjects;

@@ -17,6 +17,6 @@ Not listing individual endpoints for convenience, they are all listed within eac
 
 - [x] Finish PenguinModAPIMisc
 - [x] Finish PenguinModAPIProjects
-- [ ] Finish PenguinModAPIUsers
+- [x] Finish PenguinModAPIUsers
   - [x] Finish everything but OAuth endpoints
-  - [ ] Finish OAuth endpoints
+  - [x] Finish OAuth endpoints

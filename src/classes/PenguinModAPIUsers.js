@@ -3,6 +3,17 @@ const countryLookup = require("../misc/country-lookup.json");
 const PenguinModAPIError = require("./PenguinModAPIError.js");
 /** @typedef {import("./PenguinModAPI")} PenguinModAPI */
 
+/* TODO: replace all
+utils.assert(
+    !!this._parent.token,
+    url,
+    "Reauthenticate",
+    "No token is registered.",
+);
+
+with a single function call
+*/
+
 /**
  * @class This class is used to interface with endpoints related to users within the PenguinMod API.
  * Should only be accessed through PenguinModAPI.users
@@ -319,8 +330,15 @@ class PenguinModAPIUsers {
      * @returns {Promise<null>}
      */
     async requestRankUp() {
+        const url = `${this._parent.apiUrl}/v1/users/requestrankup`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
-            `${this._parent.apiUrl}/v1/users/requestrankup`,
+            url,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -457,6 +475,12 @@ class PenguinModAPIUsers {
      */
     async setMyFeaturedProject(projectId, featuredTitle) {
         const url = `${this._parent.apiUrl}/v1/users/setmyfeaturedproject`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -485,6 +509,12 @@ class PenguinModAPIUsers {
      */
     async setMyFeaturedProjectAdmin(target, projectId, featuredTitle) {
         const url = `${this._parent.apiUrl}/v1/users/setmyfeaturedprojectadmin`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -515,6 +545,12 @@ class PenguinModAPIUsers {
      */
     async setCustomization(customData, modTarget) {
         const url = `${this._parent.apiUrl}/v1/users/customization/setCustomization`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -542,6 +578,12 @@ class PenguinModAPIUsers {
      */
     async setCustomizationDisabled(target, isDisabled) {
         const url = `${this._parent.apiUrl}/v1/users/customization/setCustomizationDisabled`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -940,6 +982,12 @@ class PenguinModAPIUsers {
      */
     async filloutSafetyDetails(birthday, country) {
         const url = `${this._parent.apiUrl}/v1/users/filloutSafetyDetails`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
 
         if (birthday && !this.parseBirthday(birthday)) {
             throw new PenguinModAPIError(
@@ -1006,6 +1054,12 @@ class PenguinModAPIUsers {
      */
     async logout() {
         const url = `${this._parent.apiUrl}/v1/users/logout`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1057,6 +1111,7 @@ class PenguinModAPIUsers {
      * @returns {Promise<null>}
      */
     async tokenLogin(token) {
+        // TODO: this should probably be changed to not take a token and instead use _parent.token
         const url = `${this._parent.apiUrl}/v1/users/tokenlogin?token=${encodeURIComponent(token)}`;
         await utils.doBasicRequest(
             url,
@@ -1169,6 +1224,12 @@ class PenguinModAPIUsers {
      */
     async sendVerifyEmail() {
         const url = `${this._parent.apiUrl}/v1/users/resetpassword/sendVerifyEmail`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1196,6 +1257,12 @@ class PenguinModAPIUsers {
      */
     async privateProfile(makePrivate, makePrivateToFollowing) {
         const url = `${this._parent.apiUrl}/v1/users/privateProfile`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1257,6 +1324,12 @@ class PenguinModAPIUsers {
      */
     async getMessageCount() {
         const url = `${this._parent.apiUrl}/v1/users/getmessagecount?token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const data = await utils.doBasicRequest(
             url,
             null,
@@ -1274,6 +1347,12 @@ class PenguinModAPIUsers {
      */
     async getUnreadMessageCount() {
         const url = `${this._parent.apiUrl}/v1/users/getunreadmessagecount?token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const data = await utils.doBasicRequest(
             url,
             null,
@@ -1291,6 +1370,12 @@ class PenguinModAPIUsers {
      */
     async markAllMessagesAsRead() {
         const url = `${this._parent.apiUrl}/v1/users/markallmessagesasread`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1314,6 +1399,12 @@ class PenguinModAPIUsers {
      */
     async markMessageAsRead(id) {
         const url = `${this._parent.apiUrl}/v1/users/markmessageasread`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1340,6 +1431,13 @@ class PenguinModAPIUsers {
      */
     async setPFP(file) {
         const url = `${this._parent.apiUrl}/v1/users/setpfp?token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+
         const formData = new FormData();
         formData.append("picture", new Blob([file]));
 
@@ -1365,6 +1463,13 @@ class PenguinModAPIUsers {
      */
     async setPFPAdmin(target, file) {
         const url = `${this._parent.apiUrl}/v1/users/setpfpadmin`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+
         const formData = new FormData();
         formData.append("token", this._parent.token);
         formData.append("target", target);
@@ -1396,6 +1501,12 @@ class PenguinModAPIUsers {
      */
     async ban(target, reason, doUnban, time, removeFollows) {
         const url = `${this._parent.apiUrl}/v1/users/ban`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1426,6 +1537,12 @@ class PenguinModAPIUsers {
      */
     async banIP(targetIP, doUnban) {
         const url = `${this._parent.apiUrl}/v1/users/banip`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1453,6 +1570,13 @@ class PenguinModAPIUsers {
      */
     async banUserIP(target, doUnban) {
         const url = `${this._parent.apiUrl}/v1/users/banuserip`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+
         await utils.doBasicRequest(
             url,
             {
@@ -1470,6 +1594,7 @@ class PenguinModAPIUsers {
     }
     /**
      * Uses a regex to ban or unban many users at once.
+     * NOTE: this is currently disabled on the backend. Contact Ian if you need to use it.
      * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/users/massbanregex
@@ -1480,6 +1605,12 @@ class PenguinModAPIUsers {
      */
     async massBanRegex(targetRegex, doUnban) {
         const url = `${this._parent.apiUrl}/v1/users/massbanregex`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const result = await utils.doBasicRequest(
             url,
             {
@@ -1508,6 +1639,12 @@ class PenguinModAPIUsers {
      */
     async getAlts(target) {
         const url = `${this._parent.apiUrl}/v1/users/getAlts?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const data = await utils.doBasicRequest(
             url,
             null,
@@ -1530,6 +1667,12 @@ class PenguinModAPIUsers {
      */
     async assignPosition(target, admin, moderator) {
         const url = `${this._parent.apiUrl}/v1/users/assignPossition`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1560,6 +1703,12 @@ class PenguinModAPIUsers {
      */
     async setBadges(target, badges) {
         const url = `${this._parent.apiUrl}/v1/users/setBadges`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1589,6 +1738,12 @@ class PenguinModAPIUsers {
      */
     async setBadgesMultiple(targets, badges, removing) {
         const url = `${this._parent.apiUrl}/v1/users/setbadgesmultiple`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1618,6 +1773,12 @@ class PenguinModAPIUsers {
      */
     async deleteAccount(target, reason) {
         const url = `${this._parent.apiUrl}/v1/users/deleteaccount`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1634,7 +1795,7 @@ class PenguinModAPIUsers {
         );
     }
     /**
-     * Forgets any sent emails. Meant for debugging.
+     * Forgets any sent emails. Meant for debugging. Probably don't use this.
      * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/users/deleteallemails
@@ -1643,6 +1804,12 @@ class PenguinModAPIUsers {
      */
     async deleteAllEmails() {
         const url = `${this._parent.apiUrl}/v1/users/deleteallemails`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1667,6 +1834,12 @@ class PenguinModAPIUsers {
      */
     async getAdmins() {
         const url = `${this._parent.apiUrl}/v1/users/getadmins?token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const data = await utils.doBasicRequest(
             url,
             null,
@@ -1685,6 +1858,12 @@ class PenguinModAPIUsers {
      */
     async getMods() {
         const url = `${this._parent.apiUrl}/v1/users/getmods?token=${encodeURIComponent(this._parent.token)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const data = await utils.doBasicRequest(
             url,
             null,
@@ -1705,6 +1884,12 @@ class PenguinModAPIUsers {
      */
     async getAllAccountsWithIP(target) {
         const url = `${this._parent.apiUrl}/v1/users/getAllAccountsWithIP?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const data = await utils.doBasicRequest(
             url,
             null,
@@ -1724,6 +1909,12 @@ class PenguinModAPIUsers {
      */
     async getAllIPsOf(target) {
         const url = `${this._parent.apiUrl}/v1/users/getAllIPs?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const data = await utils.doBasicRequest(
             url,
             null,
@@ -1744,6 +1935,12 @@ class PenguinModAPIUsers {
      */
     async getEmail(target) {
         const url = `${this._parent.apiUrl}/v1/users/getemail?token=${encodeURIComponent(this._parent.token)}&target=${encodeURIComponent(target)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const data = await utils.doBasicRequest(
             url,
             null,
@@ -1754,7 +1951,7 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * For debugging MongoDB.
+     * For debugging MongoDB. Gets pipeline requests that take the longest (when it's enabled).
      * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/users/getworstoffenders
@@ -1762,8 +1959,14 @@ class PenguinModAPIUsers {
      * @throws {PenguinModAPIError}
      * @returns {Promise<any>}
      */
-    async getWorstOffenders(page) {
+    async getWorstOffenders(page = 0) {
         const url = `${this._parent.apiUrl}/v1/users/getworstoffenders?token=${encodeURIComponent(this._parent.token)}&page=${encodeURIComponent(page)}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         const data = await utils.doBasicRequest(
             url,
             null,
@@ -1809,7 +2012,7 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * Removes banned followers from a user's follower list.
+     * Removes banned followers from a user's follower list. Useful when a user got followed by a bunch of bots/alts.
      * Requires token.
      * Only accessible on admin accounts.
      * @link https://projects.penguinmod.com/api/v1/users/verifyfollowers
@@ -1819,6 +2022,12 @@ class PenguinModAPIUsers {
      */
     async verifyFollowers(target) {
         const url = `${this._parent.apiUrl}/v1/users/verifyfollowers`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1846,6 +2055,12 @@ class PenguinModAPIUsers {
     async toggleAccountCreation(toggle) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/toggleaccountcreation`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1873,6 +2088,12 @@ class PenguinModAPIUsers {
     async deleteModMessage(message) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/deletemodmessage`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1901,6 +2122,12 @@ class PenguinModAPIUsers {
     async sendModMessage(user, content) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/modmessage`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1930,6 +2157,12 @@ class PenguinModAPIUsers {
     async sendModReply(message, content) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/modresponse`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1957,6 +2190,12 @@ class PenguinModAPIUsers {
     async disputeMessage(message, content) {
         // TODO: This should probably not be in projects/
         const url = `${this._parent.apiUrl}/v1/projects/dispute`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
         await utils.doBasicRequest(
             url,
             {
@@ -1991,18 +2230,133 @@ class PenguinModAPIUsers {
         );
     }
 
-    // TODO: Add these OAuth endpoints
-    // TODO: /api/v1/users/addoauthmethod
-    // TODO: /api/v1/users/addscratchlogin
-    // TODO: /api/v1/users/addpasswordtooauth
-    // TODO: /api/v1/users/createoauthaccount
-    // TODO: /api/v1/users/loginoauthaccount
-    // TODO: /api/v1/users/removeoauthmethod
+    /**
+     * Removes an OAuth method.
+     * Requires token.
+     * @link https://projects.penguinmod.com/v1/users/removeoauthmethod
+     * @param {"scratch"|"github"|"google"} method The method to be removed.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<null>}
+     */
+    async removeOAuthMethod(method) {
+        const url = `${this._parent.apiUrl}/v1/users/removeoauthmethod`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        await utils.doBasicRequest(
+            url,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: this._parent.token,
+                    method,
+                }),
+            },
+            this._parent,
+            utils.RequestType.None,
+        );
+    }
 
-    // TODO: These are redirected to from the frontend, not fetched. Perhaps cleanup these into one function that redirects to the correct method so we avoid worrying about different methods, in case they're changed?
-    // TODO: /api/v1/users/githubcallback/addpasswordfinal
-    // TODO: /api/v1/users/googlecallback/addpasswordfinal
-    // TODO: /api/v1/users/scratchaddpasswordfinal
+    /**
+     * Gives a link that should be redirected to or opened in an iframe so that a user may
+     * add a password to their account using an OAuth method they have attached.
+     * Requires token.
+     * @param {"google"|"github"|"scratch"} method
+     * @returns {string} URL that should be redirected to or opened in an iframe
+     */
+    addPasswordWithOAuth(method) {
+        // TODO: should we return a link or redirect ourselves? the reason for returning
+        // a link is so the frontend may instead open an iframe instead of redirecting.
+        // (this is a todo for all of these oauth methods)
+        const url = `${this._parent.apiUrl}/v1/users/addpasswordtooauth?method=${method}&token=${this._parent.token}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        return url;
+    }
+
+    /**
+     * Gives a link that should be redirected to or opened in an iframe so that a user may
+     * add a password to their account using an OAuth method they have attached.
+     * @param {"google"|"github"|"scratch"} method
+     * @param {string} access_token The access token given by the OAuth provider.
+     * @param {string} new_password The password to be added to the account
+     * @returns {string} URL that should be redirected to or opened in an iframe
+     */
+    addPasswordWithOAuthFinal(method, access_token, new_password) {
+        let url = `${this._parent.apiUrl}/v1/users/`;
+        switch (method) {
+            case "google":
+                url += "googlecallback/addpasswordfinal";
+                break;
+            case "github":
+                url += "githubcallback/addpasswordfinal";
+                break;
+            case "scratch":
+                url += "scratchaddpasswordfinal";
+                break;
+            default:
+                utils.assert(
+                    false,
+                    url,
+                    "InvalidMethod",
+                    `Method should be google, github, or scratch: found "${method}"`,
+                );
+        }
+
+        // TODO: this is a security issue. network logs will store url parameters.
+        // we need to fix this. prob just use headers.
+        url += `?at=${access_token}&password=${new_password}`;
+
+        return url;
+    }
+
+    /**
+     * Gives a link that should be redirected to or opened in an iframe so that a user may
+     * add an oauth method to their account.
+     * Requires token.
+     * @param {"google"|"github"|"scratch"} method
+     * @returns {string} URL that should be redirected to or opened in an iframe
+     */
+    addOAuthMethod(method) {
+        const url = `${this._parent.apiUrl}/v1/users/addoauthmethod?method=${method}&token=${this._parent.token}`;
+        utils.assert(
+            !!this._parent.token,
+            url,
+            "Reauthenticate",
+            "No token is registered.",
+        );
+        return url;
+    }
+
+    /**
+     * Gives a link that should be redirected to or opened in an iframe so that a user may
+     * create an account using an OAuth method.
+     * @param {"google"|"github"|"scratch"} method
+     * @returns {string} URL that should be redirected to or opened in an iframe
+     */
+    createAccountWithOAuth(method) {
+        const url = `${this._parent.apiUrl}/v1/users/createoauthaccount?method=${method}`;
+        return url;
+    }
+
+    /**
+     * Gives a link that should be redirected to or opened in an iframe so that a user may
+     * login using an OAuth method.
+     * @param {"google"|"github"|"scratch"} method
+     * @returns {string} URL that should be redirected to or opened in an iframe
+     */
+    loginWithOAuth(method) {
+        const url = `${this._parent.apiUrl}/v1/users/createoauthaccount?method=${method}`;
+        return url;
+    }
 }
 
 module.exports = PenguinModAPIUsers;

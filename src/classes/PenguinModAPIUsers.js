@@ -536,7 +536,7 @@ class PenguinModAPIUsers {
      * Requires token.
      * Only accessible on accounts with the "donator" badge.
      * @link https://projects.penguinmod.com/api/v1/users/customization/setCustomization
-     * @param {Object} customJson The arbitrary object to save.
+     * @param {string} customJson The arbitrary JSON stringified object to save.
      * @param {string} modTarget A specific user to set the customizations for. This parameter is only allowed if you are a moderator.
      * @throws {PenguinModAPIError} Usually this will only throw if the data is invalid, or you try to set someone else's customizations without being a moderator.
      * @returns {Promise<null>}

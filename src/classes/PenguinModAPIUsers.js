@@ -1163,18 +1163,18 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * Reset an account's password using information from an email's reset password link.
+     * Reset an account's password using information from an email's reset password link and get a token back.
      * You can only get `emailState` from a PenguinMod email, it is the `state` query parameter from a https://penguinmod.com/resetpassword URL.
      * @link https://projects.penguinmod.com/api/v1/users/resetpassword/reset
      * @param {string} email Which email asked to reset a password. This email must have a valid PenguinMod account attached to it.
      * @param {string} emailState A specific code sent in an email's password reset link.
      * @param {string} newPassword The new password to use for the email's account.
      * @throws {PenguinModAPIError}
-     * @returns {Promise<null>}
+     * @returns {Promise<string>} The new token
      */
     async resetPassword(email, emailState, newPassword) {
         const url = `${this._parent.apiUrl}/v1/users/resetpassword/reset`;
-        await utils.doBasicRequest(
+        const { token } = await utils.doBasicRequest(
             url,
             {
                 method: "POST",
@@ -1186,8 +1186,9 @@ class PenguinModAPIUsers {
                 }),
             },
             this._parent,
-            utils.RequestType.None,
+            utils.RequestType.JSON,
         );
+        this._parent.setToken(token);
     }
     /**
      * Send a password reset request via email. Returns the URL that the user can visit to reset their password.
@@ -2283,12 +2284,12 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * Gives a link that should be redirected to or opened in an iframe so that a user may
-     * add a password to their account using an OAuth method they have attached.
+     * Adds a password to an account given an access token ("at") from the oauth provider, passed
+     * through query params.
      * @param {"google"|"github"|"scratch"} method
      * @param {string} access_token The access token given by the OAuth provider.
      * @param {string} new_password The password to be added to the account
-     * @returns {string} URL that should be redirected to or opened in an iframe
+     * @returns {Promise<string>} The new token
      */
     addPasswordWithOAuthFinal(method, access_token, new_password) {
         let url = `${this._parent.apiUrl}/v1/users/`;
@@ -2311,8 +2312,6 @@ class PenguinModAPIUsers {
                 );
         }
 
-        // TODO: this is a security issue. network logs will store url parameters.
-        // we need to fix this. prob just use headers.
         url += `?at=${access_token}&password=${new_password}`;
 
         return url;

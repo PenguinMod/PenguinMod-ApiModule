@@ -532,18 +532,16 @@ class PenguinModAPIUsers {
         );
     }
     /**
-     * Saves an arbitrary object (with restrictions) to your profile.
-     * For exact restrictions, see the `seeBlockedUserCustomization` function in https://github.com/PenguinMod/PenguinMod-BackendApi/blob/main/api/v1/db/UserManager.js
-     *
+     * Saves an arbitrary JSON stringified object to your profile.
      * Requires token.
      * Only accessible on accounts with the "donator" badge.
      * @link https://projects.penguinmod.com/api/v1/users/customization/setCustomization
-     * @param {Object} customData The arbitrary object to save.
+     * @param {string} customJson The arbitrary JSON stringified object to save.
      * @param {string} modTarget A specific user to set the customizations for. This parameter is only allowed if you are a moderator.
      * @throws {PenguinModAPIError} Usually this will only throw if the data is invalid, or you try to set someone else's customizations without being a moderator.
      * @returns {Promise<null>}
      */
-    async setCustomization(customData, modTarget) {
+    async setCustomization(customJson, modTarget) {
         const url = `${this._parent.apiUrl}/v1/users/customization/setCustomization`;
         utils.assert(
             !!this._parent.token,
@@ -558,7 +556,7 @@ class PenguinModAPIUsers {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     token: this._parent.token,
-                    customization: customData,
+                    customization: customJson,
                     target: modTarget,
                 }),
             },
@@ -604,7 +602,7 @@ class PenguinModAPIUsers {
      * @link https://projects.penguinmod.com/api/v1/users/customization/getCustomization
      * @param {string} username The user to check.
      * @throws {PenguinModAPIError} Will also throw for accounts that do not have the "donator" badge.
-     * @returns {Promise<Object>} Resolves to an arbitrary object, see `setCustomization`
+     * @returns {Promise<string>} Resolves to an arbitrary JSON stringified object
      */
     async getCustomization(username) {
         const url = `${this._parent.apiUrl}/v1/users/customization/getCustomization?target=${encodeURIComponent(username)}`;

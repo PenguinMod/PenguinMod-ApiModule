@@ -516,40 +516,6 @@ class PenguinModAPIProjects {
     }
 
     /**
-     * Toggles uploading projects on or off. Prevents users from uploading or updating projects.
-     * Requires token.
-     * Only accessible on admin accounts.
-     * @link https://projects.penguinmod.com/api/v1/projects/hardreject
-     * @param {string} project The projects ID.
-     * @param {string} message The message to send to the projects owner.
-     * @throws {PenguinModAPIError}
-     * @returns {Promise<null>}
-     */
-    async hardReject(project, message) {
-        const url = `${this._parent.apiUrl}/v1/projects/hardreject`;
-        utils.assert(
-            !!this._parent.token,
-            url,
-            "Reauthenticate",
-            "No token is registered.",
-        );
-        await utils.doBasicRequest(
-            url,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    token: this._parent.token,
-                    project,
-                    message,
-                }),
-            },
-            this._parent,
-            utils.RequestType.None,
-        );
-    }
-
-    /**
      * Toggles if we have/have not loved this project.
      * Requires token.
      * @link https://projects.penguinmod.com/api/v1/projects/interactions/loveToggle

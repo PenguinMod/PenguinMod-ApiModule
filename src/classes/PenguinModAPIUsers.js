@@ -300,15 +300,6 @@ class PenguinModAPIUsers {
     }
 
     /**
-     * Get the url to a project's thumbnail. The URL can be used in an html image element's src field.
-     * @param {string} project_id The ID of the project.
-     * @returns {string} The url to the project's thumbnail.
-     */
-    getProjectThumbnailURL(project_id) {
-        return `${this._parent.apiUrl}/v1/projects/getproject?projectID=${encodeURIComponent(project_id)}&requestType=thumbnail`;
-    }
-
-    /**
      * Get the profile of a user.
      * Token is optional. If the user has a private account, it can be viewed only if they allow followees to view and they're following you, or if you're a mod/admin.
      * @link https://projects.penguinmod.com/api/v1/users/profile

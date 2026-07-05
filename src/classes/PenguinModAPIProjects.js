@@ -423,6 +423,16 @@ class PenguinModAPIProjects {
         );
         return arrayBuffer;
     }
+
+    /**
+     * Get the url to a project's thumbnail. The URL can be used in an html image element's src field.
+     * @param {string} project_id The ID of the project.
+     * @returns {string} The url to the project's thumbnail.
+     */
+    getProjectThumbnailURL(project_id) {
+        return `${this._parent.apiUrl}/v1/projects/getproject?projectID=${encodeURIComponent(project_id)}&requestType=thumbnail`;
+    }
+
     /**
      * Gets a project file from the server
      * @link https://projects.penguinmod.com/api/v1/projects/getprojectwrapper

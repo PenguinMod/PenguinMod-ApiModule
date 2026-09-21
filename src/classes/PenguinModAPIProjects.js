@@ -771,10 +771,11 @@ class PenguinModAPIProjects {
     /**
      * Search for projects.
      * @param {PenguinModTypes.SearchQuery} query The query to be searched.
+     * @param {boolean} includeTotal Whether or not the api should include the total. Use sparringly because it's more expensive.
      * @throws {PenguinModAPIError}
-     * @returns {Promise<Array<PenguinModTypes.Project>>}
+     * @returns {Promise<{projects: Array<PenguinModTypes.Project>, total: number}>}
      */
-    async searchProjects(query) {
+    async searchProjects(query, includeTotal = false) {
         const url = new URL(`${this._parent.apiUrl}/v1/projects/search-new`);
         url.searchParams.set("q", query.query);
         url.searchParams.set("sort", query.sort || "views");
@@ -788,6 +789,7 @@ class PenguinModAPIProjects {
         url.searchParams.set("page", query.page || 0);
         url.searchParams.set("page_size", query.pageSize || 0); // server will treat 0 as server default.
         url.searchParams.set("token", this._parent.token);
+        url.searchParams.set("includeTotal", includeTotal || false);
 
         return await utils.doBasicRequest(
             url.toString(),

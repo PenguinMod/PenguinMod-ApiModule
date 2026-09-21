@@ -756,11 +756,41 @@ class PenguinModAPIProjects {
      * @param {boolean} reverse Whether or not to reverse the sorting. For example, if sorting by newest, when reversed, it will sort by oldest. Defaults to false.
      * @throws {PenguinModAPIError}
      * @returns {Promise<Array<PenguinModTypes.Project>>}
+     * @deprecated
      */
-    async searchProjects(query, type = "views", page = 0, reverse = false) {
+    async searchProjectsOld(query, type = "views", page = 0, reverse = false) {
         const url = `${this._parent.apiUrl}/v1/projects/searchprojects?query=${query}&type=${type}&page=${page}&reverse=${reverse}&token=${this._parent.token}`;
         return await utils.doBasicRequest(
             url,
+            null,
+            this._parent,
+            utils.RequestType.JSON,
+        );
+    }
+
+    /**
+     * Search for projects.
+     * @param {PenguinModTypes.SearchQuery} query The query to be searched.
+     * @throws {PenguinModAPIError}
+     * @returns {Promise<Array<PenguinModTypes.Project>>}
+     */
+    async searchProjects(query) {
+        const url = new URL(`${this._parent.apiUrl}/v1/projects/search-new`);
+        url.searchParams.set("q", query.query);
+        url.searchParams.set("sort", query.sort || "views");
+        url.searchParams.set("reverse", query.reverse || false);
+        url.searchParams.set("before", query.before || "");
+        url.searchParams.set("after", query.after || "");
+        url.searchParams.set("remix", query.remixes || "");
+        url.searchParams.set("featured", query.featured || "");
+        url.searchParams.set("author", query.by || "");
+        url.searchParams.set("include", query.include || "all-allowed");
+        url.searchParams.set("page", query.page || 0);
+        url.searchParams.set("page_size", query.pageSize || 0); // server will treat 0 as server default.
+        url.searchParams.set("token", this._parent.token);
+
+        return await utils.doBasicRequest(
+            url.toString(),
             null,
             this._parent,
             utils.RequestType.JSON,

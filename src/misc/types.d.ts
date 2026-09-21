@@ -309,8 +309,6 @@ declare namespace PenguinModTypes {
         by?: string;
         /** Show only projects remixing the specified project ID. */
         remixes?: string;
-        /** If specified, show only studios in results (true) or exclude studios in results (false) */
-        studio?: boolean;
         /** If specified, include featured (true) or exclude featured (false) */
         featured?: boolean;
         /** What types of projects to include (standing). all-allowed by default. Only mods can actually use anything other than ranked. */

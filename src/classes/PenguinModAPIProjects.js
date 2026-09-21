@@ -783,7 +783,10 @@ class PenguinModAPIProjects {
         url.searchParams.set("before", query.before || "");
         url.searchParams.set("after", query.after || "");
         url.searchParams.set("remix", query.remixes || "");
-        url.searchParams.set("featured", query.featured || "");
+        url.searchParams.set(
+            "featured",
+            typeof query.featured === "boolean" ? query.featured : "",
+        );
         url.searchParams.set("author", query.by || "");
         url.searchParams.set("include", query.include || "all-allowed");
         url.searchParams.set("page", query.page || 0);
